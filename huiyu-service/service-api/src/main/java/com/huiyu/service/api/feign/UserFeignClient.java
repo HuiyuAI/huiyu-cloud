@@ -15,7 +15,7 @@ import com.huiyu.common.core.result.R;
  * @author Naccl
  * @date 2022-03-08
  */
-@FeignClient(value = "clh-service-user", contextId = "userFeignClient")
+@FeignClient(value = "huiyu-service", contextId = "userFeignClient")
 public interface UserFeignClient {
     /**
      * 通过openid查询单条数据

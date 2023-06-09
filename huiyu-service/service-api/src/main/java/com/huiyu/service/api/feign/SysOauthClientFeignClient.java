@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author Naccl
  * @date 2022-03-07
  */
-@FeignClient(value = "clh-service-sys", contextId = "sysOauthClientFeignClient")
+@FeignClient(value = "huiyu-service", contextId = "sysOauthClientFeignClient")
 public interface SysOauthClientFeignClient {
     /**
      * 通过主键查询单条数据

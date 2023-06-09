@@ -1,0 +1,22 @@
+server:
+  port: 8100
+
+spring:
+  application:
+    name: huiyu-auth
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+wechat:
+  miniapp:
+    config:
+      appid: #微信小程序的appid
+      secret: #微信小程序的Secret

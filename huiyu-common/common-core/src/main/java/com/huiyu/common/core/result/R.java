@@ -49,4 +49,8 @@ public class R<T> implements Serializable {
     public static <T> R<T> error(String msg) {
         return new R(ResultCode.FAILED.getCode(), msg, null);
     }
+
+    public boolean isSuccess() {
+        return ResultCode.SUCCESS.getCode().equals(this.getCode());
+    }
 }

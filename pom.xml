@@ -14,6 +14,7 @@
         <module>huiyu-common</module>
         <module>huiyu-auth</module>
         <module>huiyu-gateway</module>
+        <module>huiyu-service</module>
     </modules>
 
     <properties>
@@ -131,6 +132,11 @@
             <dependency>
                 <groupId>com.huiyu</groupId>
                 <artifactId>common-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huiyu</groupId>
+                <artifactId>service-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -1,5 +1,6 @@
 package com.huiyu.auth.security.core.userdetails;
 
+import com.huiyu.service.api.feign.UserFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -14,9 +15,8 @@ import com.huiyu.auth.common.enums.AuthenticationIdentityEnum;
 import com.huiyu.auth.common.constant.MessageConstant;
 import com.huiyu.auth.domain.SecurityUserDetails;
 import com.huiyu.common.core.constant.SecurityConstants;
-import com.huiyu.auth.domain.User;
+import com.huiyu.service.api.entity.User;
 import com.huiyu.common.core.result.R;
-import com.huiyu.common.core.result.ResultCode;
 
 /**
  * 用户信息
@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         R<User> result = userFeignClient.queryByUsername(username);
         User user = result.getData();
         // 用户名密码认证方式不允许 ROLE_USER 角色登录
-        if (ResultCode.SUCCESS.getCode().equals(result.getCode())
+        if (result.isSuccess()
                 && user != null
                 && !(SecurityConstants.ROLE_PREFIX + SecurityConstants.ROLE_USER).equalsIgnoreCase(user.getRole())) {
             SecurityUserDetails userDetails = new SecurityUserDetails(user);
@@ -63,7 +63,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByOpenId(String openid) {
         R<User> result = userFeignClient.queryByOpenid(openid);
         User user = result.getData();
-        if (ResultCode.SUCCESS.getCode().equals(result.getCode()) && user != null) {
+        if (result.isSuccess() && user != null) {
             SecurityUserDetails userDetails = new SecurityUserDetails(user);
             log.info("userDetails: {}", userDetails);
             // 认证方式:openid

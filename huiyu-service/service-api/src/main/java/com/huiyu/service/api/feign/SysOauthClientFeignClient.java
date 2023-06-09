@@ -1,10 +1,10 @@
-package com.huiyu.auth.security.core.clientdetails;
+package com.huiyu.service.api.feign;
 
+import com.huiyu.common.core.result.R;
+import com.huiyu.service.api.entity.SysOauthClient;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.huiyu.auth.domain.SysOauthClient;
-import com.huiyu.common.core.result.R;
 
 /**
  * oauth2客户端 FeignClient

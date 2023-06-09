@@ -13,10 +13,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.huiyu.common.core.constant.SecurityConstants;
 import com.huiyu.auth.security.core.userdetails.UserDetailsServiceImpl;
-import com.huiyu.auth.security.core.userdetails.UserFeignClient;
-import com.huiyu.auth.domain.User;
+import com.huiyu.service.api.feign.UserFeignClient;
+import com.huiyu.service.api.entity.User;
 import com.huiyu.common.core.result.R;
-import com.huiyu.common.core.result.ResultCode;
 
 import java.util.HashSet;
 
@@ -58,7 +57,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         log.info("result={}", result);
         User user = result.getData();
         // 这个equals没错，不管有没有查到用户，状态码总是SUCCESS
-        if (ResultCode.SUCCESS.getCode().equals(result.getCode()) && user == null) {
+        if (result.isSuccess() && user == null) {
             String sessionKey = sessionInfo.getSessionKey();
             String encryptedData = authenticationToken.getEncryptedData();
             String iv = authenticationToken.getIv();
@@ -93,7 +92,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
     private String getUniqueUsername(String nickname) {
         // 检查用户名是否存在
         R<Long> countResult = userFeignClient.count(User.builder().username(nickname).build());
-        if (ResultCode.SUCCESS.getCode().equals(countResult.getCode()) && countResult.getData() > 0) {
+        if (countResult.isSuccess() && countResult.getData() > 0) {
             // 用户名已存在，拼上一个随机数
             nickname = nickname + RandomUtil.randomNumber();
             // 继续检查是否存在

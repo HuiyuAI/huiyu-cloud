@@ -13,7 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.huiyu.auth.security.core.userdetails.UserFeignClient;
+import com.huiyu.service.api.feign.UserFeignClient;
 import com.huiyu.auth.security.extension.wechat.WechatAuthenticationProvider;
 import com.huiyu.auth.security.core.userdetails.UserDetailsServiceImpl;
 

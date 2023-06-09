@@ -1,6 +1,7 @@
 package com.huiyu.auth.domain;
 
 import cn.hutool.core.collection.CollUtil;
+import com.huiyu.service.api.entity.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

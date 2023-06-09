@@ -1,4 +1,4 @@
-package com.huiyu.auth.security.config;
+package com.huiyu.service.api.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,7 +10,7 @@ import com.huiyu.common.core.result.R;
  * @author Naccl
  * @date 2022-03-12
  */
-@FeignClient(value = "clh-service-sys", contextId = "sysPermissionFeignClient")
+@FeignClient(value = "huiyu-service", contextId = "sysPermissionFeignClient")
 public interface SysPermissionFeignClient {
     /**
      * 加载角色权限规则至Redis缓存

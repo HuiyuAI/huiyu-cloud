@@ -1,5 +1,8 @@
 package com.huiyu.auth.security.core.clientdetails;
 
+import com.huiyu.common.core.result.R;
+import com.huiyu.service.api.entity.SysOauthClient;
+import com.huiyu.service.api.feign.SysOauthClientFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -7,9 +10,6 @@ import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import com.huiyu.auth.common.enums.PasswordEncoderTypeEnum;
-import com.huiyu.auth.domain.SysOauthClient;
-import com.huiyu.common.core.result.R;
-import com.huiyu.common.core.result.ResultCode;
 
 /**
  * OAuth2 客户端信息
@@ -26,7 +26,7 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
     public ClientDetails loadClientByClientId(String clientId) {
         R<SysOauthClient> result = oauthClientFeignClient.queryByClientId(clientId);
         SysOauthClient client = result.getData();
-        if (ResultCode.SUCCESS.getCode().equals(result.getCode()) && client != null) {
+        if (result.isSuccess() && client != null) {
             BaseClientDetails clientDetails = new BaseClientDetails(
                     client.getClientId(),
                     client.getResourceIds(),

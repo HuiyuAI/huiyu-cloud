@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.SysOauthClientMapper">
+
+    <resultMap type="com.huiyu.service.api.entity.SysOauthClient" id="SysOauthClientMap">
+        <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
+        <result property="resourceIds" column="resource_ids" jdbcType="VARCHAR"/>
+        <result property="clientSecret" column="client_secret" jdbcType="VARCHAR"/>
+        <result property="scope" column="scope" jdbcType="VARCHAR"/>
+        <result property="authorizedGrantTypes" column="authorized_grant_types" jdbcType="VARCHAR"/>
+        <result property="webServerRedirectUri" column="web_server_redirect_uri" jdbcType="VARCHAR"/>
+        <result property="authorities" column="authorities" jdbcType="VARCHAR"/>
+        <result property="accessTokenValidity" column="access_token_validity" jdbcType="INTEGER"/>
+        <result property="refreshTokenValidity" column="refresh_token_validity" jdbcType="INTEGER"/>
+        <result property="additionalInformation" column="additional_information" jdbcType="VARCHAR"/>
+        <result property="autoapprove" column="autoapprove" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="allColumns">
+        client_id, resource_ids, client_secret, scope, authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, refresh_token_validity, additional_information, autoapprove
+    </sql>
+
+    <sql id="queryWhere">
+        <if test="clientId != null and clientId != ''">
+            and client_id = #{clientId}
+        </if>
+        <if test="resourceIds != null and resourceIds != ''">
+            and resource_ids = #{resourceIds}
+        </if>
+        <if test="clientSecret != null and clientSecret != ''">
+            and client_secret = #{clientSecret}
+        </if>
+        <if test="scope != null and scope != ''">
+            and scope = #{scope}
+        </if>
+        <if test="authorizedGrantTypes != null and authorizedGrantTypes != ''">
+            and authorized_grant_types = #{authorizedGrantTypes}
+        </if>
+        <if test="webServerRedirectUri != null and webServerRedirectUri != ''">
+            and web_server_redirect_uri = #{webServerRedirectUri}
+        </if>
+        <if test="authorities != null and authorities != ''">
+            and authorities = #{authorities}
+        </if>
+        <if test="accessTokenValidity != null">
+            and access_token_validity = #{accessTokenValidity}
+        </if>
+        <if test="refreshTokenValidity != null">
+            and refresh_token_validity = #{refreshTokenValidity}
+        </if>
+        <if test="additionalInformation != null and additionalInformation != ''">
+            and additional_information = #{additionalInformation}
+        </if>
+        <if test="autoapprove != null and autoapprove != ''">
+            and autoapprove = #{autoapprove}
+        </if>
+    </sql>
+
+    <!--查询单个-->
+    <select id="queryByClientId" resultMap="SysOauthClientMap">
+        select
+        <include refid="allColumns"/>
+        from sys_oauth_client
+        where client_id = #{clientId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="SysOauthClientMap">
+        select
+        <include refid="allColumns"/>
+        from sys_oauth_client
+        <where>
+            <include refid="queryWhere"/>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from sys_oauth_client
+        <where>
+            <include refid="queryWhere"/>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into sys_oauth_client(<include refid="allColumns"/>)
+        values (#{clientId}, #{resourceIds}, #{clientSecret}, #{scope}, #{authorizedGrantTypes}, #{webServerRedirectUri},
+        #{authorities}, #{accessTokenValidity}, #{refreshTokenValidity}, #{additionalInformation}, #{autoapprove})
+    </insert>
+
+    <insert id="insertBatch">
+        insert into sys_oauth_client(<include refid="allColumns"/>)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{clientId}, #{entity.resourceIds}, #{entity.clientSecret}, #{entity.scope}, #{entity.authorizedGrantTypes},
+            #{entity.webServerRedirectUri}, #{entity.authorities}, #{entity.accessTokenValidity},
+            #{entity.refreshTokenValidity}, #{entity.additionalInformation}, #{entity.autoapprove})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch">
+        insert into sys_oauth_client(<include refid="allColumns"/>)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.resourceIds}, #{entity.clientSecret}, #{entity.scope}, #{entity.authorizedGrantTypes},
+            #{entity.webServerRedirectUri}, #{entity.authorities}, #{entity.accessTokenValidity},
+            #{entity.refreshTokenValidity}, #{entity.additionalInformation}, #{entity.autoapprove})
+        </foreach>
+        on duplicate key update
+        resource_ids = values(resource_ids),
+        client_secret = values(client_secret),
+        scope = values(scope),
+        authorized_grant_types = values(authorized_grant_types),
+        web_server_redirect_uri = values(web_server_redirect_uri),
+        authorities = values(authorities),
+        access_token_validity = values(access_token_validity),
+        refresh_token_validity = values(refresh_token_validity),
+        additional_information = values(additional_information),
+        autoapprove = values(autoapprove)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update sys_oauth_client
+        <set>
+            <if test="resourceIds != null and resourceIds != ''">
+                resource_ids = #{resourceIds},
+            </if>
+            <if test="clientSecret != null and clientSecret != ''">
+                client_secret = #{clientSecret},
+            </if>
+            <if test="scope != null and scope != ''">
+                scope = #{scope},
+            </if>
+            <if test="authorizedGrantTypes != null and authorizedGrantTypes != ''">
+                authorized_grant_types = #{authorizedGrantTypes},
+            </if>
+            <if test="webServerRedirectUri != null and webServerRedirectUri != ''">
+                web_server_redirect_uri = #{webServerRedirectUri},
+            </if>
+            <if test="authorities != null and authorities != ''">
+                authorities = #{authorities},
+            </if>
+            <if test="accessTokenValidity != null">
+                access_token_validity = #{accessTokenValidity},
+            </if>
+            <if test="refreshTokenValidity != null">
+                refresh_token_validity = #{refreshTokenValidity},
+            </if>
+            <if test="additionalInformation != null and additionalInformation != ''">
+                additional_information = #{additionalInformation},
+            </if>
+            <if test="autoapprove != null and autoapprove != ''">
+                autoapprove = #{autoapprove},
+            </if>
+        </set>
+        where client_id = #{clientId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteByClientId">
+        delete
+        from sys_oauth_client
+        where client_id = #{clientId}
+    </delete>
+</mapper>
+

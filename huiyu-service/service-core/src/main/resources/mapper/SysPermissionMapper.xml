@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.SysPermissionMapper">
+
+    <resultMap type="com.huiyu.service.api.entity.SysPermission" id="SysPermissionMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="urlPerm" column="url_perm" jdbcType="VARCHAR"/>
+        <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="orderId" column="order_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysPermissionMap">
+        select id,
+               name,
+               url_perm,
+               role,
+               order_id
+        from sys_permission
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="SysPermissionMap">
+        select
+        id, name, url_perm, role, order_id
+        from sys_permission
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                <bind name="pattern1" value="'%' + name + '%'"/>
+                and name like #{pattern1}
+            </if>
+            <if test="urlPerm != null and urlPerm != ''">
+                and url_perm = #{urlPerm}
+            </if>
+            <if test="role != null and role != ''">
+                <bind name="pattern2" value="'%' + role + '%'"/>
+                and role like #{pattern2}
+            </if>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from sys_permission
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="urlPerm != null and urlPerm != ''">
+                and url_perm = #{urlPerm}
+            </if>
+            <if test="role != null and role != ''">
+                and role = #{role}
+            </if>
+            <if test="orderId != null">
+                and order_id = #{orderId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_permission(name, url_perm, role, order_id)
+        values (#{name}, #{urlPerm}, #{role}, #{orderId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_permission(name, url_perm, role, order_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.urlPerm}, #{entity.role}, #{entity.orderId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_permission(name, url_perm, role, order_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.urlPerm}, #{entity.role}, #{entity.orderId})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        url_perm = values(url_perm),
+        role = values(role),
+        order_id = values(order_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update sys_permission
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="urlPerm != null and urlPerm != ''">
+                url_perm = #{urlPerm},
+            </if>
+            <if test="role != null and role != ''">
+                role = #{role},
+            </if>
+            <if test="orderId != null">
+                order_id = #{orderId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from sys_permission
+        where id = #{id}
+    </delete>
+</mapper>

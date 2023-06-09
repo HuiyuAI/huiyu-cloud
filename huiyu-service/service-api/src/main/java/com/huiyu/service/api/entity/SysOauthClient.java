@@ -1,11 +1,9 @@
-package com.huiyu.auth.domain;
+package com.huiyu.service.api.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -15,12 +13,10 @@ import java.io.Serializable;
  * @author Naccl
  * @date 2022-03-07
  */
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
 public class SysOauthClient implements Serializable {
     /**
      * 客户端ID

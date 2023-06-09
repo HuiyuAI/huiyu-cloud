@@ -1,5 +1,6 @@
 package com.huiyu.auth.security.config;
 
+import com.huiyu.service.api.feign.SysPermissionFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

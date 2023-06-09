@@ -1,4 +1,4 @@
-package com.huiyu.auth.security.core.userdetails;
+package com.huiyu.service.api.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.huiyu.auth.domain.User;
+import com.huiyu.service.api.entity.User;
 import com.huiyu.common.core.result.R;
 
 /**

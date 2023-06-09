@@ -16,6 +16,12 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+        - id: huiyu-service
+          uri: lb://huiyu-service
+          predicates:
+            - Path=/service/**
+          filters:
+            - StripPrefix=1
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -32,9 +38,9 @@ spring:
         jwt:
           jwk-set-uri: 'http://localhost:8100/rsa/publicKey' #配置RSA的公钥访问地址
   redis:
-    host: 127.0.0.1
-    port: 6379
-    password: 123456
+    host: 101.43.14.157
+    port: 6378
+    password: 123asdASD
     database: 0
 secure:
   ignore:

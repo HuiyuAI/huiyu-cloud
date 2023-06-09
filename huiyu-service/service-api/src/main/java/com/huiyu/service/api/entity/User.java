@@ -1,4 +1,4 @@
-package com.huiyu.auth.domain;
+package com.huiyu.service.api.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -86,6 +86,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
     }
 
     /**
+     * TODO 现在username是唯一的，后面要把loadUserByUsername()改掉
      * 获取唯一用户名
      *
      * @param nickname 原始昵称

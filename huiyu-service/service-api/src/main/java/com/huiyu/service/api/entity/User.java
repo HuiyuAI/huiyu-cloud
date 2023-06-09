@@ -2,12 +2,11 @@ package com.huiyu.service.api.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * (User)实体类
@@ -15,12 +14,10 @@ import java.io.Serializable;
  * @author Naccl
  * @date 2022-03-08
  */
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-@ToString
 public class User implements Serializable {
     /**
      * 用户id
@@ -54,4 +51,28 @@ public class User implements Serializable {
      * 角色
      */
     private String role;
+    /**
+     * 手机号
+     */
+    private String phone;
+    /**
+     * 积分
+     */
+    private Integer integral;
+    /**
+     * 等级
+     */
+    private Integer level;
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+    /**
+     * 是否删除1是0否
+     */
+    private Integer isDelete;
 }

@@ -11,145 +11,104 @@
         <result property="gender" column="gender" jdbcType="INTEGER"/>
         <result property="enabled" column="enabled" jdbcType="BOOLEAN"/>
         <result property="role" column="role" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone"/>
+        <result property="integral" column="integral"/>
+        <result property="level" column="level"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="UserMap">
-        select id,
-               openid,
-               username,
-               password,
-               avatar,
-               gender,
-               enabled,
-               role
+        select *
         from user
-        where id = #{id}
+        where is_delete = 0
+          and id = #{id}
     </select>
 
     <!--查询单个-->
     <select id="queryByOpenid" resultMap="UserMap">
-        select id,
-               openid,
-               username,
-               password,
-               avatar,
-               gender,
-               enabled,
-               role
+        select *
         from user
-        where openid = #{openid}
+        where is_delete = 0
+          and openid = #{openid}
     </select>
 
     <!--查询单个-->
     <select id="queryByUsername" resultMap="UserMap">
-        select id,
-               openid,
-               username,
-               password,
-               avatar,
-               gender,
-               enabled,
-               role
+        select *
         from user
-        where username = #{username}
+        where is_delete = 0
+          and username = #{username}
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAll" resultMap="UserMap">
-        select
-        id, openid, username, password, avatar, gender, enabled, role
+        select *
         from user
-        <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="openid != null and openid != ''">
-                and openid = #{openid}
-            </if>
-            <if test="username != null and username != ''">
-                and username = #{username}
-            </if>
-            <if test="password != null and password != ''">
-                and password = #{password}
-            </if>
-            <if test="avatar != null and avatar != ''">
-                and avatar = #{avatar}
-            </if>
-            <if test="gender != null">
-                and gender = #{gender}
-            </if>
-            <if test="enabled != null">
-                and enabled = #{enabled}
-            </if>
-            <if test="role != null and role != ''">
-                and role = #{role}
-            </if>
-        </where>
+        where is_delete = 0
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="openid != null and openid != ''">
+            and openid = #{openid}
+        </if>
+        <if test="username != null and username != ''">
+            and username = #{username}
+        </if>
+        <if test="password != null and password != ''">
+            and password = #{password}
+        </if>
+        <if test="avatar != null and avatar != ''">
+            and avatar = #{avatar}
+        </if>
+        <if test="gender != null">
+            and gender = #{gender}
+        </if>
+        <if test="enabled != null">
+            and enabled = #{enabled}
+        </if>
+        <if test="role != null and role != ''">
+            and role = #{role}
+        </if>
     </select>
 
     <!--统计总行数-->
     <select id="count" resultType="java.lang.Long">
         select count(1)
         from user
-        <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="openid != null and openid != ''">
-                and openid = #{openid}
-            </if>
-            <if test="username != null and username != ''">
-                and username = #{username}
-            </if>
-            <if test="password != null and password != ''">
-                and password = #{password}
-            </if>
-            <if test="avatar != null and avatar != ''">
-                and avatar = #{avatar}
-            </if>
-            <if test="gender != null">
-                and gender = #{gender}
-            </if>
-            <if test="enabled != null">
-                and enabled = #{enabled}
-            </if>
-            <if test="role != null and role != ''">
-                and role = #{role}
-            </if>
-        </where>
+        where is_delete = 0
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="openid != null and openid != ''">
+            and openid = #{openid}
+        </if>
+        <if test="username != null and username != ''">
+            and username = #{username}
+        </if>
+        <if test="password != null and password != ''">
+            and password = #{password}
+        </if>
+        <if test="avatar != null and avatar != ''">
+            and avatar = #{avatar}
+        </if>
+        <if test="gender != null">
+            and gender = #{gender}
+        </if>
+        <if test="enabled != null">
+            and enabled = #{enabled}
+        </if>
+        <if test="role != null and role != ''">
+            and role = #{role}
+        </if>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into user(openid, username, password, avatar, gender, enabled, role)
         values (#{openid}, #{username}, #{password}, #{avatar}, #{gender}, #{enabled}, #{role})
-    </insert>
-
-    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into user(openid, username, password, avatar, gender, enabled, role)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.openid}, #{entity.username}, #{entity.password}, #{entity.avatar}, #{entity.gender},
-            #{entity.enabled}, #{entity.role})
-        </foreach>
-    </insert>
-
-    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into user(openid, username, password, avatar, gender, enabled, role)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.openid}, #{entity.username}, #{entity.password}, #{entity.avatar}, #{entity.gender},
-            #{entity.enabled}, #{entity.role})
-        </foreach>
-        on duplicate key update
-        openid = values(openid),
-        username = values(username),
-        password = values(password),
-        avatar = values(avatar),
-        gender = values(gender),
-        enabled = values(enabled),
-        role = values(role)
     </insert>
 
     <!--通过主键修改数据-->
@@ -178,13 +137,15 @@
                 role = #{role},
             </if>
         </set>
-        where id = #{id}
+        where is_delete = 0
+        and id = #{id}
     </update>
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete
-        from user
-        where id = #{id}
+        update user
+        set is_delete = 1
+        where is_delete = 0
+          and id = #{id}
     </delete>
 </mapper>

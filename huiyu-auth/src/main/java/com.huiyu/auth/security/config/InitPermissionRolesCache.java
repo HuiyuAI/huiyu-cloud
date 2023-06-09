@@ -1,5 +1,6 @@
 package com.huiyu.auth.security.config;
 
+import cn.hutool.json.JSONUtil;
 import com.huiyu.service.api.feign.SysPermissionFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,6 @@ public class InitPermissionRolesCache implements CommandLineRunner {
     @Override
     public void run(String... args) {
         R<Boolean> result = sysPermissionFeignClient.refreshPermRolesRules();
-        log.info("初始化权限角色规则缓存：{}", result.getData());
+        log.info("初始化权限角色规则缓存：{}", JSONUtil.toJsonStr(result.getData()));
     }
 }

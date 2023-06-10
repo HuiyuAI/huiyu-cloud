@@ -2,7 +2,7 @@ package com.huiyu.service.core.controller.admin;
 
 import com.huiyu.common.core.result.R;
 import com.huiyu.service.api.entity.User;
-import com.huiyu.service.core.service.UserService;
+import com.huiyu.service.core.service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;

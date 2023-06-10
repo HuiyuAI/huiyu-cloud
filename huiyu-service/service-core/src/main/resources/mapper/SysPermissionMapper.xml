@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huiyu.service.core.mapper.SysPermissionMapper">
+<mapper namespace="com.huiyu.service.core.mapper.auth.SysPermissionMapper">
 
     <resultMap type="com.huiyu.service.api.entity.SysPermission" id="SysPermissionMap">
         <result property="id" column="id" jdbcType="INTEGER"/>

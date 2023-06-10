@@ -2,7 +2,7 @@ package com.huiyu.service.core.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.huiyu.service.core.service.SysOauthClientService;
+import com.huiyu.service.core.service.auth.SysOauthClientService;
 import com.huiyu.service.api.entity.SysOauthClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

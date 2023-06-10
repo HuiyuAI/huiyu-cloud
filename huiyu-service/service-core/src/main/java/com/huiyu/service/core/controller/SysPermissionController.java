@@ -3,7 +3,7 @@ package com.huiyu.service.core.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.huiyu.service.api.entity.SysPermission;
-import com.huiyu.service.core.service.SysPermissionService;
+import com.huiyu.service.core.service.auth.SysPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

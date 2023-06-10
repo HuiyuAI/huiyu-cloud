@@ -1,10 +1,10 @@
-package com.huiyu.service.core.service.impl;
+package com.huiyu.service.core.service.auth.impl;
 
 import com.huiyu.service.api.entity.SysOauthClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
-import com.huiyu.service.core.mapper.SysOauthClientMapper;
-import com.huiyu.service.core.service.SysOauthClientService;
+import com.huiyu.service.core.mapper.auth.SysOauthClientMapper;
+import com.huiyu.service.core.service.auth.SysOauthClientService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

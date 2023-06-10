@@ -1,4 +1,4 @@
-package com.huiyu.service.core.service.impl;
+package com.huiyu.service.core.service.auth.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import com.huiyu.common.redis.constant.RedisKeyConstant;
-import com.huiyu.service.core.mapper.SysPermissionMapper;
-import com.huiyu.service.core.service.SysPermissionService;
+import com.huiyu.service.core.mapper.auth.SysPermissionMapper;
+import com.huiyu.service.core.service.auth.SysPermissionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

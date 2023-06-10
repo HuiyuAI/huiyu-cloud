@@ -1,4 +1,4 @@
-package com.huiyu.service.core.mapper;
+package com.huiyu.service.core.mapper.auth;
 
 import com.huiyu.service.api.entity.SysPermission;
 import org.apache.ibatis.annotations.Mapper;

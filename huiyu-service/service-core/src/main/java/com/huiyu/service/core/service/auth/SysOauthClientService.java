@@ -1,4 +1,4 @@
-package com.huiyu.service.core.service;
+package com.huiyu.service.core.service.auth;
 
 import com.huiyu.service.api.entity.SysOauthClient;
 

@@ -1,9 +1,9 @@
-package com.huiyu.service.core.service.impl;
+package com.huiyu.service.core.service.auth.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.huiyu.service.api.entity.User;
-import com.huiyu.service.core.mapper.UserMapper;
-import com.huiyu.service.core.service.UserService;
+import com.huiyu.service.core.mapper.auth.UserMapper;
+import com.huiyu.service.core.service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -43,4 +43,4 @@ mybatis:
 logging:
   level:
     root: info
-    top.naccl: debug
+    com.huiyu: debug

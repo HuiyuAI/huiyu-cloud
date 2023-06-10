@@ -47,3 +47,8 @@ secure:
     urls: #配置白名单路径
       - "/actuator/**"
       - "/auth/oauth/token"
+
+logging:
+  level:
+    root: info
+    com.huiyu: debug

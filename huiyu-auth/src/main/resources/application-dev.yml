@@ -20,3 +20,8 @@ wechat:
     config:
       appid: #微信小程序的appid
       secret: #微信小程序的Secret
+
+logging:
+  level:
+    root: info
+    com.huiyu: debug

@@ -1,9 +1,10 @@
 package com.huiyu.service.core.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import javax.annotation.Resource;
 
 /**
  * @Auther: wAnG
@@ -14,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 public class BaseInterceptorConfig extends WebMvcConfigurationSupport {
 
-    @Autowired
+    @Resource
     private RequestInterceptor requestInterceptor;
 
     @Override

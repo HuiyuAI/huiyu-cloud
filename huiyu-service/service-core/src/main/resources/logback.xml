@@ -71,10 +71,6 @@
         </encoder>
     </appender>
 
-    <logger name="DBInfo" level="info" additivity="false">
-        <appender-ref ref="DBLog"/>
-    </logger>
-
     <!-- 按照每天生成日志文件 -->
     <appender name="paramLog"  class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -95,6 +91,12 @@
 
     <logger name="paramLog" level="info" additivity="false">
         <appender-ref ref="paramLog"/>
+        <appender-ref ref="consoleLog" />
+    </logger>
+
+    <logger name="DBInfo" level="info" additivity="false">
+        <appender-ref ref="DBLog"/>
+        <appender-ref ref="consoleLog" />
     </logger>
 
 　　　<root level="INFO">

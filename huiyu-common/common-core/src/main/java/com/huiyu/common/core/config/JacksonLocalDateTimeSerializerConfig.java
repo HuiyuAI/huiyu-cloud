@@ -58,7 +58,6 @@ public class JacksonLocalDateTimeSerializerConfig {
         @Override
         public LocalDateTime deserialize(JsonParser p, DeserializationContext deserializationContext) throws IOException {
             long timestamp = p.getValueAsLong();
-            System.out.println("timestamp: " + timestamp);
             if (timestamp > 0) {
                 return LocalDateTimeUtil.of(timestamp, ZoneOffset.of("+8"));
             }

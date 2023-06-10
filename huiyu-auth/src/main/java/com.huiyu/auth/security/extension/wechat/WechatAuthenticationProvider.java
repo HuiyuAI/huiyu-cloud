@@ -51,7 +51,6 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             log.info("wechat sessionInfo={}", JSONUtil.toJsonStr(sessionInfo));
         } catch (WxErrorException e) {
             log.error("请求微信sessionInfo error: {}", e);
-            e.printStackTrace();
         }
         String openid = sessionInfo.getOpenid();
 

@@ -18,8 +18,8 @@ management:
 wechat:
   miniapp:
     config:
-      appid: #微信小程序的appid
-      secret: #微信小程序的Secret
+      appid: wx7eb04dd743a70c8f
+      secret: 3328425d1b5f7e44c71ead5de08e772a
 
 logging:
   level:

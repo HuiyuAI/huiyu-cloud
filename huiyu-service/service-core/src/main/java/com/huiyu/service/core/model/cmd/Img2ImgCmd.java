@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 /**
  * img2img指令对象
@@ -15,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Img2ImgCmd {
+@EqualsAndHashCode(callSuper = true)
+public class Img2ImgCmd extends Cmd{
     /**
      * 模型id
      */

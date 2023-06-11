@@ -4,11 +4,15 @@ import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdValidator;
+import com.huiyu.service.core.sd.generate.ImageGenerateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Stable Diffusion功能请求处理
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sd")
 public class SDController {
+
+    @Resource
+    private List<ImageGenerateService> cmdValidators;
 
     @PostMapping("/txt2img")
     public R<?> txt2img(@RequestBody Txt2ImgCmd cmd) {

@@ -1,9 +1,6 @@
 package com.huiyu.service.core.model.cmd;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -17,7 +14,8 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Txt2ImgCmd {
+@EqualsAndHashCode(callSuper = true)
+public class Txt2ImgCmd extends Cmd{
     /**
      * 模型id
      */

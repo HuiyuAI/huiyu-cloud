@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.PicExtMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="picExtMap" type="com.huiyu.service.core.entity.PicExt">
+        <result column="id" property="id"/>
+        <result column="pic_id" property="picId"/>
+        <result column="views" property="views"/>
+        <result column="enable" property="enable" jdbcType="INTEGER"/>
+        <result column="path" property="path"/>
+    </resultMap>
+
+    <insert id="insertPicExt">
+        insert into t_pic_e
+            (pic_id, views, enable, path)
+        values
+            (#{picExt.picId},#{picExt.views},#{picExt.enable},#{picExt.path})
+    </insert>
+
+    <update id="update">
+        update t_pic_e
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="picId != null and picId != ''">
+                pic_id = #{picId},
+            </if>
+            <if test="views != null and views != ''">
+                views = #{views},
+            </if>
+            <if test="enable != null">
+                enable = #{enable},
+            </if>
+            <if test="path != null and path != ''">
+                path = #{path},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getByPicId" resultMap="picExtMap">
+            select *
+            from t_pic_e
+            where enable = 1
+              and pic_id = #{picId};
+    </select>
+
+
+</mapper>

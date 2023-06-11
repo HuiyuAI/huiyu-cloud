@@ -22,6 +22,10 @@
         </dependency>
         <dependency>
             <groupId>com.huiyu</groupId>
+            <artifactId>common-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.huiyu</groupId>
             <artifactId>common-redis</artifactId>
         </dependency>
         <dependency>

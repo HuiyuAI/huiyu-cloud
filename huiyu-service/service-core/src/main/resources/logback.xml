@@ -4,7 +4,7 @@
         <!-- 彩色日志 -->
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %red(%d{yyyy-MM-dd HH:mm:ss}) %white(%X{TraceId}) %blue([%thread]) %magenta(%-5level) %green([%class{30}]) \n>>> %cyan(%msg) %n
+                %boldWhite(%d{yyyy-MM-dd HH:mm:ss.SSS}) %white(%X{TraceId}) %blue([%thread]) %magenta(%-5level) %green([%class{30}]) \n>>> %msg %n
             </pattern>
         </layout>
     </appender>
@@ -18,13 +18,13 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>huiyu-service/service-core/logs/info.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
+            <FileNamePattern>huiyu-service/service-core/log/info.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
             <!--日志文件最大的大小-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
-            <MaxHistory>20</MaxHistory>
+            <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] -[%X{TraceId}] [%-5level] %-40.40logger{39} \n>>> %msg%n"</pattern>
@@ -39,13 +39,13 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>huiyu-service/service-core/logs/error.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
+            <FileNamePattern>huiyu-service/service-core/log/error.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
             <!--日志文件最大的大小-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
-            <MaxHistory>20</MaxHistory>
+            <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] -[%X{TraceId}] [%-5level] %-40.40logger{39} \n>>> %msg%n"</pattern>
@@ -57,13 +57,13 @@
     <appender name="DBLog"  class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>huiyu-service/service-core/logs/db.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
+            <FileNamePattern>huiyu-service/service-core/log/db.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
             <!--日志文件最大的大小-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
-            <MaxHistory>20</MaxHistory>
+            <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] -[%X{TraceId}] [%-5level] %-40.40logger{39} \n>>> %msg%n"</pattern>
@@ -75,13 +75,13 @@
     <appender name="paramLog"  class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>huiyu-service/service-core/logs/param.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
+            <FileNamePattern>huiyu-service/service-core/log/param.%d{yyyy-MM-dd}_%i.log</FileNamePattern>
             <!--日志文件最大的大小-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
-            <MaxHistory>20</MaxHistory>
+            <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] -[%X{TraceId}] [%-5level] %-40.40logger{39} \n>>> %msg%n"</pattern>

@@ -44,4 +44,6 @@ public class Task implements Serializable {
      * 是否删除1是0否
      */
     private Integer isDelete;
+
+    private String execSource;
 }

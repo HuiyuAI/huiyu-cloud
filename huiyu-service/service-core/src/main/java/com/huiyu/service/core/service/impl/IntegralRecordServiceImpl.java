@@ -1,7 +1,8 @@
-package com.huiyu.service.core.service;
+package com.huiyu.service.core.service.impl;
 
 import com.huiyu.service.core.entity.IntegralRecord;
 import com.huiyu.service.core.mapper.integral.IntegralRecordMapper;
+import com.huiyu.service.core.service.IntegralRecordService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 

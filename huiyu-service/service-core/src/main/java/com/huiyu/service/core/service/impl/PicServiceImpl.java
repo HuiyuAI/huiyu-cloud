@@ -1,10 +1,11 @@
-package com.huiyu.service.core.service;
+package com.huiyu.service.core.service.impl;
 
 import com.huiyu.service.core.constant.StateEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicExt;
 import com.huiyu.service.core.mapper.PicExtMapper;
 import com.huiyu.service.core.mapper.PicMapper;
+import com.huiyu.service.core.service.PicService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

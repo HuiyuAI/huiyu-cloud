@@ -1,4 +1,4 @@
-package com.huiyu.service.core.config;
+package com.huiyu.service.core.executor;
 
 import com.huiyu.service.core.handler.MessageExecutionHandler;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +19,19 @@ import java.util.concurrent.TimeUnit;
 @EnableAsync
 public class ExecutorConfig {
 
-    @Bean(name = "messageQueueExecutor")
-    public Executor messageQueueExecutor() {
+    @Bean(name = "submitRequestExecutor")
+    public ThreadPoolExecutorDecorator submitRequestExecutor() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 1, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(5));
         executor.setRejectedExecutionHandler(new MessageExecutionHandler());
-        return executor;
+        return ThreadPoolExecutorDecorator.builder()
+                .threadPoolExecutor(executor)
+                .sourceName("local")
+                .build();
     }
 
-    @Bean(name = "messageProcessorExecutor")
-    public Executor messageProcessorExecutor() {
+    @Bean(name = "splitTaskExecutor")
+    public Executor splitTaskExecutor() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 1, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(5));
         executor.setRejectedExecutionHandler(new MessageExecutionHandler());

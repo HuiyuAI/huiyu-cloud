@@ -12,4 +12,6 @@ public interface PicService {
     boolean delete(Pic pic);
 
     boolean share(Pic pic, StateEnum state);
+
+    Long getAncestorById(Long id);
 }

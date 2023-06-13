@@ -1,5 +1,6 @@
 package com.huiyu.service.core.entity;
 
+import com.huiyu.service.core.constant.TaskStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class Task implements Serializable {
     /**
      * 任务状态
      */
-    private Integer status;
+    private TaskStatusEnum status;
     /**
      * 用户id
      */

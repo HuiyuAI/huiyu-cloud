@@ -3,6 +3,7 @@ package com.huiyu.service.core.task;
 import cn.hutool.json.JSONObject;
 import com.huiyu.service.core.business.TaskBusiness;
 import com.huiyu.service.core.config.SpringContext;
+import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,7 +52,7 @@ public class EnQueueTask implements Runnable {
             taskBusiness.update(
                     com.huiyu.service.core.entity.Task.builder()
                             .id(taskId)
-                            .status(1)
+                            .status(TaskStatusEnum.EXECUTED)
                             .updateTime(LocalDateTime.now())
                             .build()
             );
@@ -59,7 +60,7 @@ public class EnQueueTask implements Runnable {
         List<Task> taskList = taskBusiness.getByStatus(0, 1);
         Executor messageProcessorExecutor = (Executor) SpringContext.getBean("messageProcessorExecutor");
         for (Task task : taskList) {
-            task.setStatus(3);
+            task.setStatus(TaskStatusEnum.IN_QUEUE);
             taskBusiness.update(task);
             messageProcessorExecutor.execute(new EnQueueTask(task.getId(), task.getUserId(), task.getUrl(), task.getBody()));
         }

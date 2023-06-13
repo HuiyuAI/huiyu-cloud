@@ -13,4 +13,6 @@ public interface PicMapper {
     List<Pic> getByUserId(@Param("userId") String userId);
 
     int update(Pic pic);
+
+    Long getAncestorById(Long id);
 }

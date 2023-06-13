@@ -15,6 +15,7 @@
         <result column="height" property="height"/>
         <result column="seed" property="seed"/>
         <result column="reference_pic_id" property="referencePicId"/>
+        <result column="parent_pic_id" property="parentPicId"/>
         <result column="user_id" property="userId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -66,7 +67,10 @@
                 seed = #{seed},
             </if>
             <if test="referencePicId != null">
-                referencePic_id = #{referencePicId},
+                reference_pic_id = #{referencePicId},
+            </if>
+            <if test="parentPicId != null">
+                parent_pic_id = #{parentPicId},
             </if>
             <if test="userId != null">
                 user_id = #{userId},
@@ -113,11 +117,21 @@
             and seed = #{seed}
         </if>
         <if test="referencePicId != null">
-            and referencePic_id = #{referencePicId}
+            and reference_pic_id = #{referencePicId}
+        </if>
+        <if test="parentPicId != null">
+            and parent_pic_id = #{parentPicId}
         </if>
         <if test="userId != null">
             and user_id = #{userId}
         </if>
+    </select>
+
+    <select id="getAncestorById" resultType="java.lang.Long">
+        select parent_pic_id
+        from t_pic
+        where is_delete = 0
+          and id = #{id}
     </select>
 
 

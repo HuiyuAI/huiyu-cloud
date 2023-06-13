@@ -67,4 +67,13 @@ public class PicServiceImpl implements PicService {
             return picExtMapper.insertPicExt(picExt) > 0;
         }
     }
+
+    @Override
+    public Long getAncestorById(Long id) {
+        Long ancestorId = picMapper.getAncestorById(id);
+        if (ancestorId == null || ancestorId == 0 || ancestorId.equals(id)) {
+            return id;
+        }
+        return getAncestorById(ancestorId);
+    }
 }

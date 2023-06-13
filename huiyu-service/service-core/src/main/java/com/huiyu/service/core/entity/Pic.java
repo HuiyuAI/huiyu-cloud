@@ -63,6 +63,10 @@ public class Pic implements Serializable {
      */
     private Long referencePicId;
     /**
+     * 源图id
+     */
+    private Long parentPicId;
+    /**
      * 用户id
      */
     private Long userId;

@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 /**
  * @author wAnG
@@ -27,7 +25,7 @@ public class ImageTaskService {
     private List<ThreadPoolExecutorDecorator> submitRequestExecutorList;
 
     @Resource
-    private List<AbstractImageTaskInvoker> imageTaskInvokerList;
+    private imageTaskInvoker imageTaskInvokerList;
 
     public void trySplitTask(Task task){
         List<Task> tasks = new ArrayList<>();
@@ -47,20 +45,11 @@ public class ImageTaskService {
             return;
         }
 
-        AbstractImageTaskInvoker imageTaskInvoker = imageTaskInvokerList.stream()
-                .filter(imageTaskInvokerItem -> imageTaskInvokerItem.isSupper(task))
-                .findFirst()
-                .orElse(null);
-
-        if(Objects.isNull(imageTaskInvoker)){
-            log.error("未分配执行器");
-            return;
-        }
-
+        // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
                 CompletableFuture.runAsync(() -> {
-                    imageTaskInvoker.invokerGenerate(taskItem);
+                    imageTaskInvokerList.invokerGenerate(taskItem);
                 },executor.getThreadPoolExecutor());
             });
         });

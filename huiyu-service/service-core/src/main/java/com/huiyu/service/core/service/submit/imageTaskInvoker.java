@@ -1,11 +1,15 @@
 package com.huiyu.service.core.service.submit;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.huiyu.service.core.business.TaskBusiness;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.sd.dto.ImgDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -16,7 +20,11 @@ import java.util.List;
  * @Date 2023-06-13  00:07
  */
 @Service
-public abstract class AbstractImageTaskInvoker<T extends ImgDTO> {
+@Slf4j
+public class imageTaskInvoker {
+
+    @Resource
+    private RestTemplate restTemplate;
 
     @Resource
     private ImageTaskService imageTaskService;
@@ -25,11 +33,9 @@ public abstract class AbstractImageTaskInvoker<T extends ImgDTO> {
     private TaskBusiness taskBusiness;
 
     public void invokerGenerate(Task task) {
-        insertTask();
+        insertTask(task);
 
-        T t = buildRequest(task);
-
-        invokerHttp();
+        invokerHttp(task);
 
         generateEnd(task);
 
@@ -52,8 +58,9 @@ public abstract class AbstractImageTaskInvoker<T extends ImgDTO> {
         }
     }
 
-    private void insertTask() {
+    private void insertTask(Task task) {
         // todo 在这里插入执行记录
+        boolean result = taskBusiness.insertTask(task);
     }
 
     private void findTask() {
@@ -68,9 +75,18 @@ public abstract class AbstractImageTaskInvoker<T extends ImgDTO> {
         imageTaskService.trySplitTask(task);
     }
 
-    private void invokerHttp() {
+    private void invokerHttp(Task task) {
+        String body1 = task.getBody();
         // todo 调用api
         String url = getUrl();
+        ResponseEntity<String> response = restTemplate.postForEntity(url, body1, String.class);
+        String body = response.getBody();
+        JSONObject jsonObject = new JSONObject(body);
+        JSONArray imageUuidList = jsonObject.getJSONArray("image_uuid_list");
+        for (Object uuid : imageUuidList) {
+            String imgUrl = "https://huiyucdn.naccl.top/gen/" + uuid + ".jpg";
+            log.info("image url: {}", imgUrl);
+        }
     }
 
     private String getUrl() {
@@ -78,9 +94,6 @@ public abstract class AbstractImageTaskInvoker<T extends ImgDTO> {
         return StringUtils.EMPTY;
     }
 
-    public abstract T buildRequest(Task task);
-
-    public abstract boolean isSupper(Task task);
 
 
 }

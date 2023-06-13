@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * @Date 2023-06-14  00:32
  */
 @Service
-public class Txt2SubmitRequestQueueService extends AbstractSubmitRequestQueueService<Txt2ImgCmd> {
+public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueueService<Txt2ImgCmd> {
     @Override
     public Task convertTask(Txt2ImgCmd txt2ImgCmd) {
         return null;

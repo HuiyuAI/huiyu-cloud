@@ -9,7 +9,7 @@ import com.huiyu.service.core.sd.validator.constant.CmdType;
  * @author wAnG
  * @Date 2023-06-12  00:28
  */
-@CmdValidator(name = "model_id",dealType = CmdType.IMG2)
+@CmdValidator(name = "model_id", dealType = CmdType.IMG2IMG)
 public class modelIdValidator implements IPropertyValidator<Img2ImgCmd> {
 
     @Override

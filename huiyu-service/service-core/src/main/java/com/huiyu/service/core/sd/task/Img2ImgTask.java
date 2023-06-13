@@ -11,5 +11,5 @@ import lombok.Data;
  */
 @Data
 public class Img2ImgTask {
-    private Img2ImgDTO txt2ImgDTO;
+    private Img2ImgDTO img2ImgDTO;
 }

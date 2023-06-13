@@ -6,8 +6,8 @@ package com.huiyu.service.core.sd.validator.constant;
  */
 public class CmdType {
 
-    public static final String IMG2 = "img2";
+    public static final String IMG2IMG = "img2img";
 
-    public static final String Tex2 = "tex2";
+    public static final String TXT2IMG = "txt2img";
 
 }

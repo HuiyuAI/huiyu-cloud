@@ -1,4 +1,4 @@
-package com.huiyu.service.core.mapper.integral;
+package com.huiyu.service.core.mapper;
 
 import com.huiyu.service.core.entity.IntegralRecord;
 import org.apache.ibatis.annotations.Mapper;

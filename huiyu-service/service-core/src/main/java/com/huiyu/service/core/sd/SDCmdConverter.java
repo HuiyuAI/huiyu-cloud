@@ -24,11 +24,32 @@ public class SDCmdConverter {
         String negativePrompt = cmd.getNegativePrompt();
 
         // TODO 根据质量等级设置高清化参数
-        Integer quality = cmd.getQuality();
         boolean enableHr = true;
+        // 极少情况下，不同的模型、参数可能需要"R-ESRGAN 4x+ Anime6B"
         String hrUpscaler = "Latent";
         BigDecimal denoisingStrength = new BigDecimal("0.6");
         BigDecimal hrScale = new BigDecimal("2");
+
+        switch (cmd.getQuality()) {
+            case 1:
+                // 高清
+                enableHr = false;
+                break;
+            case 2:
+                // 超清
+                enableHr = true;
+                break;
+            case 3:
+                // 超清修复 第一道工序+第二道工序
+                enableHr = true;
+                break;
+            case 4:
+                // 超清精绘 三道工序
+                enableHr = true;
+                break;
+            default:
+                break;
+        }
 
         // TODO 根据图片尺寸设置对应宽高
         Integer size = cmd.getSize();

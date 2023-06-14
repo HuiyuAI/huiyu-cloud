@@ -46,3 +46,7 @@ logging:
   level:
     root: info
     com.huiyu: debug
+
+huiyu:
+  sd:
+    callback-token: LGVMAXk38rZmfwo1Qzf6jl7TcdoCqT97

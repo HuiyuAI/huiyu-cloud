@@ -28,6 +28,12 @@ public class SDController {
     @Resource
     private List<ImageGenerateService> cmdValidators;
 
+    /**
+     * 文生图
+     *
+     * @param cmd Txt2ImgCmd
+     * @return 校验成功返回等待消息/校验失败返回错误消息
+     */
     @PostMapping("/txt2img")
     public R<?> txt2img(@RequestBody Txt2ImgCmd cmd) {
         // 1. 校验用户积分

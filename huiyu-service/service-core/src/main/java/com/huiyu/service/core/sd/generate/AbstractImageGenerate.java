@@ -3,8 +3,11 @@ package com.huiyu.service.core.sd.generate;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.validator.AbstractCmdValidator;
 import com.huiyu.service.core.service.submit.AbstractSubmitRequestQueueService;
+import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -51,8 +54,18 @@ public abstract class AbstractImageGenerate<T extends Cmd> extends AbstractCmdVa
     public void preExec() {
     }
 
-    public void afterExec(){
-    };
+    public void afterExec() {
+    }
+
+    ;
+
+    public boolean isSupport(T t) {
+        ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
+        Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
+        String typeName = actualTypeArgument.getTypeName();
+        String name = t.getClass().getName();
+        return StringUtils.equals(typeName, name);
+    }
 
 
 }

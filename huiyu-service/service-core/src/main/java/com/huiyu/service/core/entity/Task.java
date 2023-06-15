@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Task implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    private String id;
     /**
      * 请求地址
      */

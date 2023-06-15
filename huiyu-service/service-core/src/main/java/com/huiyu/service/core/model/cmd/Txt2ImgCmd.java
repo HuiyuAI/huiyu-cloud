@@ -25,7 +25,7 @@ public class Txt2ImgCmd extends Cmd{
     /**
      * 模型id
      */
-    private Integer modelId;
+    private String modelId;
     /**
      * 正向描述词
      */

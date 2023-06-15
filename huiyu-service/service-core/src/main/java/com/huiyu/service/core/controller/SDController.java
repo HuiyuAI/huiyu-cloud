@@ -4,7 +4,7 @@ import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdValidator;
-import com.huiyu.service.core.sd.generate.ImageGenerateService;
+import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +26,7 @@ import java.util.List;
 public class SDController {
 
     @Resource
-    private List<ImageGenerateService> cmdValidators;
+    private List<AbstractImageGenerate> imageGenerates;
 
     /**
      * 文生图
@@ -46,6 +46,9 @@ public class SDController {
         }
 
         // 3. 提交任务队列
+
+        imageGenerates.stream().filter(imageGenerate -> imageGenerate.isSupport(cmd))
+                .forEach(imageGenerate -> imageGenerate.generate(cmd));
 
         // 4. 处理用户界面
 

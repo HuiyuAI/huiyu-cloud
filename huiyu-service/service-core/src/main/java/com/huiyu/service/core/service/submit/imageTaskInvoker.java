@@ -2,10 +2,8 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -46,17 +44,16 @@ public class imageTaskInvoker {
 
     private void generateEnd(Task task) {
         // 结束以后将任务置为完成
-        Long taskId = task.getId();
+        String taskId = task.getId();
         // 数据库任务数据则修改状态
-        if (taskId != null && taskId != 0) {
+        if (StringUtils.isNotBlank(taskId)) {
+            Task TaskDO = Task.builder()
+                    .id(taskId)
+                    .status(TaskStatusEnum.EXECUTED)
+                    .updateTime(LocalDateTime.now())
+                    .build();
             // 根据标识更新数据库状态
-            taskService.update(
-                    Task.builder()
-                            .id(taskId)
-                            .status(TaskStatusEnum.EXECUTED)
-                            .updateTime(LocalDateTime.now())
-                            .build()
-            );
+            taskService.update(TaskDO);
         }
     }
 
@@ -78,10 +75,9 @@ public class imageTaskInvoker {
     }
 
     private void invokerHttp(Task task) {
-        Dto dto = JSONUtil.parseObj(task.getBody()).toBean(Dto.class);
         // todo 调用api
         String url = getUrl();
-        ResponseEntity<String> response = restTemplate.postForEntity(url, dto, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, task.getBody(), String.class);
         String body = response.getBody();
         JSONObject jsonObject = new JSONObject(body);
         JSONArray imageUuidList = jsonObject.getJSONArray("image_uuid_list");

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class SDCmdConverter {
     public static Txt2ImgDto convert(Txt2ImgCmd cmd) {
         // TODO 根据模型id查模型名称、vae、采样器
-        Integer modelId = cmd.getModelId();
+        String modelId = cmd.getModelId();
         String modelName = "mix-pro-v3-non-ema-fp32.safetensors [9b307cd7a8]";
         String vae = "vae-ft-mse-840000-ema-pruned.ckpt";
         String sampler = "DPM++ 2M Karras";

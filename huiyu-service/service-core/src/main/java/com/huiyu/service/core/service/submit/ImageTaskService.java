@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.submit;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
@@ -63,9 +64,16 @@ public class ImageTaskService {
         return task.getCount() > 1;
     }
 
-    private List<Task> splitTask(Task task){
-        // todo 深拷贝， 修改seed种子，修改count为1
-        return Lists.newArrayList();
+    private List<Task> splitTask(Task task) {
+        List<Task> taskList = Lists.newArrayList();
+        if (task.getCount() > 1) {
+            for (int i = 0; i < task.getCount(); i++) {
+                Task copyTask = new Task();
+                BeanUtil.copyProperties(task, copyTask);
+                taskList.add(copyTask);
+            }
+        }
+        return taskList;
     }
 
 }

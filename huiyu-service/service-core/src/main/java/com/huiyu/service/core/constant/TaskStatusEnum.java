@@ -1,7 +1,7 @@
 package com.huiyu.service.core.constant;
 
 public enum TaskStatusEnum implements BaseEnum<Integer> {
-    UNEXECUTED(0, "未执行"),
+    UN_EXECUTED(0, "未执行"),
     EXECUTED(1, "已执行"),
     IN_QUEUE(2, "在队列中");
 

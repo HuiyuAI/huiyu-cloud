@@ -6,7 +6,6 @@ import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -25,6 +24,7 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         if (r instanceof Task) {
             Task task = (Task) r;
+            log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
             Long taskId = task.getId();
             if (taskId != null && taskId != 0) {
                 taskService.update(
@@ -35,18 +35,8 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
                 );
                 return;
             }
-            log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
-            taskService.insertTask(
-                    Task.builder()
-                            .body(task.getBody())
-                            .isDelete(0)
-                            .url(task.getUrl())
-                            .userId(task.getUserId())
-                            .createTime(LocalDateTime.now())
-                            .updateTime(LocalDateTime.now())
-                            .status(TaskStatusEnum.UNEXECUTED)
-                            .build()
-            );
+            task.setStatus(TaskStatusEnum.UNEXECUTED);
+            taskService.insertTask(task);
         }
     }
 }

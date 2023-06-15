@@ -30,8 +30,8 @@ public class ImageTaskService {
     public void trySplitTask(Task task){
         List<Task> tasks = new ArrayList<>();
 
-        if (judgeSplitTask()){
-            tasks.addAll(splitTask());
+        if (judgeSplitTask(task)){
+            tasks.addAll(splitTask(task));
         } else {
             tasks.add(task);
         }
@@ -59,12 +59,12 @@ public class ImageTaskService {
 
 
     // 判断是否需要拆分
-    private boolean judgeSplitTask(){
-        return false;
+    private boolean judgeSplitTask(Task task){
+        return task.getCount() > 1;
     }
 
-    private List<Task> splitTask(){
-
+    private List<Task> splitTask(Task task){
+        // todo 深拷贝， 修改seed种子，修改count为1
         return Lists.newArrayList();
     }
 

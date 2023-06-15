@@ -1,5 +1,7 @@
 package com.huiyu.service.core.model.cmd;
 
+import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,4 +67,9 @@ public class Txt2ImgCmd extends Cmd{
      * 种子
      */
     private Integer seed;
+
+    @Override
+    public Dto toDto() {
+        return new Txt2ImgDto();
+    }
 }

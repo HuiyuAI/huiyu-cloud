@@ -45,6 +45,10 @@ public class Task implements Serializable {
      * 是否删除1是0否
      */
     private Integer isDelete;
+    /**
+     * 任务数
+     */
+    private Integer count;
 
     private String execSource;
 }

@@ -1,5 +1,7 @@
 package com.huiyu.service.core.model.cmd;
 
+import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +24,9 @@ public class Img2ImgCmd extends Cmd{
      * 模型id
      */
     private Integer modelId;
+
+    @Override
+    public Dto toDto() {
+        return new Img2ImgDto();
+    }
 }

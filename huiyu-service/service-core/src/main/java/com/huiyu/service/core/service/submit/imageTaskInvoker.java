@@ -2,8 +2,10 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -76,10 +78,10 @@ public class imageTaskInvoker {
     }
 
     private void invokerHttp(Task task) {
-        String body1 = task.getBody();
+        Dto dto = JSONUtil.parseObj(task.getBody()).toBean(Dto.class);
         // todo 调用api
         String url = getUrl();
-        ResponseEntity<String> response = restTemplate.postForEntity(url, body1, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, dto, String.class);
         String body = response.getBody();
         JSONObject jsonObject = new JSONObject(body);
         JSONArray imageUuidList = jsonObject.getJSONArray("image_uuid_list");

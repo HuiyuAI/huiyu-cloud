@@ -2,9 +2,9 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
-import com.huiyu.service.core.business.TaskBusiness;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class imageTaskInvoker {
     private ImageTaskService imageTaskService;
 
     @Resource
-    private TaskBusiness taskBusiness;
+    private TaskService taskService;
 
     public void invokerGenerate(Task task) {
         insertTask(task);
@@ -48,7 +48,7 @@ public class imageTaskInvoker {
         // 数据库任务数据则修改状态
         if (taskId != null && taskId != 0) {
             // 根据标识更新数据库状态
-            taskBusiness.update(
+            taskService.update(
                     Task.builder()
                             .id(taskId)
                             .status(TaskStatusEnum.EXECUTED)
@@ -60,18 +60,18 @@ public class imageTaskInvoker {
 
     private void insertTask(Task task) {
         // todo 在这里插入执行记录
-        boolean result = taskBusiness.insertTask(task);
+        boolean result = taskService.insertTask(task);
     }
 
     private void findTask() {
         // 寻找新的任务放入线程池
-        List<Task> taskList = taskBusiness.getByStatus(0, 1);
+        List<Task> taskList = taskService.getByStatus(0, 1);
         if (taskList.isEmpty()) {
             return;
         }
         Task task = taskList.get(0);
         task.setStatus(TaskStatusEnum.IN_QUEUE);
-        taskBusiness.update(task);
+        taskService.update(task);
         imageTaskService.trySplitTask(task);
     }
 

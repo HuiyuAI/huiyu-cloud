@@ -1,10 +1,10 @@
 package com.huiyu.service.core.task;
 
 import cn.hutool.json.JSONObject;
-import com.huiyu.service.core.business.TaskBusiness;
 import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.service.TaskService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -46,10 +46,10 @@ public class EnQueueTask implements Runnable {
         log.info("{} user: {}, url: {}, body: {}", "执行完成", userId, url, body);
 
         // 查询数据库
-        TaskBusiness taskBusiness = SpringContext.getBean(TaskBusiness.class);
+        TaskService taskService = SpringContext.getBean(TaskService.class);
         if (taskId != null && taskId != 0) {
             // 根据标识更新数据库状态
-            taskBusiness.update(
+            taskService.update(
                     com.huiyu.service.core.entity.Task.builder()
                             .id(taskId)
                             .status(TaskStatusEnum.EXECUTED)
@@ -57,11 +57,11 @@ public class EnQueueTask implements Runnable {
                             .build()
             );
         }
-        List<Task> taskList = taskBusiness.getByStatus(0, 1);
+        List<Task> taskList = taskService.getByStatus(0, 1);
         Executor messageProcessorExecutor = (Executor) SpringContext.getBean("messageProcessorExecutor");
         for (Task task : taskList) {
             task.setStatus(TaskStatusEnum.IN_QUEUE);
-            taskBusiness.update(task);
+            taskService.update(task);
             messageProcessorExecutor.execute(new EnQueueTask(task.getId(), task.getUserId(), task.getUrl(), task.getBody()));
         }
     }

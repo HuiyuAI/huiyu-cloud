@@ -1,8 +1,8 @@
 package com.huiyu.service.core.handler;
 
-import com.huiyu.service.core.business.TaskBusiness;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class MessageExecutionHandler implements RejectedExecutionHandler {
 
     @Resource
-    private TaskBusiness taskBusiness;
+    private TaskService taskService;
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
@@ -27,7 +27,7 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
             Task task = (Task) r;
             Long taskId = task.getId();
             if (taskId != null && taskId != 0) {
-                taskBusiness.update(
+                taskService.update(
                         Task.builder()
                                 .id(taskId)
                                 .status(TaskStatusEnum.UNEXECUTED)
@@ -36,7 +36,7 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
                 return;
             }
             log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
-            taskBusiness.insertTask(
+            taskService.insertTask(
                     Task.builder()
                             .body(task.getBody())
                             .isDelete(0)

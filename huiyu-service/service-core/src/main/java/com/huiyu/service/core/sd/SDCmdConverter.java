@@ -2,8 +2,8 @@ package com.huiyu.service.core.sd;
 
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
-import com.huiyu.service.core.sd.dto.Img2ImgDTO;
-import com.huiyu.service.core.sd.dto.Txt2ImgDTO;
+import com.huiyu.service.core.sd.dto.Img2ImgDto;
+import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 
 import java.math.BigDecimal;
 
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @date 2023-06-11
  */
 public class SDCmdConverter {
-    public static Txt2ImgDTO convert(Txt2ImgCmd cmd) {
+    public static Txt2ImgDto convert(Txt2ImgCmd cmd) {
         // TODO 根据模型id查模型名称、vae、采样器
         Integer modelId = cmd.getModelId();
         String modelName = "mix-pro-v3-non-ema-fp32.safetensors [9b307cd7a8]";
@@ -61,7 +61,7 @@ public class SDCmdConverter {
         Integer batchSize = 1;
 
 
-        return Txt2ImgDTO.builder()
+        return Txt2ImgDto.builder()
                 .sdModelCheckpoint(modelName)
                 .sdVae(vae)
                 .prompt(prompt)
@@ -81,7 +81,7 @@ public class SDCmdConverter {
                 .build();
     }
 
-    public static Img2ImgDTO convert(Img2ImgCmd cmd) {
+    public static Img2ImgDto convert(Img2ImgCmd cmd) {
         return null;
     }
 }

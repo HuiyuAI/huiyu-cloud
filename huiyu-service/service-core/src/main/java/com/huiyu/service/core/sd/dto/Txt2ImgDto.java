@@ -1,7 +1,11 @@
 package com.huiyu.service.core.sd.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -16,7 +20,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Txt2ImgDTO extends ImgDTO{
+public class Txt2ImgDto extends Dto {
     /**
      * 模型
      */

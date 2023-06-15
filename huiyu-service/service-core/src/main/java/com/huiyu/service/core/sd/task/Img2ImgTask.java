@@ -1,6 +1,6 @@
 package com.huiyu.service.core.sd.task;
 
-import com.huiyu.service.core.sd.dto.Img2ImgDTO;
+import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import lombok.Data;
 
 /**
@@ -11,5 +11,5 @@ import lombok.Data;
  */
 @Data
 public class Img2ImgTask {
-    private Img2ImgDTO img2ImgDTO;
+    private Img2ImgDto img2ImgDTO;
 }

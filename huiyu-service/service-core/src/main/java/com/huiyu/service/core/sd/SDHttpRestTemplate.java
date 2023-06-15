@@ -3,7 +3,7 @@ package com.huiyu.service.core.sd;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.huiyu.service.core.sd.constant.SDAPIConstant;
-import com.huiyu.service.core.sd.dto.Txt2ImgDTO;
+import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class SDHttpRestTemplate {
     @Autowired
     private RestTemplate restTemplate;
 
-    public void txt2img(Txt2ImgDTO dto) {
+    public void txt2img(Txt2ImgDto dto) {
         String url = SDAPIConstant.BASE_URL + SDAPIConstant.TXT2IMG;
         ResponseEntity<String> response = restTemplate.postForEntity(url, dto, String.class);
         String body = response.getBody();

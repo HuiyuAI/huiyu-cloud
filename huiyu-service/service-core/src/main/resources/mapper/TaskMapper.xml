@@ -5,7 +5,6 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="taskMap" type="com.huiyu.service.core.entity.Task">
         <result column="id" property="id"/>
-        <result column="task_id" property="taskId"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
         <result column="url" property="url"/>
@@ -18,8 +17,8 @@
     </resultMap>
 
     <insert id="insertTask">
-        insert into task (task_id, user_id, type, url, body, status, exec_source, create_time, update_time, is_delete)
-        values (#{taskId}, #{userId}, #{type}, #{url}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        insert into task (user_id, type, url, body, status, exec_source, create_time, update_time, is_delete)
+        values (#{userId}, #{type}, #{url}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
@@ -27,16 +26,13 @@
         from task
         where is_delete = 0
           and status = #{status}
-        ORDER BY create_time desc
+        ORDER BY create_time asc
             limit #{limit}
     </select>
 
     <update id="update">
         update task
         <set>
-            <if test="taskId != null and taskId != ''">
-                task_id = #{taskId},
-            </if>
             <if test="userId != null">
                 user_id = #{userId},
             </if>
@@ -60,7 +56,7 @@
             </if>
         </set>
         where is_delete = 0
-        and task_id = #{taskId}
+        and id = #{id}
     </update>
 
 </mapper>

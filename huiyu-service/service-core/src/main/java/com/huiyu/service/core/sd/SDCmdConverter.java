@@ -2,6 +2,7 @@ package com.huiyu.service.core.sd;
 
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 
@@ -53,8 +54,7 @@ public class SDCmdConverter {
 
         // TODO 根据图片尺寸设置对应宽高
         Integer size = cmd.getSize();
-        Integer width = 512;
-        Integer height = 512;
+        ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
 
         // TODO 生成数量考虑拆分成多个任务
         Integer count = cmd.getCount();
@@ -72,8 +72,8 @@ public class SDCmdConverter {
                 .hrUpscaler(hrUpscaler)
                 .denoisingStrength(denoisingStrength)
                 .hrScale(hrScale)
-                .width(width)
-                .height(height)
+                .width(imageSizeEnum.getWidth())
+                .height(imageSizeEnum.getHeight())
                 .batchSize(batchSize)
                 .nIter(1)
                 .cfgScale(cmd.getCfg())

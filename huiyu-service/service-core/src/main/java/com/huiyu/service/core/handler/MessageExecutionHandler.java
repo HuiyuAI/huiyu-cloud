@@ -1,7 +1,7 @@
 package com.huiyu.service.core.handler;
 
 import com.huiyu.service.core.config.SpringContext;
-import com.huiyu.service.core.config.ThreadLocalConfig;
+import com.huiyu.service.core.config.TaskThreadLocal;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.TaskService;
@@ -22,26 +22,23 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         TaskService taskService = SpringContext.getBean(TaskService.class);
-        ThreadLocalConfig threadLocalConfig = SpringContext.getBean(ThreadLocalConfig.class);
         try {
-            Task task = (Task) threadLocalConfig.get();
+            Task task = TaskThreadLocal.get();
             if (task != null) {
                 log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
                 Long id = task.getId();
                 if (id != null && id != 0) {
-                    taskService.update(
-                            Task.builder()
-                                    .taskId(task.getTaskId())
-                                    .status(TaskStatusEnum.UN_EXECUTED)
-                                    .build()
-                    );
+                    Task wrapper = Task.builder()
+                            .taskId(task.getTaskId())
+                            .status(TaskStatusEnum.UN_EXECUTED)
+                            .build();
+                    taskService.update(wrapper);
                     return;
                 }
-                task.setStatus(TaskStatusEnum.UN_EXECUTED);
                 taskService.insertTask(task);
             }
         } finally {
-            threadLocalConfig.remove();
+            TaskThreadLocal.remove();
         }
     }
 }

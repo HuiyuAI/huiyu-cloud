@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class imageTaskInvoker {
+public class ImageTaskInvoker {
 
     @Resource
     private RestTemplate restTemplate;

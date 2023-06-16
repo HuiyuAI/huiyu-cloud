@@ -2,7 +2,7 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.google.common.collect.Lists;
-import com.huiyu.service.core.config.ThreadLocalConfig;
+import com.huiyu.service.core.config.TaskThreadLocal;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +27,15 @@ public class ImageTaskService {
     private List<ThreadPoolExecutorDecorator> submitRequestExecutorList;
 
     @Resource
-    private imageTaskInvoker imageTaskInvokerList;
+    private ImageTaskInvoker imageTaskInvokerList;
 
     @Resource
-    private ThreadLocalConfig threadLocalConfig;
+    private TaskThreadLocal taskThreadLocal;
 
-    public void trySplitTask(Task task){
+    public void trySplitTask(Task task) {
         List<Task> tasks = new ArrayList<>();
 
-        if (judgeSplitTask(task)){
+        if (judgeSplitTask(task)) {
             tasks.addAll(splitTask(task));
         } else {
             tasks.add(task);
@@ -45,18 +45,18 @@ public class ImageTaskService {
                 .filter(decorator -> StringUtils.equals(task.getExecSource(), decorator.getSourceName()))
                 .findFirst();
 
-        if(!executorOptional.isPresent()){
+        if (!executorOptional.isPresent()) {
             log.error("未分配执行源");
             return;
         }
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
-                threadLocalConfig.set(taskItem);
+                taskThreadLocal.set(taskItem);
                 CompletableFuture.runAsync(() -> {
                     imageTaskInvokerList.invokerGenerate(taskItem);
                 }, executor.getThreadPoolExecutor());
-                threadLocalConfig.remove();
+                taskThreadLocal.remove();
             });
         });
 
@@ -65,7 +65,7 @@ public class ImageTaskService {
 
 
     // 判断是否需要拆分
-    private boolean judgeSplitTask(Task task){
+    private boolean judgeSplitTask(Task task) {
         return task.getCount() > 1;
     }
 

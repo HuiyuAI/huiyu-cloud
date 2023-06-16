@@ -1,7 +1,6 @@
 package com.huiyu.service.core.sd.generate;
 
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
-import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import org.springframework.stereotype.Service;
 
 /**

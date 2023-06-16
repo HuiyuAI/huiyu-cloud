@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
-import com.huiyu.service.core.sd.constant.ImageSizeEnum;
+import com.huiyu.service.core.sd.SDCmdConverter;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.utils.IdUtils;
 import org.springframework.stereotype.Service;
@@ -20,51 +20,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
     @Override
     public Task convertTask(Txt2ImgCmd txt2ImgCmd) {
         Task task = new Task();
-        Txt2ImgDto txt2ImgDto = new Txt2ImgDto();
-
-        txt2ImgDto.setSdModelCheckpoint(txt2ImgCmd.getModelId());
-        txt2ImgDto.setSdVae("");
-        txt2ImgDto.setPrompt(txt2ImgCmd.getPrompt());
-        txt2ImgDto.setNegativePrompt(txt2ImgCmd.getNegativePrompt());
-        txt2ImgDto.setSamplerName("");
-        txt2ImgDto.setSteps(txt2ImgCmd.getSteps());
-
-        txt2ImgDto.setHrScale(null);
-        txt2ImgDto.setDenoisingStrength(null);
-        txt2ImgDto.setHrScale(null);
-
-        // 图片尺寸
-        Integer size = txt2ImgCmd.getSize();
-        ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
-        txt2ImgDto.setHeight(imageSizeEnum.getHigh());
-        txt2ImgDto.setWidth(imageSizeEnum.getWight());
-
-        boolean enableHr = false;
-
-        switch (txt2ImgCmd.getQuality()) {
-            case 1:
-                // 高清
-                enableHr = false;
-                break;
-            case 2:
-                // 超清
-                enableHr = true;
-                break;
-            case 3:
-                // 超清修复 第一道工序+第二道工序
-                enableHr = true;
-                break;
-            case 4:
-                // 超清精绘 三道工序
-                enableHr = true;
-                break;
-            default:
-                break;
-        }
-
-        txt2ImgDto.setEnableHr(enableHr);
-        txt2ImgDto.setCfgScale(txt2ImgCmd.getCfg());
-        txt2ImgDto.setSeed(txt2ImgCmd.getSeed());
+        Txt2ImgDto txt2ImgDto = SDCmdConverter.convert(txt2ImgCmd);
 
         task.setExecSource("local");
         task.setCreateTime(LocalDateTime.now());

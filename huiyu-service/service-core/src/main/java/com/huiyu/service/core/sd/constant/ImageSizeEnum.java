@@ -1,11 +1,18 @@
 package com.huiyu.service.core.sd.constant;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 import java.util.Objects;
 
 /**
  * @author wAnG
  * @Date 2023-06-16  00:24
  */
+@Getter
+@ToString
+@AllArgsConstructor
 public enum ImageSizeEnum {
 
     AVATAR_FRAME(1, "头像框", "1:1", 512, 512),
@@ -22,57 +29,9 @@ public enum ImageSizeEnum {
 
     private String proportion;
 
-    private Integer wight;
+    private Integer width;
 
-    private Integer high;
-
-    ImageSizeEnum(Integer code, String desc, String proportion, Integer wight, Integer high) {
-        this.code = code;
-        this.desc = desc;
-        this.proportion = proportion;
-        this.wight = wight;
-        this.high = high;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getProportion() {
-        return proportion;
-    }
-
-    public void setProportion(String proportion) {
-        this.proportion = proportion;
-    }
-
-    public Integer getWight() {
-        return wight;
-    }
-
-    public void setWight(Integer wight) {
-        this.wight = wight;
-    }
-
-    public Integer getHigh() {
-        return high;
-    }
-
-    public void setHigh(Integer high) {
-        this.high = high;
-    }
+    private Integer height;
 
     public static ImageSizeEnum getEnumByCode(Integer code) {
         for (ImageSizeEnum sizeEnums : ImageSizeEnum.values()) {

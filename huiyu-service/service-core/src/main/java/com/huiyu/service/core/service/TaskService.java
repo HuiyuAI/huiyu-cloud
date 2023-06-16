@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public interface TaskService {
-    List<Task> getByStatus(int status, int n);
+    List<Task> getByStatus(int status, int limit);
 
     boolean insertTask(Task task);
 

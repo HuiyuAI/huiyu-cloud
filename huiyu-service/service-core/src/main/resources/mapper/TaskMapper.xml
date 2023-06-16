@@ -5,52 +5,58 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="taskMap" type="com.huiyu.service.core.entity.Task">
         <result column="id" property="id"/>
-        <result column="task_id" property="taskId"/>
+        <result column="user_id" property="userId"/>
+        <result column="type" property="type"/>
         <result column="url" property="url"/>
         <result column="body" property="body"/>
         <result column="status" property="status"/>
-        <result column="user_id" property="userId"/>
+        <result column="exec_source" property="execSource"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
     <insert id="insertTask">
-        insert into t_task
-            (task_id, url, body, status, user_id, create_time, update_time, is_delete)
-        values
-            (#{taskId},#{url},#{body},#{status},#{userId},#{createTime},#{updateTime},#{isDelete})
+        insert into task (user_id, type, url, body, status, exec_source, create_time, update_time, is_delete)
+        values (#{userId}, #{type}, #{url}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
         select *
-        from t_task
+        from task
         where is_delete = 0
           and status = #{status}
-        ORDER BY create_time desc
-        limit #{n}
+        ORDER BY create_time asc
+            limit #{limit}
     </select>
 
     <update id="update">
-        update t_task
+        update task
         <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
             <if test="body != null and body != ''">
                 body = #{body},
             </if>
             <if test="status != null">
                 status = #{status},
             </if>
-            <if test="userId != null">
-                user_id = #{userId},
+            <if test="execSource != null and execSource != ''">
+                exec_source = #{execSource},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},
             </if>
-            <if test="isDelete != null">
-                is_delete = #{isDelete},
-            </if>
         </set>
-        where task_id = #{taskId}
+        where is_delete = 0
+        and id = #{id}
     </update>
 
 </mapper>

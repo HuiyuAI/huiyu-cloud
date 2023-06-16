@@ -46,9 +46,10 @@ public class SDController {
         }
 
         // 3. 提交任务队列
-        imageGenerates.stream().filter(imageGenerate -> imageGenerate.isSupport(cmd))
-                .forEach(imageGenerate -> imageGenerate.generate(cmd));
 
+        imageGenerates.stream()
+                .filter(imageGenerate -> imageGenerate.isSupport(cmd))
+                .forEach(imageGenerate -> imageGenerate.generate(cmd));
         // 4. 处理用户界面
 
         return R.ok();

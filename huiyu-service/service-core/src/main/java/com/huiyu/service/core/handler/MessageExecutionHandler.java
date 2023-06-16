@@ -20,7 +20,6 @@ import static com.huiyu.service.core.config.ImageTaskContext.TASK_INFO_CONTEXT;
 @Slf4j
 public class MessageExecutionHandler implements RejectedExecutionHandler {
 
-
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         TaskService taskService = SpringContext.getBean(TaskService.class);
@@ -28,10 +27,10 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
             Task task = TASK_INFO_CONTEXT.get();
             if (task != null) {
                 log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
-                Long id = task.getId();
-                if (id != null && id != 0) {
+                Long taskId = task.getId();
+                if (taskId != null) {
                     Task wrapper = Task.builder()
-                            .taskId(task.getTaskId())
+                            .id(taskId)
                             .status(TaskStatusEnum.UN_EXECUTED)
                             .build();
                     taskService.update(wrapper);

@@ -52,14 +52,8 @@ public class SDCmdConverter {
                 break;
         }
 
-        // TODO 根据图片尺寸设置对应宽高
         Integer size = cmd.getSize();
         ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
-
-        // TODO 生成数量考虑拆分成多个任务
-        Integer count = cmd.getCount();
-        Integer batchSize = 1;
-
 
         return Txt2ImgDto.builder()
                 .sdModelCheckpoint(modelName)
@@ -74,7 +68,7 @@ public class SDCmdConverter {
                 .hrScale(hrScale)
                 .width(imageSizeEnum.getWidth())
                 .height(imageSizeEnum.getHeight())
-                .batchSize(batchSize)
+                .batchSize(1)
                 .nIter(1)
                 .cfgScale(cmd.getCfg())
                 .seed(cmd.getSeed())

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface TaskMapper {
 
-    List<Task> getByStatus(@Param("status") int status, @Param("n") int n);
+    List<Task> getByStatus(@Param("status") int status, @Param("limit") int limit);
 
     int insertTask(Task task);
 

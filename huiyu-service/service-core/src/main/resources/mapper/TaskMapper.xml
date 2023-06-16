@@ -7,8 +7,8 @@
         <result column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
-        <result column="url" property="url"/>
         <result column="body" property="body"/>
+        <result column="num" property="num"/>
         <result column="status" property="status"/>
         <result column="exec_source" property="execSource"/>
         <result column="create_time" property="createTime"/>
@@ -17,8 +17,8 @@
     </resultMap>
 
     <insert id="insertTask">
-        insert into task (user_id, type, url, body, status, exec_source, create_time, update_time, is_delete)
-        values (#{userId}, #{type}, #{url}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        insert into task (user_id, type, body, num, status, exec_source, create_time, update_time, is_delete)
+        values (#{userId}, #{type}, #{body}, #{num}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
@@ -39,11 +39,11 @@
             <if test="type != null and type != ''">
                 type = #{type},
             </if>
-            <if test="url != null and url != ''">
-                url = #{url},
-            </if>
             <if test="body != null and body != ''">
                 body = #{body},
+            </if>
+            <if test="num != null">
+                num = #{num},
             </if>
             <if test="status != null">
                 status = #{status},

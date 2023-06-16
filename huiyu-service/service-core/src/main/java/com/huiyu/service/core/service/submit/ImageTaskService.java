@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -32,13 +31,7 @@ public class ImageTaskService {
 
 
     public void trySplitTask(Task task) {
-        List<Task> tasks = new ArrayList<>();
-
-        if (judgeSplitTask(task)) {
-            tasks.addAll(splitTask(task));
-        } else {
-            tasks.add(task);
-        }
+        List<Task> tasks = splitTask(task);
 
         Optional<ThreadPoolExecutorDecorator> executorOptional = submitRequestExecutorList.stream()
                 .filter(decorator -> StringUtils.equals(task.getExecSource(), decorator.getSourceName()))
@@ -58,26 +51,19 @@ public class ImageTaskService {
                 TASK_INFO_CONTEXT.remove();
             });
         });
-
-
-    }
-
-
-    // 判断是否需要拆分
-    private boolean judgeSplitTask(Task task) {
-        return task.getCount() > 1;
     }
 
     private List<Task> splitTask(Task task) {
         List<Task> taskList = Lists.newArrayList();
-        if (task.getCount() > 1) {
-            Integer count = task.getCount();
-            task.setCount(1);
-            for (int i = 0; i < count; i++) {
-                Task copyTask = new Task();
-                BeanUtil.copyProperties(task, copyTask);
-                taskList.add(copyTask);
-            }
+        if (task.getNum() == 1) {
+            taskList.add(task);
+            return taskList;
+        }
+        for (int i = 0; i < task.getNum(); i++) {
+            Task copyTask = new Task();
+            BeanUtil.copyProperties(task, copyTask);
+            copyTask.setNum(1);
+            taskList.add(copyTask);
         }
         return taskList;
     }

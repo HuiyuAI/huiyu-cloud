@@ -44,17 +44,12 @@ public class ImageTaskInvoker {
 
     private void generateEnd(Task task) {
         // 结束以后将任务置为完成
-        Long taskId = task.getId();
-        // 数据库任务数据则修改状态
-        if (taskId != null) {
-            Task TaskDO = Task.builder()
-                    .id(taskId)
-                    .status(TaskStatusEnum.EXECUTED)
-                    .updateTime(LocalDateTime.now())
-                    .build();
-            // 根据标识更新数据库状态
-            taskService.update(TaskDO);
-        }
+        Task TaskDO = Task.builder()
+                .id(task.getId())
+                .status(TaskStatusEnum.EXECUTED)
+                .updateTime(LocalDateTime.now())
+                .build();
+        taskService.update(TaskDO);
     }
 
     private void insertTask(Task task) {
@@ -70,6 +65,7 @@ public class ImageTaskInvoker {
         }
         Task task = taskList.get(0);
         task.setStatus(TaskStatusEnum.IN_QUEUE);
+        task.setUpdateTime(LocalDateTime.now());
         taskService.update(task);
         imageTaskService.trySplitTask(task);
     }

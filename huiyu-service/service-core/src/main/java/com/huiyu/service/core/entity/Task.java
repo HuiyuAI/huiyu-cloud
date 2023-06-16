@@ -27,13 +27,13 @@ public class Task implements Serializable {
      */
     private TaskTypeEnum type;
     /**
-     * 请求地址
-     */
-    private String url;
-    /**
-     * 请求体
+     * SD DTO
      */
     private String body;
+    /**
+     * 任务数
+     */
+    private Integer num;
     /**
      * 任务状态
      */
@@ -54,8 +54,4 @@ public class Task implements Serializable {
      * 是否删除1是0否
      */
     private Integer isDelete;
-    /**
-     * 任务数
-     */
-    private Integer count;
 }

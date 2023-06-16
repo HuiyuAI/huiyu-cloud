@@ -1,7 +1,6 @@
 package com.huiyu.service.core.handler;
 
 import com.huiyu.service.core.config.SpringContext;
-import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,19 +24,8 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
         TaskService taskService = SpringContext.getBean(TaskService.class);
         try {
             Task task = TASK_INFO_CONTEXT.get();
-            if (task != null) {
-                log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
-                Long taskId = task.getId();
-                if (taskId != null) {
-                    Task wrapper = Task.builder()
-                            .id(taskId)
-                            .status(TaskStatusEnum.UN_EXECUTED)
-                            .build();
-                    taskService.update(wrapper);
-                    return;
-                }
-                taskService.insertTask(task);
-            }
+            taskService.insertTask(task);
+            log.info("执行拒绝策略: taskId: {}, userId: {}, type: {}, execSource: {}, createTime: {}", task.getId(), task.getUserId(), task.getType().getDictKey(), task.getExecSource(), task.getCreateTime());
         } finally {
             TASK_INFO_CONTEXT.remove();
         }

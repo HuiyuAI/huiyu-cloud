@@ -57,7 +57,6 @@ public abstract class AbstractImageGenerate<T extends Cmd> extends AbstractCmdVa
     public void afterExec() {
     }
 
-    ;
 
     public boolean isSupport(T t) {
         ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();

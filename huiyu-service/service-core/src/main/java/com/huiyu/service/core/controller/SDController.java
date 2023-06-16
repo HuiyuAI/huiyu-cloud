@@ -38,7 +38,7 @@ public class SDController {
     public R<?> txt2img(@RequestBody Txt2ImgCmd cmd) {
         // 1. 校验用户积分
         Long userId = JwtUtils.getId();
-
+        cmd.setUserId(userId);
         // 2. 参数校验(数值范围)，描述词违禁词检测
         boolean validate = SDCmdValidator.validate(cmd);
         if (!validate) {
@@ -46,7 +46,6 @@ public class SDController {
         }
 
         // 3. 提交任务队列
-
         imageGenerates.stream().filter(imageGenerate -> imageGenerate.isSupport(cmd))
                 .forEach(imageGenerate -> imageGenerate.generate(cmd));
 

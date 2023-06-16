@@ -64,6 +64,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         txt2ImgDto.setCfgScale(txt2ImgCmd.getCfg());
         txt2ImgDto.setSeed(txt2ImgCmd.getSeed());
 
+        task.setUserId(txt2ImgCmd.getUserId());
         task.setCount(txt2ImgCmd.getCount());
         task.setId(IdUtils.getUuId());
         task.setBody(JSONUtil.toJsonStr(txt2ImgDto));

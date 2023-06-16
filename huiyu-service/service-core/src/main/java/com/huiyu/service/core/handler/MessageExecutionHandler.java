@@ -23,21 +23,26 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        if (r instanceof Task) {
-            Task task = (Task) r;
-            log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
-            String taskId = task.getId();
-            if (StringUtils.isNotBlank(taskId)) {
-                taskService.update(
-                        Task.builder()
-                                .id(taskId)
-                                .status(TaskStatusEnum.UN_EXECUTED)
-                                .build()
-                );
-                return;
+        ThreadLocal<Task> threadLocal = new ThreadLocal<>();
+        try {
+            Task task = threadLocal.get();
+            if (task != null) {
+                log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
+                String taskId = task.getId();
+                if (StringUtils.isNotBlank(taskId)) {
+                    taskService.update(
+                            Task.builder()
+                                    .id(taskId)
+                                    .status(TaskStatusEnum.UN_EXECUTED)
+                                    .build()
+                    );
+                    return;
+                }
+                task.setStatus(TaskStatusEnum.UN_EXECUTED);
+                taskService.insertTask(task);
             }
-            task.setStatus(TaskStatusEnum.UN_EXECUTED);
-            taskService.insertTask(task);
+        } finally {
+            threadLocal.remove();
         }
     }
 }

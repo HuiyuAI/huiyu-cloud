@@ -45,13 +45,15 @@ public class ImageTaskService {
             log.error("未分配执行源");
             return;
         }
-
+        ThreadLocal<Task> threadLocal = new ThreadLocal<>();
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
+                threadLocal.set(taskItem);
                 CompletableFuture.runAsync(() -> {
                     imageTaskInvokerList.invokerGenerate(taskItem);
-                },executor.getThreadPoolExecutor());
+                }, executor.getThreadPoolExecutor());
+                threadLocal.remove();
             });
         });
 
@@ -67,7 +69,9 @@ public class ImageTaskService {
     private List<Task> splitTask(Task task) {
         List<Task> taskList = Lists.newArrayList();
         if (task.getCount() > 1) {
-            for (int i = 0; i < task.getCount(); i++) {
+            Integer count = task.getCount();
+            task.setCount(1);
+            for (int i = 0; i < count; i++) {
                 Task copyTask = new Task();
                 BeanUtil.copyProperties(task, copyTask);
                 taskList.add(copyTask);

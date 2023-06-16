@@ -1,7 +1,5 @@
 package com.huiyu.service.core.model.cmd;
 
-import com.huiyu.service.core.sd.dto.Dto;
-import com.huiyu.service.core.sd.dto.ExtraDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,9 +28,4 @@ public class ExtraCmd extends Cmd {
      * 2: 8K
      */
     private Integer level;
-
-    @Override
-    public Dto toDto() {
-        return new ExtraDto();
-    }
 }

@@ -49,6 +49,7 @@ public class imageTaskInvoker {
         if (StringUtils.isNotBlank(taskId)) {
             Task TaskDO = Task.builder()
                     .id(taskId)
+                    .userId(task.getUserId())
                     .status(TaskStatusEnum.EXECUTED)
                     .updateTime(LocalDateTime.now())
                     .build();

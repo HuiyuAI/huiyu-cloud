@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="taskMap" type="com.huiyu.service.core.entity.Task">
         <result column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
         <result column="url" property="url"/>
         <result column="body" property="body"/>
         <result column="status" property="status"/>
@@ -16,9 +17,9 @@
 
     <insert id="insertTask">
         insert into t_task
-            (url, body, status, user_id, create_time, update_time, is_delete)
+            (task_id, url, body, status, user_id, create_time, update_time, is_delete)
         values
-            (#{url},#{body},#{status},#{userId},#{createTime},#{updateTime},#{isDelete})
+            (#{taskId},#{url},#{body},#{status},#{userId},#{createTime},#{updateTime},#{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
@@ -33,9 +34,6 @@
     <update id="update">
         update t_task
         <set>
-            <if test="id != null">
-                id = #{id},
-            </if>
             <if test="body != null and body != ''">
                 body = #{body},
             </if>
@@ -52,7 +50,7 @@
                 is_delete = #{isDelete},
             </if>
         </set>
-        where id = #{id}
+        where task_id = #{taskId}
     </update>
 
 </mapper>

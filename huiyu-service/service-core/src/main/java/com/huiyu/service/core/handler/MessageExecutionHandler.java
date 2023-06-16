@@ -1,12 +1,12 @@
 package com.huiyu.service.core.handler;
 
+import com.huiyu.service.core.config.SpringContext;
+import com.huiyu.service.core.config.ThreadLocalConfig;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -18,21 +18,20 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Slf4j
 public class MessageExecutionHandler implements RejectedExecutionHandler {
 
-    @Resource
-    private TaskService taskService;
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-        ThreadLocal<Task> threadLocal = new ThreadLocal<>();
+        TaskService taskService = SpringContext.getBean(TaskService.class);
+        ThreadLocalConfig threadLocalConfig = SpringContext.getBean(ThreadLocalConfig.class);
         try {
-            Task task = threadLocal.get();
+            Task task = (Task) threadLocalConfig.get();
             if (task != null) {
                 log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
-                String taskId = task.getId();
-                if (StringUtils.isNotBlank(taskId)) {
+                Long id = task.getId();
+                if (id != null && id != 0) {
                     taskService.update(
                             Task.builder()
-                                    .id(taskId)
+                                    .taskId(task.getTaskId())
                                     .status(TaskStatusEnum.UN_EXECUTED)
                                     .build()
                     );
@@ -42,7 +41,7 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
                 taskService.insertTask(task);
             }
         } finally {
-            threadLocal.remove();
+            threadLocalConfig.remove();
         }
     }
 }

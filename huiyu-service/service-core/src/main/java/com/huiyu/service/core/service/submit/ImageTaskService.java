@@ -2,6 +2,7 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.google.common.collect.Lists;
+import com.huiyu.service.core.config.ThreadLocalConfig;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,9 @@ public class ImageTaskService {
     @Resource
     private imageTaskInvoker imageTaskInvokerList;
 
+    @Resource
+    private ThreadLocalConfig threadLocalConfig;
+
     public void trySplitTask(Task task){
         List<Task> tasks = new ArrayList<>();
 
@@ -45,15 +49,14 @@ public class ImageTaskService {
             log.error("未分配执行源");
             return;
         }
-        ThreadLocal<Task> threadLocal = new ThreadLocal<>();
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
-                threadLocal.set(taskItem);
+                threadLocalConfig.set(taskItem);
                 CompletableFuture.runAsync(() -> {
                     imageTaskInvokerList.invokerGenerate(taskItem);
                 }, executor.getThreadPoolExecutor());
-                threadLocal.remove();
+                threadLocalConfig.remove();
             });
         });
 

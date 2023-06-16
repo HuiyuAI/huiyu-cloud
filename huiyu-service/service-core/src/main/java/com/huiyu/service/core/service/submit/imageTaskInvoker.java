@@ -44,11 +44,11 @@ public class imageTaskInvoker {
 
     private void generateEnd(Task task) {
         // 结束以后将任务置为完成
-        String taskId = task.getId();
+        String taskId = task.getTaskId();
         // 数据库任务数据则修改状态
         if (StringUtils.isNotBlank(taskId)) {
             Task TaskDO = Task.builder()
-                    .id(taskId)
+                    .taskId(taskId)
                     .userId(task.getUserId())
                     .status(TaskStatusEnum.EXECUTED)
                     .updateTime(LocalDateTime.now())

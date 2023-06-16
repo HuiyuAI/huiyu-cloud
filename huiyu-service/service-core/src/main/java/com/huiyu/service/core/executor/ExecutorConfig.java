@@ -35,8 +35,8 @@ public class ExecutorConfig {
     @Bean(name = "splitTaskExecutor")
     public TaskExecutor splitTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(20);
-        executor.setMaxPoolSize(10);
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(20);
         executor.setQueueCapacity(1000);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         executor.initialize();

@@ -2,7 +2,6 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.google.common.collect.Lists;
-import com.huiyu.service.core.config.TaskThreadLocal;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
+import static com.huiyu.service.core.config.ImageTaskContext.TASK_INFO_CONTEXT;
 
 /**
  * @author wAnG
@@ -29,8 +30,6 @@ public class ImageTaskService {
     @Resource
     private ImageTaskInvoker imageTaskInvokerList;
 
-    @Resource
-    private TaskThreadLocal taskThreadLocal;
 
     public void trySplitTask(Task task) {
         List<Task> tasks = new ArrayList<>();
@@ -52,11 +51,11 @@ public class ImageTaskService {
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
-                taskThreadLocal.set(taskItem);
+                TASK_INFO_CONTEXT.set(taskItem);
                 CompletableFuture.runAsync(() -> {
                     imageTaskInvokerList.invokerGenerate(taskItem);
                 }, executor.getThreadPoolExecutor());
-                taskThreadLocal.remove();
+                TASK_INFO_CONTEXT.remove();
             });
         });
 

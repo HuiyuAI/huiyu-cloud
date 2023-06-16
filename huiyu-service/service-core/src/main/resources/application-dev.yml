@@ -50,3 +50,26 @@ logging:
 huiyu:
   sd:
     callback-token: LGVMAXk38rZmfwo1Qzf6jl7TcdoCqT97
+
+
+management:
+  endpoint:
+    health:
+      show-components: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: { spring.application.name }
+    export:
+      prometheus:
+        enabled: true
+scrape_configs:
+  name: { spring.application.name }
+

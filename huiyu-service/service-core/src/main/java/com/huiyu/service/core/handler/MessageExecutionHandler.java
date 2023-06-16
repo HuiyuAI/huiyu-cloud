@@ -1,7 +1,6 @@
 package com.huiyu.service.core.handler;
 
 import com.huiyu.service.core.config.SpringContext;
-import com.huiyu.service.core.config.TaskThreadLocal;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.TaskService;
@@ -9,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import static com.huiyu.service.core.config.ImageTaskContext.TASK_INFO_CONTEXT;
+
 
 /**
  * @author: 陈瑾
@@ -23,7 +25,7 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         TaskService taskService = SpringContext.getBean(TaskService.class);
         try {
-            Task task = TaskThreadLocal.get();
+            Task task = TASK_INFO_CONTEXT.get();
             if (task != null) {
                 log.info("执行拒绝策略 : user: {}, url: {}, body: {}", task.getUrl(), task.getUrl(), task.getBody());
                 Long id = task.getId();
@@ -38,7 +40,7 @@ public class MessageExecutionHandler implements RejectedExecutionHandler {
                 taskService.insertTask(task);
             }
         } finally {
-            TaskThreadLocal.remove();
+            TASK_INFO_CONTEXT.remove();
         }
     }
 }

@@ -7,13 +7,12 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public enum StateEnum implements BaseEnum<Integer> {
+public enum IntegralSourceRecordEnum implements BaseEnum<String> {
+    REGISTER(0, "register", "注册");
 
-    ENABLE(1, "启用"),
-    DISABLE(0, "禁用");
+    private Integer code;
 
-    private Integer dictKey;
+    private String dictKey;
 
     private String desc;
-
 }

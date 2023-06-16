@@ -1,5 +1,12 @@
 package com.huiyu.service.core.constant;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@ToString
+@AllArgsConstructor
 public enum TaskStatusEnum implements BaseEnum<Integer> {
     UN_EXECUTED(0, "未执行"),
     EXECUTED(1, "已执行"),
@@ -9,27 +16,4 @@ public enum TaskStatusEnum implements BaseEnum<Integer> {
     private Integer dictKey;
 
     private String desc;
-
-    TaskStatusEnum(Integer dictKey, String desc) {
-        this.dictKey = dictKey;
-        this.desc = desc;
-    }
-
-    @Override
-    public Integer getDictKey() {
-        return dictKey;
-    }
-
-    void setDictKey(Integer dictKey) {
-        this.dictKey = dictKey;
-    }
-
-    String getDesc() {
-        return desc;
-    }
-
-    void setDesc(String desc) {
-        this.desc = desc;
-    }
-
 }

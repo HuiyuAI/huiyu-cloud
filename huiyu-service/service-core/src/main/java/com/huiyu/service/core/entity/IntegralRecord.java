@@ -1,7 +1,7 @@
 package com.huiyu.service.core.entity;
 
-import com.huiyu.service.core.constant.IntergralOperationRecoreEnum;
-import com.huiyu.service.core.constant.IntergralSoureceRecoreEnum;
+import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
+import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,11 +39,11 @@ public class IntegralRecord implements Serializable {
     /**
      * 增加为1，减少为0
      */
-    private IntergralOperationRecoreEnum operationType;
+    private IntegralOperationRecordEnum operationType;
     /**
      * 操作来源
      */
-    private IntergralSoureceRecoreEnum operationSource;
+    private IntegralSourceRecordEnum operationSource;
     /**
      * 创建时间
      */

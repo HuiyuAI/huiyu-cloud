@@ -24,7 +24,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     @Resource
     private ImageTaskService imageTaskService;
 
-    // todo 需要把Cmd封装成task
     public void submitToSplit(T t) {
         Task task = convertTask(t);
         CompletableFuture.runAsync(() -> {

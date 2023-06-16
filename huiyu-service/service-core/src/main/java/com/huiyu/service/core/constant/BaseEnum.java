@@ -8,12 +8,12 @@ public interface BaseEnum<T> {
 
     T getDictKey();
 
-    default T getValue(){
+    default T getValue() {
         return this.getDictKey();
     }
 
-    static <T> BaseEnum<T> valueOfEnum(Class<BaseEnum<T>> enumClass, String value){
-        if (Objects.isNull(value)){
+    static <T> BaseEnum<T> valueOfEnum(Class<BaseEnum<T>> enumClass, String value) {
+        if (Objects.isNull(value)) {
             return null;
         }
         BaseEnum<T>[] enums = enumClass.getEnumConstants();

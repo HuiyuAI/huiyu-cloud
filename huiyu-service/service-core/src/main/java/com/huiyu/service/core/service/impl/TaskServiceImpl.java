@@ -16,8 +16,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
     @Override
-    public List<Task> getByStatus(int status, int n) {
-        return taskMapper.getByStatus(status, n);
+    public List<Task> getByStatus(int status, int limit) {
+        return taskMapper.getByStatus(status, limit);
     }
 
     @Override

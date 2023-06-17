@@ -12,4 +12,6 @@ public interface TaskService {
     boolean insertTask(Task task);
 
     boolean update(Task task);
+
+    boolean updateByTaskId(Task task);
 }

@@ -2,6 +2,7 @@ package com.huiyu.service.core.controller;
 
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
+import com.huiyu.service.core.annotation.MethodMonitor;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
@@ -36,6 +37,7 @@ public class SDController {
      * @param cmd Txt2ImgCmd
      * @return 校验成功返回等待消息/校验失败返回错误消息
      */
+    @MethodMonitor
     @PostMapping("/txt2img")
     public R<?> txt2img(@RequestBody Txt2ImgCmd cmd) {
         // 1. 校验用户积分

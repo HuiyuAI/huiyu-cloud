@@ -1,4 +1,4 @@
-package com.huiyu.service.core.handler;
+package com.huiyu.service.core.executor;
 
 import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.constant.TaskStatusEnum;
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import static com.huiyu.service.core.config.ImageTaskContext.TASK_INFO_CONTEXT;
+import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
 
 
 /**
@@ -18,7 +18,7 @@ import static com.huiyu.service.core.config.ImageTaskContext.TASK_INFO_CONTEXT;
  * @Description: 自定义拒绝策略
  **/
 @Slf4j
-public class MessageExecutionHandler implements RejectedExecutionHandler {
+public class MessageExecutionRejectedHandler implements RejectedExecutionHandler {
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {

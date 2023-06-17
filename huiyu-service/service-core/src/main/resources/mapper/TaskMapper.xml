@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="taskMap" type="com.huiyu.service.core.entity.Task">
         <result column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
         <result column="body" property="body"/>
@@ -17,8 +18,10 @@
     </resultMap>
 
     <insert id="insertTask">
-        insert into task (id, user_id, type, body, num, status, exec_source, create_time, update_time, is_delete)
-        values (#{id}, #{userId}, #{type}, #{body}, #{num}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        insert into task (id, task_id, user_id, type, body, num, status, exec_source, create_time, update_time,
+                          is_delete)
+        values (#{id}, #{taskId}, #{userId}, #{type}, #{body}, #{num}, #{status}, #{execSource}, #{createTime},
+                #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
@@ -57,6 +60,36 @@
         </set>
         where is_delete = 0
         and id = #{id}
+    </update>
+
+
+    <update id="updateByTaskId">
+        update task
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="type != null and type != ''">
+                type = #{type},
+            </if>
+            <if test="body != null and body != ''">
+                body = #{body},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="execSource != null and execSource != ''">
+                exec_source = #{execSource},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where is_delete = 0
+        and task_id = #{taskId}
     </update>
 
 </mapper>

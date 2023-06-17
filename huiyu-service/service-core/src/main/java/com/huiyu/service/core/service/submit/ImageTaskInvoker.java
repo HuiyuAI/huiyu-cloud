@@ -1,7 +1,9 @@
 package com.huiyu.service.core.service.submit;
 
 import cn.hutool.json.JSONObject;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.sd.constant.SDAPIConstant;
@@ -17,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wAnG
@@ -48,15 +52,17 @@ public class ImageTaskInvoker {
     private void generateEnd(Task task) {
         // 结束以后将任务置为完成
         Task TaskDO = Task.builder()
-                .id(task.getId())
+                .taskId(task.getTaskId())
                 .status(TaskStatusEnum.EXECUTED)
                 .updateTime(LocalDateTime.now())
                 .build();
-        taskService.update(TaskDO);
+        taskService.updateByTaskId(TaskDO);
     }
 
     private void insertTask(Task task) {
-        // todo 在这里插入执行记录
+        if (Objects.nonNull(task.getId())) {
+            return;
+        }
         boolean result = taskService.insertTask(task);
     }
 
@@ -67,9 +73,11 @@ public class ImageTaskInvoker {
             return;
         }
         Task task = taskList.get(0);
-        task.setStatus(TaskStatusEnum.IN_QUEUE);
-        task.setUpdateTime(LocalDateTime.now());
-        taskService.update(task);
+        Task taskDo = Task.builder()
+                .id(task.getId())
+                .status(TaskStatusEnum.IN_QUEUE)
+                .build();
+        taskService.update(taskDo);
         imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
     }
 
@@ -82,7 +90,9 @@ public class ImageTaskInvoker {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(task.getBody(), headers);
+        Stopwatch stopwatch = Stopwatch.createStarted();
         ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+        Monitor.recordTime("generate_time", stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
         String body = response.getBody();
 
         log.info("response body: {}", body);

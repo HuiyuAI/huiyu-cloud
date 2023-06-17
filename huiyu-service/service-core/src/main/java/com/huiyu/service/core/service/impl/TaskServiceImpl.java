@@ -30,4 +30,9 @@ public class TaskServiceImpl implements TaskService {
     public boolean update(Task task) {
         return taskMapper.update(task) > 0;
     }
+
+    @Override
+    public boolean updateByTaskId(Task task) {
+        return taskMapper.updateByTaskId(task) > 0;
+    }
 }

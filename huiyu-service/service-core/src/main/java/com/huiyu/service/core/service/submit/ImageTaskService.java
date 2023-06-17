@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static com.huiyu.service.core.config.ImageTaskContext.TASK_INFO_CONTEXT;
+import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
 
 /**
  * @author wAnG
@@ -73,7 +73,7 @@ public class ImageTaskService {
             Task copyTask = new Task();
             BeanUtil.copyProperties(task, copyTask);
 
-            copyTask.setId(IdUtils.nextSnowflakeId());
+            copyTask.setTaskId(IdUtils.nextSnowflakeId());
             dto.setResImageUuid(IdUtil.fastUUID());
             copyTask.setBody(JacksonUtils.toJsonStr(dto));
             copyTask.setNum(1);

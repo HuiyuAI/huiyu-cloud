@@ -5,8 +5,10 @@ import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdConverter;
+import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.utils.IdUtils;
+import javafx.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,7 +20,7 @@ import java.time.LocalDateTime;
 @Service
 public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueueService<Txt2ImgCmd> {
     @Override
-    public Task convertTask(Txt2ImgCmd txt2ImgCmd) {
+    public Pair<Task, Dto> convertTask(Txt2ImgCmd txt2ImgCmd) {
         Task task = new Task();
         Txt2ImgDto txt2ImgDto = SDCmdConverter.convert(txt2ImgCmd);
 
@@ -26,13 +28,12 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         task.setId(IdUtils.nextSnowflakeId());
         task.setUserId(txt2ImgCmd.getUserId());
         task.setType(TaskTypeEnum.TXT2IMG);
-        task.setBody(txt2ImgDto);
         task.setStatus(TaskStatusEnum.UN_EXECUTED);
         task.setExecSource("local");
         task.setCreateTime(now);
         task.setUpdateTime(now);
         task.setIsDelete(0);
         task.setNum(txt2ImgCmd.getCount());
-        return task;
+        return new Pair<>(task, txt2ImgDto);
     }
 }

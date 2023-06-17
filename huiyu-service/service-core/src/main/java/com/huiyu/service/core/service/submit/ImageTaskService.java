@@ -1,9 +1,12 @@
 package com.huiyu.service.core.service.submit;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -30,8 +33,8 @@ public class ImageTaskService {
     private ImageTaskInvoker imageTaskInvokerList;
 
 
-    public void trySplitTask(Task task) {
-        List<Task> tasks = splitTask(task);
+    public void trySplitTask(Task task, Dto dto) {
+        List<Task> tasks = splitTask(task, dto);
 
         Optional<ThreadPoolExecutorDecorator> executorOptional = submitRequestExecutorList.stream()
                 .filter(decorator -> StringUtils.equals(task.getExecSource(), decorator.getSourceName()))
@@ -53,15 +56,21 @@ public class ImageTaskService {
         });
     }
 
-    private List<Task> splitTask(Task task) {
+    private List<Task> splitTask(Task task, Dto dto) {
         List<Task> taskList = Lists.newArrayList();
         if (task.getNum() == 1) {
+            JSONUtil.toJsonStr(dto);
+            dto.setImageId(task.getId());
+            task.setBody(JSONUtil.toJsonStr(dto));
             taskList.add(task);
             return taskList;
         }
         for (int i = 0; i < task.getNum(); i++) {
             Task copyTask = new Task();
             BeanUtil.copyProperties(task, copyTask);
+            copyTask.setId(IdUtils.nextSnowflakeId());
+            dto.setImageId(copyTask.getId());
+            task.setBody(JSONUtil.toJsonStr(dto));
             copyTask.setNum(1);
             taskList.add(copyTask);
         }

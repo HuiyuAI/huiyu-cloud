@@ -16,7 +16,4 @@ public class Dto implements Serializable {
      */
     @JsonProperty("res_image_uuid")
     private String resImageUuid;
-
-    @JsonProperty("image_id")
-    private Long imageId;
 }

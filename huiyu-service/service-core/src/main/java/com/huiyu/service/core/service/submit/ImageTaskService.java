@@ -2,8 +2,8 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.sd.dto.Dto;
@@ -64,8 +64,8 @@ public class ImageTaskService {
     private List<Task> splitTask(Task task, Dto dto) {
         List<Task> taskList = Lists.newArrayList();
         if (task.getNum() == 1) {
-            dto.setResImageUuid(IdUtil.fastSimpleUUID());
-            task.setBody(JSONUtil.toJsonStr(dto));
+            dto.setResImageUuid(IdUtil.fastUUID());
+            task.setBody(JacksonUtils.toJsonStr(dto));
             taskList.add(task);
             return taskList;
         }
@@ -74,8 +74,8 @@ public class ImageTaskService {
             BeanUtil.copyProperties(task, copyTask);
 
             copyTask.setId(IdUtils.nextSnowflakeId());
-            dto.setResImageUuid(IdUtil.fastSimpleUUID());
-            copyTask.setBody(JSONUtil.toJsonStr(dto));
+            dto.setResImageUuid(IdUtil.fastUUID());
+            copyTask.setBody(JacksonUtils.toJsonStr(dto));
             copyTask.setNum(1);
             taskList.add(copyTask);
         }

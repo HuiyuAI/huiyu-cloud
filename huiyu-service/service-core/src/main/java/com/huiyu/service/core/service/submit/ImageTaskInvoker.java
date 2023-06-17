@@ -1,13 +1,15 @@
 package com.huiyu.service.core.service.submit;
 
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.sd.constant.SDAPIConstant;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -74,21 +76,27 @@ public class ImageTaskInvoker {
     private void invokerHttp(Task task) {
         // todo 调用api
         String url = getUrl();
-        ResponseEntity<String> response = restTemplate.postForEntity(url, task.getBody(), String.class);
+
+        log.info("request url: {}, body: {}", url, task.getBody());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(task.getBody(), headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
         String body = response.getBody();
+
+        log.info("response body: {}", body);
+
         JSONObject jsonObject = new JSONObject(body);
-        JSONArray imageUuidList = jsonObject.getJSONArray("image_uuid_list");
-        for (Object uuid : imageUuidList) {
-            String imgUrl = "https://huiyucdn.naccl.top/gen/" + uuid + ".jpg";
-            log.info("image url: {}", imgUrl);
-        }
+        String uuid = jsonObject.getJSONObject("data").getStr("image_uuid");
+        String imgUrl = "https://huiyucdn.naccl.top/gen/" + uuid + ".jpg";
+        log.info("image url: {}", imgUrl);
     }
 
     private String getUrl() {
         // todo 多数据源操作后续会放在threadLocal里面
-        return StringUtils.EMPTY;
+        return SDAPIConstant.BASE_URL + SDAPIConstant.TXT2IMG;
     }
-
 
 
 }

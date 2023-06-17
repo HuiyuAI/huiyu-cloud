@@ -7,7 +7,7 @@
         <result column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
-        <result column="body" property="body" typeHandler="com.huiyu.service.core.handler.JsonTypeHandler"/>
+        <result column="body" property="body"/>
         <result column="num" property="num"/>
         <result column="status" property="status"/>
         <result column="exec_source" property="execSource"/>
@@ -18,8 +18,7 @@
 
     <insert id="insertTask">
         insert into task (id, user_id, type, body, num, status, exec_source, create_time, update_time, is_delete)
-        values (#{id}, #{userId}, #{type}, #{body,typeHandler=com.huiyu.service.core.handler.JsonTypeHandler}, #{num},
-                #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        values (#{id}, #{userId}, #{type}, #{body}, #{num}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">

@@ -1,5 +1,6 @@
 package com.huiyu.service.core.sd.callback.controller;
 
+import cn.hutool.json.JSONObject;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
@@ -28,17 +29,21 @@ public class SDServerCallbackController {
     private String token;
 
     /**
-     * 生图后的图片上传成功回调
+     * 图片上传成功回调
      *
      * @return ok
      */
     @PostMapping("/uploadSuccessCallback")
     public R<?> uploadSuccessCallback(@RequestBody UploadSuccessCallbackCmd cmd) {
-        log.info("生图后的图片上传成功回调: {}", JacksonUtils.toJsonStr(cmd));
+        log.info("图片上传成功回调: {}", JacksonUtils.toJsonStr(cmd));
         if (!token.equals(cmd.getToken())) {
             return R.create(ResultCode.FORBIDDEN);
         }
-        String imageUuid = cmd.getImageUuid();
+
+        String resImageUuid = cmd.getResImageUuid();
+        String imgUrl = "https://huiyucdn.naccl.top/gen/" + resImageUuid + ".jpg";
+        log.info("图片上传成功 url: {}", imgUrl);
+
         // TODO 上传回调
         // 1. 更新图片状态
 

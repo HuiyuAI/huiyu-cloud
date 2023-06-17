@@ -91,16 +91,14 @@ public class ImageTaskInvoker {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(task.getBody(), headers);
         Stopwatch stopwatch = Stopwatch.createStarted();
+
+        // TODO 接收对象，更新数据库图片信息
         ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
         Monitor.recordTime("generate_time", stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
         String body = response.getBody();
 
         log.info("response body: {}", body);
 
-        JSONObject jsonObject = new JSONObject(body);
-        String uuid = jsonObject.getJSONObject("data").getStr("image_uuid");
-        String imgUrl = "https://huiyucdn.naccl.top/gen/" + uuid + ".jpg";
-        log.info("image url: {}", imgUrl);
     }
 
     private String getUrl() {

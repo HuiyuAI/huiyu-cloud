@@ -18,7 +18,8 @@
 
     <insert id="insertTask">
         insert into task (id, user_id, type, body, num, status, exec_source, create_time, update_time, is_delete)
-        values (#{id}, #{userId}, #{type}, #{body}, #{num}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        values (#{id}, #{userId}, #{type}, #{body,typeHandler=com.huiyu.service.core.handler.JsonTypeHandler}, #{num},
+                #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">

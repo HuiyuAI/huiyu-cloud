@@ -1,6 +1,5 @@
 package com.huiyu.service.core.executor;
 
-import com.huiyu.service.core.handler.MessageExecutionHandler;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +22,13 @@ public class ExecutorConfig {
     @Bean(name = "submitRequestExecutor")
     public ThreadPoolExecutorDecorator submitRequestExecutor() {
 
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        MonitorThreadPoolTaskExecutor executor = new MonitorThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
         executor.setQueueCapacity(5);
         executor.setThreadNamePrefix("SUBMIT");
-        executor.setRejectedExecutionHandler(new MessageExecutionHandler());
+        executor.setMonitorName("submitRequestExecutor_test1");
+        executor.setRejectedExecutionHandler(new MessageExecutionRejectedHandler());
         executor.setTaskDecorator(runnable -> {
             String traceId = MDC.get(TRACE_ID);
             return () -> {

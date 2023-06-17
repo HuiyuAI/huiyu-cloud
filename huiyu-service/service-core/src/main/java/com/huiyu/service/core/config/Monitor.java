@@ -2,6 +2,7 @@ package com.huiyu.service.core.config;
 
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
 import io.prometheus.client.Summary;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
@@ -26,6 +27,8 @@ public class Monitor implements InitializingBean {
 
     private static final Map<String, Summary> summaryNameMap = new HashMap<>();
 
+    private static final Map<String, Gauge> gaugeNameMap = new HashMap<>();
+
 
     public static void recordOne(String monitorName) {
         Counter monitor = exitsCounter(monitorName);
@@ -45,6 +48,24 @@ public class Monitor implements InitializingBean {
         summary.observe(time);
     }
 
+    public static void recordInc(String monitorName) {
+        Gauge gauge = exitsGauge(monitorName);
+        if (Objects.isNull(gauge)) {
+            gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
+            gaugeNameMap.put(monitorName, gauge);
+        }
+        gauge.inc();
+    }
+
+    public static void recordDec(String monitorName) {
+        Gauge gauge = exitsGauge(monitorName);
+        if (Objects.isNull(gauge)) {
+            gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
+            gaugeNameMap.put(monitorName, gauge);
+        }
+        gauge.dec();
+    }
+
 
     private static Counter exitsCounter(String monitorName) {
         return counterNameMap.get(monitorName);
@@ -52,6 +73,10 @@ public class Monitor implements InitializingBean {
 
     private static Summary exitsSummary(String monitorName) {
         return summaryNameMap.get(monitorName);
+    }
+
+    private static Gauge exitsGauge(String monitorName) {
+        return gaugeNameMap.get(monitorName);
     }
 
 

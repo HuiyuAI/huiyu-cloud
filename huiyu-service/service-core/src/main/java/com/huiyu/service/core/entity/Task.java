@@ -2,6 +2,7 @@ package com.huiyu.service.core.entity;
 
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.constant.TaskTypeEnum;
+import com.huiyu.service.core.sd.dto.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class Task implements Serializable {
     /**
      * SD DTO
      */
-    private String body;
+    private Dto body;
     /**
      * 任务数
      */

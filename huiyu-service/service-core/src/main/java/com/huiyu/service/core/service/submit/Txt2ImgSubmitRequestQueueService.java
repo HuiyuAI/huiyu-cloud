@@ -1,6 +1,5 @@
 package com.huiyu.service.core.service.submit;
 
-import cn.hutool.json.JSONUtil;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Task;
@@ -27,7 +26,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         task.setId(IdUtils.nextSnowflakeId());
         task.setUserId(txt2ImgCmd.getUserId());
         task.setType(TaskTypeEnum.TXT2IMG);
-        task.setBody(JSONUtil.toJsonStr(txt2ImgDto));
+        task.setBody(txt2ImgDto);
         task.setStatus(TaskStatusEnum.UN_EXECUTED);
         task.setExecSource("local");
         task.setCreateTime(now);

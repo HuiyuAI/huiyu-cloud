@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.impl;
 
+import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.mapper.TaskMapper;
 import com.huiyu.service.core.service.TaskService;
@@ -16,7 +17,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskMapper taskMapper;
 
     @Override
-    public List<Task> getByStatus(int status, int limit) {
+    public List<Task> getByStatus(TaskStatusEnum status, int limit) {
         return taskMapper.getByStatus(status, limit);
     }
 

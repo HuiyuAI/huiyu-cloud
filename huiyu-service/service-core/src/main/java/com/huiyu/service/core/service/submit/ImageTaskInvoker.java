@@ -59,7 +59,7 @@ public class ImageTaskInvoker {
 
     private void findTask() {
         // 寻找新的任务放入线程池
-        List<Task> taskList = taskService.getByStatus(0, 1);
+        List<Task> taskList = taskService.getByStatus(TaskStatusEnum.UN_EXECUTED, 1);
         if (taskList.isEmpty()) {
             return;
         }

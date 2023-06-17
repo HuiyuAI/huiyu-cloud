@@ -36,8 +36,12 @@ public class ImageTaskService {
     public void trySplitTask(Task task, Dto dto) {
         List<Task> tasks = splitTask(task, dto);
 
+        execGenerate(tasks, task.getExecSource());
+    }
+
+    public void execGenerate(List<Task> tasks, String taskExecSource) {
         Optional<ThreadPoolExecutorDecorator> executorOptional = submitRequestExecutorList.stream()
-                .filter(decorator -> StringUtils.equals(task.getExecSource(), decorator.getSourceName()))
+                .filter(decorator -> StringUtils.equals(taskExecSource, decorator.getSourceName()))
                 .findFirst();
 
         if (!executorOptional.isPresent()) {

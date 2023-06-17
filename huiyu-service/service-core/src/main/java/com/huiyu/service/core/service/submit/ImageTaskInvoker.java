@@ -2,6 +2,7 @@ package com.huiyu.service.core.service.submit;
 
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import com.google.common.collect.Lists;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.TaskService;
@@ -67,7 +68,7 @@ public class ImageTaskInvoker {
         task.setStatus(TaskStatusEnum.IN_QUEUE);
         task.setUpdateTime(LocalDateTime.now());
         taskService.update(task);
-        imageTaskService.trySplitTask(task);
+        imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
     }
 
     private void invokerHttp(Task task) {

@@ -4,7 +4,7 @@
         <!-- 彩色日志 -->
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>
-                %boldWhite(%d{yyyy-MM-dd HH:mm:ss.SSS}) %white(%X{TraceId}) %blue([%thread]) %magenta(%-5level) %green([%class{30}]) \n>>> %msg %n
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %magenta(%5level) %white(%X{TraceId}) [%20.20thread] %green(%-40.40c{39} [%4L]){cyan} : %msg%n
             </pattern>
         </layout>
     </appender>

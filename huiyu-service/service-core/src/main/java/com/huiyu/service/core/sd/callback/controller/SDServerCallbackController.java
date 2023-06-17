@@ -1,8 +1,8 @@
 package com.huiyu.service.core.sd.callback.controller;
 
-import cn.hutool.json.JSONUtil;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.result.ResultCode;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.sd.callback.cmd.UploadSuccessCallbackCmd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class SDServerCallbackController {
      */
     @PostMapping("/uploadSuccessCallback")
     public R<?> uploadSuccessCallback(@RequestBody UploadSuccessCallbackCmd cmd) {
-        log.info("生图后的图片上传成功回调: {}", JSONUtil.toJsonStr(cmd));
+        log.info("生图后的图片上传成功回调: {}", JacksonUtils.toJsonStr(cmd));
         if (!token.equals(cmd.getToken())) {
             return R.create(ResultCode.FORBIDDEN);
         }

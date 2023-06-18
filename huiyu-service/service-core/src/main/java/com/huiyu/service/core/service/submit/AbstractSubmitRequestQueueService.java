@@ -5,6 +5,7 @@ import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
 import javafx.util.Pair;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,10 +14,13 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.concurrent.CompletableFuture;
 
+import static com.huiyu.service.core.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
+
 /**
  * @author wAnG
  * @Date 2023-06-12  23:30
  */
+@Slf4j
 public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
 
     @Resource
@@ -30,9 +34,8 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         Pair<Task, Dto> taskDtoPair = convertTask(t);
         Task task = taskDtoPair.getKey();
         Dto dto = taskDtoPair.getValue();
-        CompletableFuture.runAsync(() -> {
-            imageTaskService.trySplitTask(task, dto);
-        }, splitTaskExecutor.getThreadPoolExecutor());
+        CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
+                .exceptionally(ExceptionLogHandle);
     }
 
     public abstract Pair<Task, Dto> convertTask(T t);

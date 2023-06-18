@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
+import static com.huiyu.service.core.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
 
 /**
  * @author wAnG
@@ -49,13 +50,13 @@ public class ImageTaskService {
             log.error("未分配执行源");
             return;
         }
+        int i = 1 / 0;
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
                 TASK_INFO_CONTEXT.set(taskItem);
-                CompletableFuture.runAsync(() -> {
-                    imageTaskInvokerList.invokerGenerate(taskItem);
-                }, executor.getThreadPoolExecutor());
+                CompletableFuture.runAsync(() -> imageTaskInvokerList.invokerGenerate(taskItem), executor.getThreadPoolExecutor())
+                        .exceptionally(ExceptionLogHandle);
                 TASK_INFO_CONTEXT.remove();
             });
         });

@@ -116,8 +116,6 @@ public class ImageTaskInvoker {
 
         Pic pic = Pic.builder()
                 .uuid(resImageUuid)
-                // TODO 图片生成状态由回调接口更新，此处先写死
-                .status(PicStatusEnum.GENERATED)
                 .seed(seed)
                 .subseed(subseed)
                 .alwaysonScripts(alwaysonScripts)

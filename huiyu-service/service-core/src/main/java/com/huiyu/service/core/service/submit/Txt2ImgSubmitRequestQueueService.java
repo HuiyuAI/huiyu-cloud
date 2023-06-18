@@ -8,7 +8,7 @@ import com.huiyu.service.core.sd.SDCmdConverter;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.utils.IdUtils;
-import javafx.util.Pair;
+import com.huiyu.service.core.utils.NewPair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Service
 public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueueService<Txt2ImgCmd> {
     @Override
-    public Pair<Task, Dto> convertTask(Txt2ImgCmd txt2ImgCmd) {
+    public NewPair<Task, Dto> convertTask(Txt2ImgCmd txt2ImgCmd) {
         Task task = new Task();
         Txt2ImgDto txt2ImgDto = SDCmdConverter.convert(txt2ImgCmd);
 
@@ -34,6 +34,6 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         task.setUpdateTime(now);
         task.setIsDelete(0);
         task.setNum(txt2ImgCmd.getCount());
-        return new Pair<>(task, txt2ImgDto);
+        return new NewPair<>(task, txt2ImgDto);
     }
 }

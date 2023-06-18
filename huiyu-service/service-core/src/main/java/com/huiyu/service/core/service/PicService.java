@@ -12,5 +12,7 @@ public interface PicService {
 
     boolean insert(Pic pic);
 
-    boolean delete(Pic pic);
+    boolean updateByUuid(Pic pic);
+
+    boolean deleteByUuid(String uuid);
 }

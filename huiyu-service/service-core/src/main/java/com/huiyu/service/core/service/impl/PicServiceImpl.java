@@ -3,16 +3,14 @@ package com.huiyu.service.core.service.impl;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
 import com.huiyu.service.core.service.PicService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class PicServiceImpl implements PicService {
-
-    private static final Integer TRUE = 1;
 
     @Resource
     private PicMapper picMapper;
@@ -37,13 +35,15 @@ public class PicServiceImpl implements PicService {
     }
 
     @Override
-    public boolean delete(Pic pic) {
-        if (pic.getId() == null) {
+    public boolean updateByUuid(Pic pic) {
+        return picMapper.updateByUuid(pic) > 0;
+    }
+
+    @Override
+    public boolean deleteByUuid(String uuid) {
+        if (StringUtils.isEmpty(uuid)) {
             return false;
         }
-        pic.setIsDelete(TRUE);
-        pic.setUpdateTime(LocalDateTime.now());
-        int result = picMapper.update(pic);
-        return result > 0;
+        return picMapper.deleteByUuid(uuid) > 0;
     }
 }

@@ -1,12 +1,14 @@
 package com.huiyu.service.core.service.submit;
 
-import cn.hutool.json.JSONObject;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.Monitor;
+import com.huiyu.service.core.constant.HuiyuConstant;
+import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.model.dto.SDResponse;
 import com.huiyu.service.core.sd.SDTaskConverter;
 import com.huiyu.service.core.sd.constant.SDAPIConstant;
 import com.huiyu.service.core.service.PicService;
@@ -50,21 +52,11 @@ public class ImageTaskInvoker {
 
         insertPic(task);
 
-        invokerHttp(task);
+        SDResponse resp = invokerHttp(task);
 
-        generateEnd(task);
+        generateEnd(task, resp);
 
-        findTask();
-    }
-
-    private void generateEnd(Task task) {
-        // 结束以后将任务置为完成
-        Task TaskDO = Task.builder()
-                .taskId(task.getTaskId())
-                .status(TaskStatusEnum.EXECUTED)
-                .updateTime(LocalDateTime.now())
-                .build();
-        taskService.updateByTaskId(TaskDO);
+        findNextTask();
     }
 
     private void insertTask(Task task) {
@@ -76,10 +68,69 @@ public class ImageTaskInvoker {
 
     private void insertPic(Task task) {
         Pic pic = SDTaskConverter.convert(task);
+        pic.setStatus(PicStatusEnum.GENERATING);
         picService.insert(pic);
     }
 
-    private void findTask() {
+    private SDResponse invokerHttp(Task task) {
+        String url = getUrl();
+        log.info("请求Python端生成图片 url: {}, body: {}", url, task.getBody());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<>(task.getBody(), headers);
+
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        ResponseEntity<SDResponse> response = restTemplate.postForEntity(url, entity, SDResponse.class);
+        Monitor.recordTime("generate_time", stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+
+        SDResponse resp = response.getBody();
+        log.info("Python端生成图片响应结果 response: {}", resp);
+
+        return resp;
+    }
+
+    private void generateEnd(Task task, SDResponse resp) {
+        // 将任务置为完成
+        updateTaskExecuted(task);
+
+        // 更新图片信息
+        updatePic(resp);
+    }
+
+    private void updateTaskExecuted(Task task) {
+        Task TaskDO = Task.builder()
+                .taskId(task.getTaskId())
+                .status(TaskStatusEnum.EXECUTED)
+                .updateTime(LocalDateTime.now())
+                .build();
+        taskService.updateByTaskId(TaskDO);
+    }
+
+    private void updatePic(SDResponse resp) {
+        String resImageUuid = resp.getData().get("res_image_uuid").asText();
+        Long seed = resp.getData().get("info").get("seed").asLong();
+        Long subseed = resp.getData().get("info").get("subseed").asLong();
+        String infotexts = resp.getData().get("info").get("infotexts").get(0).asText();
+        String alwaysonScripts = resp.getData().get("parameters").get("alwayson_scripts").toString();
+
+        Pic pic = Pic.builder()
+                .uuid(resImageUuid)
+                // TODO 图片生成状态由回调接口更新，此处先写死
+                .status(PicStatusEnum.GENERATED)
+                .seed(seed)
+                .subseed(subseed)
+                .alwaysonScripts(alwaysonScripts)
+                .infotexts(infotexts)
+                .updateTime(LocalDateTime.now())
+                .build();
+        picService.updateByUuid(pic);
+
+        String imgUrl = HuiyuConstant.cdnUrlGen + resImageUuid + HuiyuConstant.imageSuffix;
+        log.info("测试图片生成 url: {}", imgUrl);
+    }
+
+    private void findNextTask() {
         // 寻找新的任务放入线程池
         List<Task> taskList = taskService.getByStatus(TaskStatusEnum.UN_EXECUTED, 1);
         if (taskList.isEmpty()) {
@@ -92,31 +143,6 @@ public class ImageTaskInvoker {
                 .build();
         taskService.update(taskDo);
         imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
-    }
-
-    private void invokerHttp(Task task) {
-        // todo 调用api
-        String url = getUrl();
-
-        log.info("request url: {}, body: {}", url, task.getBody());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(task.getBody(), headers);
-        Stopwatch stopwatch = Stopwatch.createStarted();
-
-        // TODO 接收对象，更新数据库图片信息
-        ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
-        Monitor.recordTime("generate_time", stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
-        String body = response.getBody();
-
-        log.info("response body: {}", body);
-
-        JSONObject jsonObject = new JSONObject(body);
-        String uuid = jsonObject.getJSONObject("data").getStr("res_image_uuid");
-        String imgUrl = "https://huiyucdn.naccl.top/gen/" + uuid + ".jpg";
-        log.info("image url: {}", imgUrl);
-
     }
 
     private String getUrl() {

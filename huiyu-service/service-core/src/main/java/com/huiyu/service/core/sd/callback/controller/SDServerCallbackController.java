@@ -4,13 +4,18 @@ import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.constant.HuiyuConstant;
+import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.sd.callback.cmd.UploadSuccessCallbackCmd;
+import com.huiyu.service.core.service.PicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 /**
  * Stable Diffusion服务端回调
@@ -23,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/callback/sd/")
 public class SDServerCallbackController {
+
+    private final PicService picService;
 
     /**
      * 图片上传成功回调
@@ -37,14 +44,19 @@ public class SDServerCallbackController {
         }
 
         String resImageUuid = cmd.getResImageUuid();
-        String imgUrl = "https://huiyucdn.naccl.top/gen/" + resImageUuid + ".jpg";
+        String imgUrl = HuiyuConstant.cdnUrlGen + resImageUuid + HuiyuConstant.imageSuffix;
         log.info("图片上传成功 url: {}", imgUrl);
 
-        // TODO 上传回调
         // 1. 更新图片状态
+        Pic pic = Pic.builder()
+                .uuid(resImageUuid)
+                .status(PicStatusEnum.GENERATED)
+                .updateTime(LocalDateTime.now())
+                .build();
+        picService.updateByUuid(pic);
 
 
-        // 2. 更新用户界面
+        // TODO 2. 更新用户界面
 
 
         return R.ok();

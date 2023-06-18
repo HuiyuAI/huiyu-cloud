@@ -1,5 +1,6 @@
 package com.huiyu.service.core.entity;
 
+import com.huiyu.service.core.constant.PicStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -46,7 +47,7 @@ public class Pic implements Serializable {
     /**
      * 状态 0生成中 1已生成
      */
-    private Integer status;
+    private PicStatusEnum status;
     /**
      * 图片地址
      */
@@ -70,11 +71,11 @@ public class Pic implements Serializable {
     /**
      * 种子
      */
-    private String seed;
+    private Long seed;
     /**
      * 子种子
      */
-    private String subseed;
+    private Long subseed;
     /**
      * 模型编码
      */

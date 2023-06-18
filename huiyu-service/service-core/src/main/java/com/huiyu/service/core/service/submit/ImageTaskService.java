@@ -50,7 +50,7 @@ public class ImageTaskService {
             log.error("未分配执行源");
             return;
         }
-        int i = 1 / 0;
+
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {

@@ -38,14 +38,16 @@
         select *
         from pic
         where is_delete = 0
-          and user_id = #{userId};
+          and status = 1
+          and user_id = #{userId}
     </select>
 
     <select id="getByUuid" resultMap="picMap">
         select *
         from pic
         where is_delete = 0
-          and uuid = #{uuid};
+          and status = 1
+          and uuid = #{uuid}
     </select>
 
     <select id="getParentPicIdById" resultType="java.lang.Long">
@@ -68,53 +70,34 @@
                 #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
-    <update id="update">
+    <update id="updateByUuid">
         update pic
         <set>
-            <if test="id != null">
-                id = #{id},
-            </if>
-            <if test="uuid != null and uuid != ''">
-                uuid = #{uuid},
-            </if>
-            <if test="path != null and path != ''">
-                path = #{path},
-            </if>
-            <if test="modelId != null">
-                model_id = #{modelId},
-            </if>
-            <if test="prompt != null">
-                prompt = #{prompt},
-            </if>
-            <if test="negativePrompt != null">
-                negative_prompt = #{negativePrompt},
-            </if>
-            <if test="width != null">
-                width = #{width},
-            </if>
-            <if test="height != null">
-                height = #{height},
+            <if test="status != null">
+                status = #{status},
             </if>
             <if test="seed != null">
                 seed = #{seed},
             </if>
-            <if test="referencePicId != null">
-                reference_pic_id = #{referencePicId},
+            <if test="subseed != null">
+                subseed = #{subseed},
             </if>
-            <if test="parentPicId != null">
-                parent_pic_id = #{parentPicId},
+            <if test="alwaysonScripts != null and alwaysonScripts != ''">
+                alwayson_scripts = #{alwaysonScripts},
             </if>
-            <if test="userId != null">
-                user_id = #{userId},
+            <if test="infotexts != null and infotexts != ''">
+                infotexts = #{infotexts},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},
             </if>
-            <if test="isDelete != null">
-                is_delete = #{isDelete},
-            </if>
         </set>
-        where id = #{id}
+        where uuid = #{uuid}
     </update>
 
+    <update id="deleteByUuid">
+        update pic
+        set is_delete = 1
+        where uuid = #{uuid}
+    </update>
 </mapper>

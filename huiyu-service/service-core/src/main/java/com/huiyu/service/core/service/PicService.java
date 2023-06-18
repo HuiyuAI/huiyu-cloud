@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface PicService {
 
-    List<Pic> getPicsByUserId(String userId);
+    List<Pic> getPicsByUserId(Long userId);
+
+    Long getParentPicIdById(Long id);
+
+    boolean insert(Pic pic);
 
     boolean delete(Pic pic);
-
-    Long getAncestorById(Long id);
 }

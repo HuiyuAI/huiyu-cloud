@@ -67,7 +67,7 @@ public class SqlCostInterceptor implements Interceptor {
         sql = sql.replace("\n", " ").replaceAll("\\s{1,}", " ");
         log.info("\n" +
                         "==================== MySQLStart ====================\n" +
-                        "totalTime : {}ms) ==> total : [{}]\n" +
+                        "totalTime : {}ms ==> total : [{}]\n" +
                         "SQL : [{}]\n" +
                         "Result : [{}]\n" +
                         "====================  MySQLEnd  ====================",

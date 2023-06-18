@@ -10,9 +10,11 @@ import java.util.List;
 @Mapper
 @Repository
 public interface PicMapper {
-    List<Pic> getByUserId(@Param("userId") String userId);
+    List<Pic> getByUserId(@Param("userId") Long userId);
+
+    Long getParentPicIdById(Long id);
+
+    int insert(Pic pic);
 
     int update(Pic pic);
-
-    Long getAncestorById(Long id);
 }

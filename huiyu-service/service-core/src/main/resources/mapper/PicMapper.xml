@@ -6,17 +6,29 @@
     <resultMap id="picMap" type="com.huiyu.service.core.entity.Pic">
         <result column="id" property="id"/>
         <result column="uuid" property="uuid"/>
-        <result column="name" property="name"/>
-        <result column="path" property="path"/>
+        <result column="user_id" property="userId"/>
         <result column="model_id" property="modelId"/>
+        <result column="parent_pic_id" property="parentPicId"/>
+        <result column="reference_pic_id" property="referencePicId"/>
+        <result column="status" property="status"/>
+        <result column="path" property="path"/>
         <result column="prompt" property="prompt"/>
         <result column="negative_prompt" property="negativePrompt"/>
         <result column="width" property="width"/>
         <result column="height" property="height"/>
         <result column="seed" property="seed"/>
-        <result column="reference_pic_id" property="referencePicId"/>
-        <result column="parent_pic_id" property="parentPicId"/>
-        <result column="user_id" property="userId"/>
+        <result column="subseed" property="subseed"/>
+        <result column="model_code" property="modelCode"/>
+        <result column="vae" property="vae"/>
+        <result column="sampler_name" property="samplerName"/>
+        <result column="steps" property="steps"/>
+        <result column="cfg" property="cfg"/>
+        <result column="enable_hr" property="enableHr"/>
+        <result column="hr_upscaler" property="hrUpscaler"/>
+        <result column="denoising_strength" property="denoisingStrength"/>
+        <result column="hr_scale" property="hrScale"/>
+        <result column="alwayson_scripts" property="alwaysonScripts"/>
+        <result column="infotexts" property="infotexts"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>
@@ -24,20 +36,40 @@
 
     <select id="getByUserId" resultMap="picMap">
         select *
-        from t_pic
+        from pic
         where is_delete = 0
           and user_id = #{userId};
     </select>
 
     <select id="getByUuid" resultMap="picMap">
         select *
-        from t_pic
+        from pic
         where is_delete = 0
           and uuid = #{uuid};
     </select>
 
+    <select id="getParentPicIdById" resultType="java.lang.Long">
+        select parent_pic_id
+        from pic
+        where is_delete = 0
+          and id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into pic (uuid, user_id, model_id, parent_pic_id, reference_pic_id, status, path,
+                         prompt, negative_prompt, width, height, seed, subseed,
+                         model_code, vae, sampler_name, steps, cfg,
+                         enable_hr, hr_upscaler, denoising_strength, hr_scale, alwayson_scripts, infotexts,
+                         create_time, update_time, is_delete)
+        values (#{uuid}, #{userId}, #{modelId}, #{parentPicId}, #{referencePicId}, #{status}, #{path},
+                #{prompt}, #{negativePrompt}, #{width}, #{height}, #{seed}, #{subseed},
+                #{modelCode}, #{vae}, #{samplerName}, #{steps}, #{cfg},
+                #{enableHr}, #{hrUpscaler}, #{denoisingStrength}, #{hrScale}, #{alwaysonScripts}, #{infotexts},
+                #{createTime}, #{updateTime}, #{isDelete})
+    </insert>
+
     <update id="update">
-        update t_pic
+        update pic
         <set>
             <if test="id != null">
                 id = #{id},
@@ -84,55 +116,5 @@
         </set>
         where id = #{id}
     </update>
-
-    <select id="getAll" resultMap="picMap">
-        select *
-        from t_pic
-        where is_delete = 0
-        <if test="id != null">
-            and id = #{id}
-        </if>
-        <if test="uuid != null and uuid != ''">
-            and uuid = #{uuid}
-        </if>
-        <if test="path != null and path != ''">
-            and path = #{path}
-        </if>
-        <if test="modelId != null">
-            and model_id = #{modelId}
-        </if>
-        <if test="prompt != null">
-            and prompt = #{prompt}
-        </if>
-        <if test="negativePrompt != null">
-            and negative_prompt = #{negativePrompt}
-        </if>
-        <if test="width != null">
-            and width = #{width}
-        </if>
-        <if test="height != null">
-            and height = #{height}
-        </if>
-        <if test="seed != null">
-            and seed = #{seed}
-        </if>
-        <if test="referencePicId != null">
-            and reference_pic_id = #{referencePicId}
-        </if>
-        <if test="parentPicId != null">
-            and parent_pic_id = #{parentPicId}
-        </if>
-        <if test="userId != null">
-            and user_id = #{userId}
-        </if>
-    </select>
-
-    <select id="getAncestorById" resultType="java.lang.Long">
-        select parent_pic_id
-        from t_pic
-        where is_delete = 0
-          and id = #{id}
-    </select>
-
 
 </mapper>

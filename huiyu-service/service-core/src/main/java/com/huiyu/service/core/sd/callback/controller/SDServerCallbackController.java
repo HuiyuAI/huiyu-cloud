@@ -1,13 +1,12 @@
 package com.huiyu.service.core.sd.callback.controller;
 
-import cn.hutool.json.JSONObject;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.sd.callback.cmd.UploadSuccessCallbackCmd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/callback/sd/")
 public class SDServerCallbackController {
 
-    @Value("${huiyu.sd.callback-token}")
-    private String token;
-
     /**
      * 图片上传成功回调
      *
@@ -36,7 +32,7 @@ public class SDServerCallbackController {
     @PostMapping("/uploadSuccessCallback")
     public R<?> uploadSuccessCallback(@RequestBody UploadSuccessCallbackCmd cmd) {
         log.info("图片上传成功回调: {}", JacksonUtils.toJsonStr(cmd));
-        if (!token.equals(cmd.getToken())) {
+        if (!HuiyuConstant.callbackToken.equals(cmd.getToken())) {
             return R.create(ResultCode.FORBIDDEN);
         }
 

@@ -5,8 +5,11 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.constant.TaskStatusEnum;
+import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.sd.SDTaskConverter;
 import com.huiyu.service.core.sd.constant.SDAPIConstant;
+import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -39,8 +42,13 @@ public class ImageTaskInvoker {
     @Resource
     private TaskService taskService;
 
+    @Resource
+    private PicService picService;
+
     public void invokerGenerate(Task task) {
         insertTask(task);
+
+        insertPic(task);
 
         invokerHttp(task);
 
@@ -64,6 +72,11 @@ public class ImageTaskInvoker {
             return;
         }
         boolean result = taskService.insertTask(task);
+    }
+
+    private void insertPic(Task task) {
+        Pic pic = SDTaskConverter.convert(task);
+        picService.insert(pic);
     }
 
     private void findTask() {

@@ -18,27 +18,32 @@ public class PicServiceImpl implements PicService {
     private PicMapper picMapper;
 
     @Override
-    public List<Pic> getPicsByUserId(String userId) {
+    public List<Pic> getPicsByUserId(Long userId) {
         return picMapper.getByUserId(userId);
     }
 
     @Override
+    public Long getParentPicIdById(Long id) {
+        Long parentPicId = picMapper.getParentPicIdById(id);
+        if (parentPicId == null || parentPicId == 0 || parentPicId.equals(id)) {
+            return id;
+        }
+        return getParentPicIdById(parentPicId);
+    }
+
+    @Override
+    public boolean insert(Pic pic) {
+        return picMapper.insert(pic) > 0;
+    }
+
+    @Override
     public boolean delete(Pic pic) {
-        if(pic.getId() == null){
+        if (pic.getId() == null) {
             return false;
         }
         pic.setIsDelete(TRUE);
         pic.setUpdateTime(LocalDateTime.now());
         int result = picMapper.update(pic);
         return result > 0;
-    }
-
-    @Override
-    public Long getAncestorById(Long id) {
-        Long ancestorId = picMapper.getAncestorById(id);
-        if (ancestorId == null || ancestorId == 0 || ancestorId.equals(id)) {
-            return id;
-        }
-        return getAncestorById(ancestorId);
     }
 }

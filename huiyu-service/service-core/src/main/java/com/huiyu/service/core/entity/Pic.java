@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -27,17 +28,29 @@ public class Pic implements Serializable {
      */
     private String uuid;
     /**
-     * 图片名称
+     * 用户id
      */
-    private String name;
-    /**
-     * 图片地址
-     */
-    private String path;
+    private Long userId;
     /**
      * 模型id
      */
     private Integer modelId;
+    /**
+     * 源图id
+     */
+    private Long parentPicId;
+    /**
+     * 参考图id
+     */
+    private Long referencePicId;
+    /**
+     * 状态 0生成中 1已生成
+     */
+    private Integer status;
+    /**
+     * 图片地址
+     */
+    private String path;
     /**
      * 正向描述词
      */
@@ -59,17 +72,53 @@ public class Pic implements Serializable {
      */
     private String seed;
     /**
-     * 参考图id
+     * 子种子
      */
-    private Long referencePicId;
+    private String subseed;
     /**
-     * 源图id
+     * 模型编码
      */
-    private Long parentPicId;
+    private String modelCode;
     /**
-     * 用户id
+     * vae
      */
-    private Long userId;
+    private String vae;
+    /**
+     * 采样器
+     */
+    private String samplerName;
+    /**
+     * 采样步数 10-30
+     */
+    private Integer steps;
+    /**
+     * 提示词引导系数 1-30 步进0.5
+     */
+    private BigDecimal cfg;
+    /**
+     * 启用高分辨率修复
+     */
+    private Boolean enableHr;
+    /**
+     * 高清化算法
+     */
+    private String hrUpscaler;
+    /**
+     * 重绘强度 0.00-1.00之间两位小数
+     */
+    private BigDecimal denoisingStrength;
+    /**
+     * 放大倍数 1-4之间两位小数 步进0.05
+     */
+    private BigDecimal hrScale;
+    /**
+     * controlnet参数
+     */
+    private String alwaysonScripts;
+    /**
+     * 通用图片描述文本
+     */
+    private String infotexts;
     /**
      * 创建时间
      */

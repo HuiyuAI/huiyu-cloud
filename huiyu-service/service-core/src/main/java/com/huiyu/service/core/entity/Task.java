@@ -1,5 +1,6 @@
 package com.huiyu.service.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.constant.TaskTypeEnum;
 import lombok.AllArgsConstructor;
@@ -36,10 +37,6 @@ public class Task implements Serializable {
      */
     private String body;
     /**
-     * 任务数
-     */
-    private Integer num;
-    /**
      * 任务状态
      */
     private TaskStatusEnum status;
@@ -59,4 +56,10 @@ public class Task implements Serializable {
      * 是否删除1是0否
      */
     private Integer isDelete;
+
+    /**
+     * 任务数
+     */
+    @JsonIgnore
+    private transient Integer num;
 }

@@ -1,6 +1,5 @@
 package com.huiyu.service.core.handler;
 
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -28,8 +27,12 @@ public class RequestInterceptor implements HandlerInterceptor {
         String IP = request.getLocalAddr();
         String remoteName = request.getServerName();
         long startTime = System.currentTimeMillis();
-        request.getSession().setAttribute("startTime",startTime);
-        log.info("[Request In] ==> IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}]",IP,method,requestURI,remoteName);
+        request.getSession().setAttribute("startTime", startTime);
+        log.info("\n" +
+                        "==================== RequestStart ====================\n" +
+                        "IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}]\n" +
+                        "====================  RequestEnd  ====================",
+                IP, method, requestURI, remoteName);
         return true;
     }
 
@@ -44,8 +47,12 @@ public class RequestInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         String IP = request.getLocalAddr();
         String remoteName = request.getServerName();
-        log.info("[Request Out (totalTime : {}ms)] ==> IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}] | \n " +
-                "status : [{}] | body : [{}]",totalTime,IP,method,requestURI,remoteName,status,body);
+        log.info("\n" +
+                        "==================== ResponseStart ====================\n" +
+                        "totalTime : {}ms ==> IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}] |\n" +
+                        "status : [{}] | body : [{}]\n" +
+                        "====================  ResponseEnd  ====================",
+                totalTime, IP, method, requestURI, remoteName, status, body);
     }
 
 }

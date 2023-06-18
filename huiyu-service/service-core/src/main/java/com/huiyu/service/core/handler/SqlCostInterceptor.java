@@ -60,12 +60,18 @@ public class SqlCostInterceptor implements Interceptor {
         BoundSql boundSql = statementHandler.getBoundSql();
         Object parameterObject = boundSql.getParameterObject();
         String sql = boundSql.getSql();
-        if(parameterObject != null){
+        if (parameterObject != null) {
             sql = getFllSql(boundSql, parameterObject);
         }
         int total = resultList == null ? 0 : resultList.size();
         sql = sql.replace("\n", " ").replaceAll("\\s{1,}", " ");
-        log.info("[MySQL (totalTime : {}ms)] ==> total : [{}]  \n>>> SQL : [{}] \n>>> Result : [{}]",sqlCost,total,sql,resultList);
+        log.info("\n" +
+                        "==================== MySQLStart ====================\n" +
+                        "totalTime : {}ms) ==> total : [{}]\n" +
+                        "SQL : [{}]\n" +
+                        "Result : [{}]\n" +
+                        "====================  MySQLEnd  ====================",
+                sqlCost, total, sql, resultList);
     }
 
     public String getFllSql(BoundSql boundSql, Object parameterObject) {

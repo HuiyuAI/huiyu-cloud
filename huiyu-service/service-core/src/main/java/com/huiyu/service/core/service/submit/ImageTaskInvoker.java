@@ -99,6 +99,11 @@ public class ImageTaskInvoker {
 
         log.info("response body: {}", body);
 
+        JSONObject jsonObject = new JSONObject(body);
+        String uuid = jsonObject.getJSONObject("data").getStr("res_image_uuid");
+        String imgUrl = "https://huiyucdn.naccl.top/gen/" + uuid + ".jpg";
+        log.info("image url: {}", imgUrl);
+
     }
 
     private String getUrl() {

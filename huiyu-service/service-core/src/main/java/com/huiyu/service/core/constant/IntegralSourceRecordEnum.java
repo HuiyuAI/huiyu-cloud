@@ -9,7 +9,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum IntegralSourceRecordEnum implements BaseEnum<String> {
     REGISTER(0, "register", "注册"),
-    GENERATE_PIC(1, "generate_pic", "生成图片");
+    GENERATE_PIC(1, "generate_pic", "生成图片"),
+
+    SING_IN(2, "sine_in", "签到");
 
     private Integer code;
 

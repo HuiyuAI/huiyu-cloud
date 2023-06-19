@@ -28,24 +28,24 @@ public class SignRecordBussinessImpl implements SignRecordBussiness {
             return false;
         }
         // 签到积分奖励
-        return integralRecordBussiness.updateIntegral(userId, 1, IntegralSourceRecordEnum.SING_IN, IntegralOperationRecordEnum.ADD);
+        return integralRecordBussiness.updateIntegral(userId, 1, IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD);
     }
 
     private boolean isSignIn(Long userId) {
         // 判断用户是否已签到
         SignRecord signRecord = signRecordService.getTodayByUserId(userId);
-        if (signRecord != null && signRecord.getStatus() == SignRecordStatusEnum.GENERATED) {
+        if (signRecord != null && signRecord.getStatus() == SignRecordStatusEnum.SIGN_IN) {
             return false;
         }
         if (signRecord == null) {
             signRecord = SignRecord.builder()
                     .signTime(LocalDate.now())
                     .isDelete(0)
-                    .status(SignRecordStatusEnum.GENERATED)
+                    .status(SignRecordStatusEnum.SIGN_IN)
                     .userId(userId).build();
             return signRecordService.insert(signRecord);
         }
-        signRecord.setStatus(SignRecordStatusEnum.GENERATED);
+        signRecord.setStatus(SignRecordStatusEnum.SIGN_IN);
         return signRecordService.updateToday(signRecord);
     }
 }

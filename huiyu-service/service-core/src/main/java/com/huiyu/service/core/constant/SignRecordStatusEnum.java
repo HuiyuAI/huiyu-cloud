@@ -13,9 +13,9 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public enum SignRecordStatusEnum implements BaseEnum<Integer> {
-    GENERATING(0, "未签到"),
+    UN_SIGN_IN(0, "未签到"),
 
-    GENERATED(1, "已签到"),
+    SIGN_IN(1, "已签到"),
     ;
 
     private Integer dictKey;

@@ -133,6 +133,9 @@
             <if test="enabled != null">
                 enabled = #{enabled},
             </if>
+            <if test="integral != null">
+                integral = #{integral},
+            </if>
             <if test="role != null and role != ''">
                 role = #{role},
             </if>
@@ -148,4 +151,12 @@
         where is_delete = 0
           and id = #{id}
     </delete>
+
+    <!--通过主键查询积分-->
+    <select id="getIntegralById" resultType="java.lang.Integer">
+        select integral
+        from user
+        where is_delete = 0
+          and id = #{id}
+    </select>
 </mapper>

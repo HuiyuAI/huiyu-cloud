@@ -19,4 +19,6 @@ public interface PicMapper {
     int updateByUuid(Pic pic);
 
     int deleteByUuid(String uuid);
+
+    Pic getByUuid(String uuid);
 }

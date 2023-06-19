@@ -15,4 +15,6 @@ public interface PicService {
     boolean updateByUuid(Pic pic);
 
     boolean deleteByUuid(String uuid);
+
+    Pic getByUuid(String uuid);
 }

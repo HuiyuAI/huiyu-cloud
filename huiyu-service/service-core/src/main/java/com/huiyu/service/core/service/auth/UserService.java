@@ -64,4 +64,12 @@ public interface UserService {
      * @return 是否成功
      */
     boolean deleteById(Long id);
+
+    /**
+     * 通过主键查询积分
+     *
+     * @param id 主键
+     * @return 积分数
+     */
+    int getIntegralById(Long id);
 }

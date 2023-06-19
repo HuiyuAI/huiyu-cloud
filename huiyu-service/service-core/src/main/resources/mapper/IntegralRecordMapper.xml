@@ -16,17 +16,17 @@
     </resultMap>
 
     <insert id="insertRecord">
-        insert into t_integral_record
+        insert into integral_record
             (record_no, user_id, fraction, operation_type, operation_source)
-            values
-            (#{integralRecord.recordNo},#{integralRecord.userId},#{integralRecord.fraction},#{integralRecord.operationType},#{integralRecord.operationSource})
+        values (#{integralRecord.recordNo}, #{integralRecord.userId}, #{integralRecord.fraction},
+                #{integralRecord.operationType}, #{integralRecord.operationSource})
 
     </insert>
 
 
     <update id="update">
 
-        update t_integral_record
+        update integral_record
         <set>
             <if test="recordNo != null">
                 record_no = #{recordNo},
@@ -52,7 +52,8 @@
 
     <select id="getByUserId" resultMap="baseResult">
         select *
-        from t_integral_record where user_id = #{userId};
+        from integral_record
+        where user_id = #{userId};
     </select>
 
 

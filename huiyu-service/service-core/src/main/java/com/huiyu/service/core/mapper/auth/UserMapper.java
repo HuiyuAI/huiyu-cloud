@@ -2,7 +2,6 @@ package com.huiyu.service.core.mapper.auth;
 
 import com.huiyu.service.api.entity.User;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -79,4 +78,12 @@ public interface UserMapper {
      * @return 影响行数
      */
     int deleteById(Long id);
+
+    /**
+     * 通过主键查询积分
+     *
+     * @param id 主键
+     * @return 积分数
+     */
+    int getIntegralById(Long id);
 }

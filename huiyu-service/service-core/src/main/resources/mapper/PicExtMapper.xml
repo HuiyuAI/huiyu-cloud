@@ -12,14 +12,13 @@
     </resultMap>
 
     <insert id="insertPicExt">
-        insert into t_pic_e
+        insert into pic_e
             (pic_id, views, enable, path)
-        values
-            (#{picExt.picId},#{picExt.views},#{picExt.enable},#{picExt.path})
+        values (#{picExt.picId}, #{picExt.views}, #{picExt.enable}, #{picExt.path})
     </insert>
 
     <update id="update">
-        update t_pic_e
+        update pic_e
         <set>
             <if test="id != null">
                 id = #{id},
@@ -41,10 +40,10 @@
     </update>
 
     <select id="getByPicId" resultMap="picExtMap">
-            select *
-            from t_pic_e
-            where enable = 1
-              and pic_id = #{picId};
+        select *
+        from pic_e
+        where enable = 1
+          and pic_id = #{picId};
     </select>
 
 

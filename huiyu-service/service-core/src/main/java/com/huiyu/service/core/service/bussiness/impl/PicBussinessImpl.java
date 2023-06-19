@@ -1,6 +1,6 @@
-package com.huiyu.service.core.bussiness.impl;
+package com.huiyu.service.core.service.bussiness.impl;
 
-import com.huiyu.service.core.bussiness.PicBussiness;
+import com.huiyu.service.core.service.bussiness.PicBussiness;
 import com.huiyu.service.core.constant.StateEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicExt;
@@ -35,11 +35,12 @@ public class PicBussinessImpl implements PicBussiness {
             return picExtService.update(picExt) > 0;
         } else {
             // 未分享
-            picExt = new PicExt();
-            picExt.setPicId(pic.getId());
-            picExt.setViews(0);
-            picExt.setPath(pic.getPath());
-            picExt.setEnable(state);
+            picExt = PicExt.builder()
+                    .picId(pic.getId())
+                    .views(0)
+                    .path(pic.getPath())
+                    .enable(state)
+                    .build();
             return picExtService.insertPicExt(picExt) > 0;
         }
     }

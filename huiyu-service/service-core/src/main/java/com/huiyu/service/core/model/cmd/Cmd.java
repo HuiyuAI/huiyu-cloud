@@ -9,4 +9,9 @@ import lombok.Data;
 @Data
 public class Cmd {
     private Long userId;
+
+    /**
+     * 积分
+     */
+    private Integer integral;
 }

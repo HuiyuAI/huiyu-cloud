@@ -46,4 +46,9 @@ public class PicServiceImpl implements PicService {
         }
         return picMapper.deleteByUuid(uuid) > 0;
     }
+
+    @Override
+    public Pic getByUuid(String uuid) {
+        return picMapper.getByUuid(uuid);
+    }
 }

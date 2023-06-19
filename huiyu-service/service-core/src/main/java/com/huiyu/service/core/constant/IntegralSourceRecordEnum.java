@@ -8,7 +8,8 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public enum IntegralSourceRecordEnum implements BaseEnum<String> {
-    REGISTER(0, "register", "注册");
+    REGISTER(0, "register", "注册"),
+    GENERATE_PIC(1, "generate_pic", "生成图片");
 
     private Integer code;
 

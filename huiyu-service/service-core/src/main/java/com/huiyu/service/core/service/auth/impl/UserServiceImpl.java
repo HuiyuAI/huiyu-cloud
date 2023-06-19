@@ -109,4 +109,9 @@ public class UserServiceImpl implements UserService {
     public boolean deleteById(Long id) {
         return userMapper.deleteById(id) > 0;
     }
+
+    @Override
+    public int getIntegralById(Long id) {
+        return userMapper.getIntegralById(id);
+    }
 }

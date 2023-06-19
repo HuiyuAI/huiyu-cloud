@@ -4,8 +4,10 @@ import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.annotation.MethodMonitor;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.sd.SDCmdCountIntegral;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
+import com.huiyu.service.core.service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,9 @@ public class SDController {
     @Resource
     private List<AbstractImageGenerate> imageGenerates;
 
+    @Resource
+    private UserService userService;
+
     /**
      * 文生图
      *
@@ -42,19 +47,26 @@ public class SDController {
     public R<?> txt2img(@RequestBody Txt2ImgCmd cmd) {
         // 1. 校验用户积分
         Long userId = JwtUtils.getId();
-        cmd.setUserId(1L);
+        int countIntegral = SDCmdCountIntegral.countByCmd(cmd);
+        int integral = userService.getIntegralById(1L);
+        if (integral < countIntegral) {
+            return R.error("积分不足");
+        }
         // 2. 参数校验(数值范围)，描述词违禁词检测
         boolean validate = SDCmdValidator.validate(cmd);
         if (!validate) {
             return R.error("参数错误");
         }
+        // 3. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
 
-        // 3. 提交任务队列
+        cmd.setIntegral(countIntegral);
+        cmd.setUserId(1L);
+        // 4. 提交任务队列
 
         imageGenerates.stream()
                 .filter(imageGenerate -> imageGenerate.isSupport(cmd))
                 .forEach(imageGenerate -> imageGenerate.generate(cmd));
-        // 4. 处理用户界面
+        // 5. 处理用户界面
 
         return R.ok();
     }

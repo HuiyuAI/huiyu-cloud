@@ -32,8 +32,7 @@
         <nimbus-jose-jwt.version>9.16.1</nimbus-jose-jwt.version>
         <mysql.version>8.0.20</mysql.version>
         <druid-spring-boot.version>1.2.8</druid-spring-boot.version>
-        <mybatis-spring-boot.version>2.1.4</mybatis-spring-boot.version>
-        <pagehelper-spring-boot.version>1.4.1</pagehelper-spring-boot.version>
+        <mybatis-plus-boot.version>3.5.3.1</mybatis-plus-boot.version>
         <lombok.version>1.18.16</lombok.version>
         <hutool-all.version>5.7.16</hutool-all.version>
     </properties>
@@ -94,17 +93,11 @@
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid-spring-boot.version}</version>
             </dependency>
-            <!-- Mybatis -->
+            <!-- mybatis-plus -->
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring-boot.version}</version>
-            </dependency>
-            <!-- pagehelper 分页插件 -->
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper-spring-boot.version}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot.version}</version>
             </dependency>
             <!-- lombok -->
             <dependency>

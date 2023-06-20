@@ -1,7 +1,7 @@
 package com.huiyu.service.core.controller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.service.auth.SysOauthClientService;
 import com.huiyu.service.api.entity.SysOauthClient;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,8 @@ public class SysOauthClientController {
      * @return 查询结果
      */
     @GetMapping("/{pageNum}/{pageSize}")
-    public R<PageInfo<SysOauthClient>> queryByPage(SysOauthClient sysOauthClient, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<SysOauthClient> pageInfo = new PageInfo<>(sysOauthClientService.queryAll(sysOauthClient));
+    public R<IPage<SysOauthClient>> queryByPage(SysOauthClient sysOauthClient, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+        IPage<SysOauthClient> pageInfo = sysOauthClientService.queryPage(new Page<>(pageNum, pageSize), sysOauthClient);
         return R.ok(pageInfo);
     }
 

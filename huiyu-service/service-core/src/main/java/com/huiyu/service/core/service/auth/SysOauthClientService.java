@@ -1,8 +1,8 @@
 package com.huiyu.service.core.service.auth;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.api.entity.SysOauthClient;
-
-import java.util.List;
 
 /**
  * (SysOauthClient)表服务接口
@@ -10,14 +10,15 @@ import java.util.List;
  * @author Naccl
  * @date 2022-03-07
  */
-public interface SysOauthClientService {
+public interface SysOauthClientService extends IService<SysOauthClient> {
     /**
      * 分页查询
      *
+     * @param page           分页对象
      * @param sysOauthClient 筛选条件
      * @return 查询结果
      */
-    List<SysOauthClient> queryAll(SysOauthClient sysOauthClient);
+    IPage<SysOauthClient> queryPage(IPage<SysOauthClient> page, SysOauthClient sysOauthClient);
 
     /**
      * 通过主键查询单条数据

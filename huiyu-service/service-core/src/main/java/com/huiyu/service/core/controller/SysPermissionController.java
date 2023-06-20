@@ -1,7 +1,7 @@
 package com.huiyu.service.core.controller;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.api.entity.SysPermission;
 import com.huiyu.service.core.service.auth.SysPermissionService;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,8 @@ public class SysPermissionController {
      * @return 查询结果
      */
     @GetMapping("/{pageNum}/{pageSize}")
-    public R<PageInfo<SysPermission>> queryByPage(SysPermission sysPermission, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize, "order_id asc");
-        PageInfo<SysPermission> pageInfo = new PageInfo<>(sysPermissionService.queryAll(sysPermission));
+    public R<IPage<SysPermission>> queryByPage(SysPermission sysPermission, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+        IPage<SysPermission> pageInfo = sysPermissionService.queryPage(new Page<>(pageNum, pageSize), sysPermission);
         return R.ok(pageInfo);
     }
 

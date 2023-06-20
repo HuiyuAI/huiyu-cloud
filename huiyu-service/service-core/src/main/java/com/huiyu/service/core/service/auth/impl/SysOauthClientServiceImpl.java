@@ -1,13 +1,14 @@
 package com.huiyu.service.core.service.auth.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.api.entity.SysOauthClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import com.huiyu.service.core.mapper.auth.SysOauthClientMapper;
 import com.huiyu.service.core.service.auth.SysOauthClientService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * (SysOauthClient)表服务实现类
@@ -17,18 +18,19 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Service
-public class SysOauthClientServiceImpl implements SysOauthClientService {
+public class SysOauthClientServiceImpl extends ServiceImpl<SysOauthClientMapper, SysOauthClient> implements SysOauthClientService {
     private final SysOauthClientMapper sysOauthClientMapper;
 
     /**
      * 分页查询
      *
+     * @param page           分页对象
      * @param sysOauthClient 筛选条件
      * @return 查询结果
      */
     @Override
-    public List<SysOauthClient> queryAll(SysOauthClient sysOauthClient) {
-        return sysOauthClientMapper.queryAll(sysOauthClient);
+    public IPage<SysOauthClient> queryPage(IPage<SysOauthClient> page, SysOauthClient sysOauthClient) {
+        return super.page(page, new QueryWrapper<>(sysOauthClient));
     }
 
     /**

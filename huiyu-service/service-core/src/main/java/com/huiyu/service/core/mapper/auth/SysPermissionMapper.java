@@ -1,5 +1,6 @@
 package com.huiyu.service.core.mapper.auth;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.huiyu.service.api.entity.SysPermission;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface SysPermissionMapper {
+public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     /**
      * 查询指定行数据
      *

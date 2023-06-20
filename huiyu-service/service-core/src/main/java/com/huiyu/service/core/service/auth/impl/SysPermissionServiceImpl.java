@@ -3,6 +3,9 @@ package com.huiyu.service.core.service.auth.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.api.entity.SysPermission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,19 +29,20 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class SysPermissionServiceImpl implements SysPermissionService {
+public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
     private final SysPermissionMapper sysPermissionMapper;
     private final RedisTemplate redisTemplate;
 
     /**
      * 分页查询
      *
+     * @param page          分页对象
      * @param sysPermission 筛选条件
      * @return 查询结果
      */
     @Override
-    public List<SysPermission> queryAll(SysPermission sysPermission) {
-        return sysPermissionMapper.queryAll(sysPermission);
+    public IPage<SysPermission> queryPage(IPage<SysPermission> page, SysPermission sysPermission) {
+        return super.page(page, new QueryWrapper<>(sysPermission));
     }
 
     /**
@@ -109,7 +113,7 @@ public class SysPermissionServiceImpl implements SysPermissionService {
     @Override
     public boolean refreshPermRolesRules() {
         redisTemplate.delete(RedisKeyConstant.RESOURCE_ROLES_MAP);
-        List<SysPermission> sysPermissions = queryAll(new SysPermission());
+        List<SysPermission> sysPermissions = sysPermissionMapper.queryAll(new SysPermission());
         if (CollUtil.isNotEmpty(sysPermissions)) {
             // 初始化URL【权限->角色(集合)】规则
             List<SysPermission> urlPermList = sysPermissions.stream()

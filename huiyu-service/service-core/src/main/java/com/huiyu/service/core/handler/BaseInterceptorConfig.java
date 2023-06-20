@@ -1,6 +1,7 @@
 package com.huiyu.service.core.handler;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -17,6 +18,15 @@ public class BaseInterceptorConfig extends WebMvcConfigurationSupport {
 
     @Resource
     private RequestInterceptor requestInterceptor;
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedHeaders("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
+                .maxAge(3600);
+    }
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {

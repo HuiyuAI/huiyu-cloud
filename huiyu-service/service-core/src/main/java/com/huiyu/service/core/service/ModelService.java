@@ -32,5 +32,5 @@ public interface ModelService extends IService<Model> {
     /**
      * 批量删除
      */
-    boolean removeByIds(List<Integer> ids);
+    boolean removeByIds(List<Long> ids);
 }

@@ -46,7 +46,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     }
 
     @Override
-    public boolean removeByIds(List<Integer> ids) {
+    public boolean removeByIds(List<Long> ids) {
         return super.removeByIds(ids);
     }
 

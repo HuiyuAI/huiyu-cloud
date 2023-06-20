@@ -55,7 +55,7 @@ public class ModelController {
      * 批量删除
      */
     @PostMapping("/removeByIds")
-    public R<?> remove(@RequestBody List<Integer> ids) {
+    public R<?> remove(@RequestBody List<Long> ids) {
         return R.ok(modelService.removeByIds(ids));
     }
 }

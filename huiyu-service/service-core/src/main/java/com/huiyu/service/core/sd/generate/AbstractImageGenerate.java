@@ -1,5 +1,6 @@
 package com.huiyu.service.core.sd.generate;
 
+import com.huiyu.service.core.config.executor.ThreadTransactionManager;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.model.cmd.Cmd;
@@ -40,12 +41,14 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     public void preExec(T t) {
-        boolean flag = integralRecordBussiness.updateIntegral(
-                1L,
-                t.getIntegral(),
-                IntegralSourceRecordEnum.GENERATE_PIC,
-                IntegralOperationRecordEnum.REDUCE
-        );
+        boolean startResult = ThreadTransactionManager.startTransaction();
+        if (startResult) {
+            try {
+                boolean insertResult = changeUserIntegral(t);
+            } catch (Exception e) {
+                ThreadTransactionManager.transactionRollback.apply(e);
+            }
+        }
     }
 
     public void afterExec() {
@@ -57,5 +60,10 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
         String typeName = actualTypeArgument.getTypeName();
         String name = t.getClass().getName();
         return StringUtils.equals(typeName, name);
+    }
+
+    private boolean changeUserIntegral(T t) {
+        return integralRecordBussiness.updateIntegral(10001L, t.getIntegral(),
+                IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE);
     }
 }

@@ -1,4 +1,4 @@
-package com.huiyu.service.core.executor;
+package com.huiyu.service.core.config.executor;
 
 import com.huiyu.service.core.config.Monitor;
 

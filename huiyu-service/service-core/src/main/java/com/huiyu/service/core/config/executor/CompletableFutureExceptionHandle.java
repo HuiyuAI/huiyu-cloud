@@ -1,4 +1,4 @@
-package com.huiyu.service.core.executor;
+package com.huiyu.service.core.config.executor;
 
 import lombok.extern.slf4j.Slf4j;
 

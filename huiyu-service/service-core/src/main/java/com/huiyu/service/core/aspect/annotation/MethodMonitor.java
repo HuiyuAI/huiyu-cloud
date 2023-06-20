@@ -1,4 +1,4 @@
-package com.huiyu.service.core.annotation;
+package com.huiyu.service.core.aspect.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

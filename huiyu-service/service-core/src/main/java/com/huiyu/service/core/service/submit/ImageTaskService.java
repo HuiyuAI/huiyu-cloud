@@ -4,9 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import com.google.common.collect.Lists;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.sd.SDTaskConverter;
 import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.service.PicService;
+import com.huiyu.service.core.service.TaskService;
 import com.huiyu.service.core.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -14,11 +19,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
-import static com.huiyu.service.core.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
+import static com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
 
 /**
  * @author wAnG
@@ -33,6 +39,12 @@ public class ImageTaskService {
 
     @Resource
     private ImageTaskInvoker imageTaskInvokerList;
+
+    @Resource
+    private TaskService taskService;
+
+    @Resource
+    private PicService picService;
 
 
     public void trySplitTask(Task task, Dto dto) {
@@ -54,12 +66,21 @@ public class ImageTaskService {
         // todo 缺少多级队列
         executorOptional.ifPresent(executor -> {
             tasks.forEach(taskItem -> {
+                preInvoker(taskItem);
                 TASK_INFO_CONTEXT.set(taskItem);
                 CompletableFuture.runAsync(() -> imageTaskInvokerList.invokerGenerate(taskItem), executor.getThreadPoolExecutor())
                         .exceptionally(ExceptionLogHandle);
                 TASK_INFO_CONTEXT.remove();
             });
         });
+    }
+
+    private void preInvoker(Task task) {
+
+        insertTask(task);
+
+        insertPic(task);
+
     }
 
     private List<Task> splitTask(Task task, Dto dto) {
@@ -81,6 +102,22 @@ public class ImageTaskService {
             taskList.add(copyTask);
         }
         return taskList;
+    }
+
+    private void insertTask(Task task) {
+        if (Objects.nonNull(task.getId())) {
+            return;
+        }
+        boolean result = taskService.insertTask(task);
+    }
+
+    private void insertPic(Task task) {
+        Pic pic = SDTaskConverter.convert(task);
+        if (picService.getByUuid(pic.getUuid()) != null) {
+            return;
+        }
+        pic.setStatus(PicStatusEnum.GENERATING);
+        picService.insert(pic);
     }
 
 }

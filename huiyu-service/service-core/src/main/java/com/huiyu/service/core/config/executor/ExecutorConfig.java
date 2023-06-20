@@ -1,4 +1,4 @@
-package com.huiyu.service.core.executor;
+package com.huiyu.service.core.config.executor;
 
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,8 @@
 package com.huiyu.service.core.service.submit;
 
+import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.config.executor.ThreadTransactionManager;
 import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.utils.NewPair;
@@ -13,8 +14,6 @@ import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.concurrent.CompletableFuture;
-
-import static com.huiyu.service.core.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
 
 /**
  * @author wAnG
@@ -35,7 +34,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         Task task = taskDtoPair.getKey();
         Dto dto = taskDtoPair.getValue();
         CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
-                .exceptionally(ExceptionLogHandle);
+                .handle(ThreadTransactionManager.transactionCommit);
     }
 
     public abstract NewPair<Task, Dto> convertTask(T t);

@@ -2,7 +2,7 @@ package com.huiyu.service.core.controller;
 
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
-import com.huiyu.service.core.annotation.MethodMonitor;
+import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdCountIntegral;
 import com.huiyu.service.core.sd.SDCmdValidator;

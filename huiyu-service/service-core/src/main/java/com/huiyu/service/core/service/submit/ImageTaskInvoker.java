@@ -4,12 +4,10 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.constant.HuiyuConstant;
-import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.dto.SDResponse;
-import com.huiyu.service.core.sd.SDTaskConverter;
 import com.huiyu.service.core.sd.constant.SDAPIConstant;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
@@ -24,7 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,9 +45,7 @@ public class ImageTaskInvoker {
     private PicService picService;
 
     public void invokerGenerate(Task task) {
-        insertTask(task);
 
-        insertPic(task);
 
         SDResponse resp = invokerHttp(task);
 
@@ -59,21 +54,7 @@ public class ImageTaskInvoker {
         findNextTask();
     }
 
-    private void insertTask(Task task) {
-        if (Objects.nonNull(task.getId())) {
-            return;
-        }
-        boolean result = taskService.insertTask(task);
-    }
 
-    private void insertPic(Task task) {
-        Pic pic = SDTaskConverter.convert(task);
-        if (picService.getByUuid(pic.getUuid()) != null) {
-            return;
-        }
-        pic.setStatus(PicStatusEnum.GENERATING);
-        picService.insert(pic);
-    }
 
     private SDResponse invokerHttp(Task task) {
         String url = getUrl();

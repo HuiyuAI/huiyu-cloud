@@ -24,7 +24,7 @@ public class MethodMonitorAspect {
     private static final String COUNT_SUFFIX = "_Count";
 
 
-    @Around("@annotation(com.huiyu.service.core.annotation.MethodMonitor)")
+    @Around("@annotation(com.huiyu.service.core.aspect.annotation.MethodMonitor)")
     public Object methodInfo(ProceedingJoinPoint pjp) throws Throwable {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
         String methodName = method.getName();

@@ -37,7 +37,7 @@ spring:
     password: 123asdASD
     database: 0
 
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     default-enum-type-handler: com.huiyu.service.core.handler.EnumTypeHandle

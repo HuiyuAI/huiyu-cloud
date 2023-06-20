@@ -1,13 +1,10 @@
 package com.huiyu.service.core.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.common.core.result.R;
-import com.huiyu.service.core.entity.Model;
-import com.huiyu.service.core.model.query.ModelQuery;
+import com.huiyu.service.core.model.dto.ModelDto;
 import com.huiyu.service.core.model.vo.ModelVo;
 import com.huiyu.service.core.service.ModelService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,34 +27,35 @@ public class ModelController {
     private final ModelService modelService;
 
     /**
-     * 分页
+     * 查全部
      */
-    @GetMapping("/{pageNum}/{pageSize}")
-    public R<IPage<ModelVo>> queryByPage(ModelQuery modelQuery, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
-        return R.ok();
+    @GetMapping("/list")
+    public R<List<ModelVo>> queryAll() {
+        List<ModelVo> modelVoList = modelService.queryAll();
+        return R.ok(modelVoList);
     }
 
     /**
      * 新增
      */
     @PostMapping("/save")
-    public R<ModelVo> save(@RequestBody Model model) {
-        return R.ok();
+    public R<?> save(@RequestBody ModelDto dto) {
+        return R.status(modelService.save(dto));
     }
 
     /**
-     * 修改
+     * 批量修改
      */
-    @PostMapping("/update")
-    public R<?> update(@RequestBody Model model) {
-        return R.ok();
+    @PostMapping("/updateBatchById")
+    public R<?> update(@RequestBody List<ModelDto> dtoList) {
+        return R.ok(modelService.updateBatchById(dtoList));
     }
 
     /**
-     * 删除
+     * 批量删除
      */
-    @PostMapping("/remove")
+    @PostMapping("/removeByIds")
     public R<?> remove(@RequestBody List<Integer> ids) {
-        return R.ok();
+        return R.ok(modelService.removeByIds(ids));
     }
 }

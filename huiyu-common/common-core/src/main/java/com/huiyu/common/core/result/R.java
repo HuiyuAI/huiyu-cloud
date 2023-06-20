@@ -50,6 +50,10 @@ public class R<T> implements Serializable {
         return new R(ResultCode.FAILED.getCode(), msg, null);
     }
 
+    public static <T> R<T> status(boolean flag) {
+        return flag ? R.ok() : R.error();
+    }
+
     public boolean isSuccess() {
         return ResultCode.SUCCESS.getCode().equals(this.getCode());
     }

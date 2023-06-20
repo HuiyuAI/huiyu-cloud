@@ -68,6 +68,9 @@ public class ImageTaskInvoker {
 
     private void insertPic(Task task) {
         Pic pic = SDTaskConverter.convert(task);
+        if (picService.getByUuid(pic.getUuid()) != null) {
+            return;
+        }
         pic.setStatus(PicStatusEnum.GENERATING);
         picService.insert(pic);
     }

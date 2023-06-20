@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.ModelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="modelResultMap" type="com.huiyu.service.core.entity.Model">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="category" property="category"/>
+        <result column="description" property="description"/>
+        <result column="cover_url" property="coverUrl"/>
+        <result column="code" property="code"/>
+        <result column="vae" property="vae"/>
+        <result column="sampler" property="sampler"/>
+        <result column="hr_upscaler" property="hrUpscaler"/>
+        <result column="lora" property="lora"/>
+        <result column="priority" property="priority"/>
+        <result column="enabled" property="enabled"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
+    </resultMap>
+
+</mapper>

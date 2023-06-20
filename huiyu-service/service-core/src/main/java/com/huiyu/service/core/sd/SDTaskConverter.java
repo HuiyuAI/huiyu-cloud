@@ -51,6 +51,7 @@ public class SDTaskConverter {
         return Pic.builder()
                 .uuid(dto.getResImageUuid())
                 .userId(task.getUserId())
+                .taskId(task.getTaskId())
                 // TODO cmd中的模型id怎么获取
                 .modelId(1)
                 .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)

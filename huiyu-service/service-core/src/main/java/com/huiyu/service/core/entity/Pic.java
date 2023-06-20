@@ -33,6 +33,10 @@ public class Pic implements Serializable {
      */
     private Long userId;
     /**
+     * 任务id
+     */
+    private Long taskId;
+    /**
      * 模型id
      */
     private Integer modelId;

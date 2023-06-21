@@ -2,6 +2,7 @@ package com.huiyu.common.web.handler;
 
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.huiyu.common.core.result.R;
@@ -46,6 +47,15 @@ public class ControllerExceptionHandler {
     public <T> R<T> processException(IllegalArgumentException e) {
         log.warn("断言异常: {}", e.getMessage());
         return R.error(e.getMessage());
+    }
+
+    /**
+     * 捕获参数校验异常
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public <T> R<T> processException(MethodArgumentNotValidException e) {
+        log.warn("参数校验异常: {}", e.getMessage());
+        return R.error(e.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     /**

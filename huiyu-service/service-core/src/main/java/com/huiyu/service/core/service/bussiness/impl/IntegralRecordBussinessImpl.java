@@ -54,7 +54,7 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
         // 记录积分表
         IntegralRecord integralRecord = IntegralRecord.builder()
                 .userId(String.valueOf(userId))
-                .recordNo("")
+                .recordNo("1")
                 .fraction(integral)
                 .operationType(operation)
                 .operationSource(source)

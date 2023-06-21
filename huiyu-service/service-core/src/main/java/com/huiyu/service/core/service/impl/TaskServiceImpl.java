@@ -35,4 +35,9 @@ public class TaskServiceImpl implements TaskService {
     public boolean updateByTaskId(Task task) {
         return taskMapper.updateByTaskId(task) > 0;
     }
+
+    @Override
+    public Task getByIdNotStatus(Long taskId) {
+        return taskMapper.getByIdNotStatus(taskId);
+    }
 }

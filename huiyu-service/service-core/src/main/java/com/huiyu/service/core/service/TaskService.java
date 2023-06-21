@@ -14,4 +14,6 @@ public interface TaskService {
     boolean update(Task task);
 
     boolean updateByTaskId(Task task);
+
+    Task getByIdNotStatus(Long taskId);
 }

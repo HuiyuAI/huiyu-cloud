@@ -41,8 +41,8 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     public void preExec(T t) {
-        boolean startResult = ThreadTransactionManager.startTransaction();
-        if (startResult) {
+//        boolean startResult = ThreadTransactionManager.startTransaction();
+        if (true) {
             try {
                 boolean insertResult = changeUserIntegral(t);
             } catch (Exception e) {

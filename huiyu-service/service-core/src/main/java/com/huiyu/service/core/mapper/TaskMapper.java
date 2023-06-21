@@ -19,4 +19,6 @@ public interface TaskMapper {
     int update(Task task);
 
     int updateByTaskId(Task task);
+
+    Task getByIdNotStatus(Long taskId);
 }

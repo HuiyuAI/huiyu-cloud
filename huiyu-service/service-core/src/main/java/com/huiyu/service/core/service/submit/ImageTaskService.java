@@ -4,10 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import com.google.common.collect.Lists;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.sd.SDTaskConverter;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.service.PicService;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -105,7 +104,7 @@ public class ImageTaskService {
     }
 
     private void insertTask(Task task) {
-        if (Objects.nonNull(task.getId())) {
+        if (taskService.getByIdNotStatus(task.getTaskId()) != null) {
             return;
         }
         boolean result = taskService.insertTask(task);

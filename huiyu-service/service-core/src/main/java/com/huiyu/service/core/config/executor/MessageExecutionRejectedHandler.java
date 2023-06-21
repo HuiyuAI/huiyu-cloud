@@ -25,11 +25,11 @@ public class MessageExecutionRejectedHandler implements RejectedExecutionHandler
         TaskService taskService = SpringContext.getBean(TaskService.class);
         try {
             Task task = TASK_INFO_CONTEXT.get();
-            Long taskId = task.getId();
-            log.info("执行拒绝策略: taskId: {}, userId: {}, type: {}, execSource: {}, createTime: {}", task.getId(), task.getUserId(), task.getType().getDictKey(), task.getExecSource(), task.getCreateTime());
-            if (taskId != null) {
+            Long taskId = task.getTaskId();
+            log.info("执行拒绝策略: taskId: {}, userId: {}, type: {}, execSource: {}, createTime: {}", task.getTaskId(), task.getUserId(), task.getType().getDictKey(), task.getExecSource(), task.getCreateTime());
+            if (taskService.getByIdNotStatus(taskId) != null) {
                 Task wrapper = Task.builder()
-                        .id(taskId)
+                        .taskId(taskId)
                         .status(TaskStatusEnum.UN_EXECUTED)
                         .build();
                 taskService.update(wrapper);

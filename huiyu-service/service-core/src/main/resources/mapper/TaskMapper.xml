@@ -4,7 +4,6 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="taskMap" type="com.huiyu.service.core.entity.Task">
-        <result column="id" property="id"/>
         <result column="task_id" property="taskId"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
@@ -17,8 +16,8 @@
     </resultMap>
 
     <insert id="insertTask">
-        insert into task (id, task_id, user_id, type, body, status, exec_source, create_time, update_time, is_delete)
-        values (#{id}, #{taskId}, #{userId}, #{type}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        insert into task (task_id, user_id, type, body, status, exec_source, create_time, update_time, is_delete)
+        values (#{taskId}, #{userId}, #{type}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
@@ -28,6 +27,13 @@
           and status = #{status}
         ORDER BY create_time asc
             limit #{limit}
+    </select>
+
+    <select id="getByIdNotStatus" resultMap="taskMap">
+        select *
+        from task
+        where is_delete = 0
+        and task_id = #{taskId}
     </select>
 
     <update id="update">
@@ -53,7 +59,7 @@
             </if>
         </set>
         where is_delete = 0
-        and id = #{id}
+        and task_id = #{taskId}
     </update>
 
 

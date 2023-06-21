@@ -1,7 +1,6 @@
 package com.huiyu.service.core.service.submit;
 
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
-import com.huiyu.service.core.config.executor.ThreadTransactionManager;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
@@ -33,8 +32,8 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         NewPair<Task, Dto> taskDtoPair = convertTask(t);
         Task task = taskDtoPair.getKey();
         Dto dto = taskDtoPair.getValue();
-        CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
-                .handle(ThreadTransactionManager.transactionCommit);
+        CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor());
+//                .handle(ThreadTransactionManager.transactionCommit);
     }
 
     public abstract NewPair<Task, Dto> convertTask(T t);

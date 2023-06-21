@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * (User)表服务实现类
@@ -73,7 +72,6 @@ public class UserServiceImpl implements UserService {
      * @param user 实例对象
      * @return 实例对象
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public User insert(User user) {
         if (StrUtil.isNotBlank(user.getPassword())) {
@@ -89,7 +87,6 @@ public class UserServiceImpl implements UserService {
      * @param user 实例对象
      * @return 实例对象
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean update(User user) {
         if (StrUtil.isNotBlank(user.getPassword())) {
@@ -104,7 +101,6 @@ public class UserServiceImpl implements UserService {
      * @param id 主键
      * @return 是否成功
      */
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean deleteById(Long id) {
         return userMapper.deleteById(id) > 0;

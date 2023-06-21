@@ -4,6 +4,7 @@ import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Summary;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import java.util.Objects;
  */
 @Component
 @DependsOn("springContext")
+@Slf4j
 public class Monitor implements InitializingBean {
 
     private static CollectorRegistry collectorRegistry;
@@ -31,39 +33,55 @@ public class Monitor implements InitializingBean {
 
 
     public static void recordOne(String monitorName) {
-        Counter monitor = exitsCounter(monitorName);
-        if (Objects.isNull(monitor)) {
-            monitor = Counter.build().name(monitorName).help(monitorName).register(collectorRegistry);
-            counterNameMap.put(monitorName, monitor);
+        try {
+            Counter monitor = exitsCounter(monitorName);
+            if (Objects.isNull(monitor)) {
+                monitor = Counter.build().name(monitorName).help(monitorName).register(collectorRegistry);
+                counterNameMap.put(monitorName, monitor);
+            }
+            monitor.inc();
+        } catch (Exception e) {
+            log.error("监控异常", e);
         }
-        monitor.inc();
     }
 
     public static void recordTime(String monitorName, long time) {
-        Summary summary = exitsSummary(monitorName);
-        if (Objects.isNull(summary)) {
-            summary = Summary.build().name(monitorName).help(monitorName).register(collectorRegistry);
-            summaryNameMap.put(monitorName, summary);
+        try {
+            Summary summary = exitsSummary(monitorName);
+            if (Objects.isNull(summary)) {
+                summary = Summary.build().name(monitorName).help(monitorName).register(collectorRegistry);
+                summaryNameMap.put(monitorName, summary);
+            }
+            summary.observe(time);
+        } catch (Exception e) {
+            log.error("监控异常", e);
         }
-        summary.observe(time);
     }
 
     public static void recordInc(String monitorName) {
-        Gauge gauge = exitsGauge(monitorName);
-        if (Objects.isNull(gauge)) {
-            gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
-            gaugeNameMap.put(monitorName, gauge);
+        try {
+            Gauge gauge = exitsGauge(monitorName);
+            if (Objects.isNull(gauge)) {
+                gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
+                gaugeNameMap.put(monitorName, gauge);
+            }
+            gauge.inc();
+        } catch (Exception e) {
+            log.error("监控异常", e);
         }
-        gauge.inc();
     }
 
     public static void recordDec(String monitorName) {
-        Gauge gauge = exitsGauge(monitorName);
-        if (Objects.isNull(gauge)) {
-            gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
-            gaugeNameMap.put(monitorName, gauge);
+        try {
+            Gauge gauge = exitsGauge(monitorName);
+            if (Objects.isNull(gauge)) {
+                gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
+                gaugeNameMap.put(monitorName, gauge);
+            }
+            gauge.dec();
+        } catch (Exception e) {
+            log.error("监控异常", e);
         }
-        gauge.dec();
     }
 
 

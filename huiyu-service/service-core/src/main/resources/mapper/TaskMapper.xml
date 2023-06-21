@@ -59,7 +59,7 @@
             </if>
         </set>
         where is_delete = 0
-        and task_id = #{taskId}
+        and id = #{id}
     </update>
 
 </mapper>

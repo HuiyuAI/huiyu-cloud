@@ -24,7 +24,7 @@ public class SDCmdCountIntegral {
         if ("ROLE_ROOT".equals(role)) {
             integral *= 0;
         }
-        return -1;
+        return integral;
     }
 
 }

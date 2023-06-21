@@ -8,6 +8,7 @@ import com.huiyu.service.core.sd.SDCmdCountIntegral;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
 import com.huiyu.service.core.service.auth.UserService;
+import com.huiyu.service.core.utils.NewPair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -44,7 +46,7 @@ public class SDController {
      */
     @MethodMonitor
     @PostMapping("/txt2img")
-    public R<?> txt2img(@RequestBody Txt2ImgCmd cmd) {
+    public R<?> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
         // 1. 校验用户积分
         Long userId = JwtUtils.getId();
         int countIntegral = SDCmdCountIntegral.countByCmd(cmd);
@@ -53,9 +55,9 @@ public class SDController {
             return R.error("积分不足");
         }
         // 2. 参数校验(数值范围)，描述词违禁词检测
-        boolean validate = SDCmdValidator.validate(cmd);
-        if (!validate) {
-            return R.error("参数错误");
+        NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
+        if (!validate.getKey()) {
+            return R.error(validate.getValue());
         }
         // 3. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
 

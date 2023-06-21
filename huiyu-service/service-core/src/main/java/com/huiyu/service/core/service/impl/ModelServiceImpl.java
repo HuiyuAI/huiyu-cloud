@@ -5,7 +5,6 @@ import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.mapper.ModelMapper;
 import com.huiyu.service.core.convert.ModelConverter;
 import com.huiyu.service.core.model.dto.ModelDto;
-import com.huiyu.service.core.model.vo.ModelVo;
 import com.huiyu.service.core.service.ModelService;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +21,18 @@ import java.util.List;
 public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements ModelService {
 
     @Override
-    public List<ModelVo> queryAll() {
-        List<Model> list = super.list();
-        return ModelConverter.INSTANCE.toVOList(list);
+    public List<Model> queryAll() {
+        return super.lambdaQuery()
+                .eq(Model::getEnabled, 1)
+                .list();
+    }
+
+    @Override
+    public Model getById(Long id) {
+        return super.lambdaQuery()
+                .eq(Model::getId, id)
+                .eq(Model::getEnabled, 1)
+                .one();
     }
 
     @Override

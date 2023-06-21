@@ -32,6 +32,10 @@ public class NewPair<K, V> implements Serializable {
         this.value = value;
     }
 
+    public static NewPair of(Object key, Object value) {
+        return new NewPair(key, value);
+    }
+
 
     @Override
     public String toString() {

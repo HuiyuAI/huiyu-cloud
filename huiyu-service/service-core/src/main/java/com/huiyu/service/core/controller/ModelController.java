@@ -1,6 +1,8 @@
 package com.huiyu.service.core.controller;
 
 import com.huiyu.common.core.result.R;
+import com.huiyu.service.core.convert.ModelConverter;
+import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.model.dto.ModelDto;
 import com.huiyu.service.core.model.vo.ModelVo;
 import com.huiyu.service.core.service.ModelService;
@@ -31,7 +33,8 @@ public class ModelController {
      */
     @GetMapping("/list")
     public R<List<ModelVo>> queryAll() {
-        List<ModelVo> modelVoList = modelService.queryAll();
+        List<Model> modelList = modelService.queryAll();
+        List<ModelVo> modelVoList = ModelConverter.INSTANCE.toVOList(modelList);
         return R.ok(modelVoList);
     }
 

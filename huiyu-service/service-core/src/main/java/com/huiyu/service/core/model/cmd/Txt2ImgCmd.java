@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -19,14 +23,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Txt2ImgCmd extends Cmd{
+public class Txt2ImgCmd extends Cmd {
     /**
      * 模型id
      */
-    private String modelId;
+    @NotNull(message = "模型id不能为空")
+    private Long modelId;
     /**
      * 正向描述词
      */
+    @NotBlank(message = "描述词不能为空")
     private String prompt;
     /**
      * 反向描述词
@@ -35,6 +41,8 @@ public class Txt2ImgCmd extends Cmd{
     /**
      * 采样步数 10-30
      */
+    @Min(value = 10, message = "参数错误")
+    @Max(value = 30, message = "参数错误")
     private Integer steps;
     /**
      * 图片尺寸
@@ -44,10 +52,16 @@ public class Txt2ImgCmd extends Cmd{
      * 4: 手机壁纸  9:16  1080x1920
      * 5: 电脑壁纸  16:9  1920x1080
      */
+    @Min(value = 1, message = "参数错误")
+    @Max(value = 5, message = "参数错误")
+    @NotNull(message = "参数错误")
     private Integer size;
     /**
-     * 生成数量 1、2、4
+     * 生成数量 1、2、3、4
      */
+    @Min(value = 1, message = "参数错误")
+    @Max(value = 4, message = "参数错误")
+    @NotNull(message = "参数错误")
     private Integer count;
     /**
      * 图片质量
@@ -56,14 +70,19 @@ public class Txt2ImgCmd extends Cmd{
      * 3: 超清修复
      * 4: 超清精绘
      */
+    @Min(value = 1, message = "参数错误")
+    @Max(value = 4, message = "参数错误")
+    @NotNull(message = "参数错误")
     private Integer quality;
     /**
      * 描述词相关度 3-15 步进0.5
      */
+    @Min(value = 3, message = "参数错误")
+    @Max(value = 15, message = "参数错误")
     private BigDecimal cfg;
     /**
      * 种子
      */
-    private Integer seed;
+    private Long seed;
 
 }

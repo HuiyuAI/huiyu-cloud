@@ -100,5 +100,5 @@ public class Txt2ImgDto extends Dto {
      * 种子
      */
     @JsonProperty("seed")
-    private Integer seed;
+    private Long seed;
 }

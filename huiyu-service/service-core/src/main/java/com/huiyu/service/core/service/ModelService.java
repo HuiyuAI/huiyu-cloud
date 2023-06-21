@@ -3,7 +3,6 @@ package com.huiyu.service.core.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.model.dto.ModelDto;
-import com.huiyu.service.core.model.vo.ModelVo;
 
 import java.util.List;
 
@@ -17,7 +16,12 @@ public interface ModelService extends IService<Model> {
     /**
      * 查询全部
      */
-    List<ModelVo> queryAll();
+    List<Model> queryAll();
+
+    /**
+     * 根据id查询
+     */
+    Model getById(Long id);
 
     /**
      * 新增

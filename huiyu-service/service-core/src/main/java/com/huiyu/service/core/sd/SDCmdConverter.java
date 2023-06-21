@@ -1,10 +1,14 @@
 package com.huiyu.service.core.sd;
 
+import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
+import com.huiyu.service.core.service.ModelService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
@@ -12,25 +16,33 @@ import java.math.BigDecimal;
  * @author Naccl
  * @date 2023-06-11
  */
+@Component
 public class SDCmdConverter {
+
+    private static ModelService modelService;
+
+    @Autowired
+    public void setModelService(ModelService modelService) {
+        SDCmdConverter.modelService = modelService;
+    }
+
     public static Txt2ImgDto convert(Txt2ImgCmd cmd) {
-        // TODO 根据模型id查模型名称、vae、采样器
-        String modelId = cmd.getModelId();
-        String modelName = "mix-pro-v3-non-ema-fp32.safetensors [9b307cd7a8]";
-        String vae = "vae-ft-mse-840000-ema-pruned.ckpt";
-        String sampler = "DPM++ 2M Karras";
+        Model model = modelService.getById(cmd.getModelId());
+
+        String modelName = model.getCode();
+        String vae = model.getVae();
+        String sampler = model.getSampler();
 
         // TODO 调用API翻译中文描述词（或根据词库映射）
         String prompt = cmd.getPrompt();
         String negativePrompt = cmd.getNegativePrompt();
 
-        // TODO 根据质量等级设置高清化参数
         boolean enableHr = true;
-        // 极少情况下，不同的模型、参数可能需要"R-ESRGAN 4x+ Anime6B"
-        String hrUpscaler = "Latent";
+        String hrUpscaler = model.getHrUpscaler();
         BigDecimal denoisingStrength = new BigDecimal("0.6");
         BigDecimal hrScale = new BigDecimal("2");
 
+        // TODO 根据质量等级设置高清化工序
         switch (cmd.getQuality()) {
             case 1:
                 // 高清

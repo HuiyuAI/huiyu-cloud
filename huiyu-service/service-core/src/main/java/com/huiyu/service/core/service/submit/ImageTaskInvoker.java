@@ -84,11 +84,11 @@ public class ImageTaskInvoker {
 
     private void updateTaskExecuted(Task task) {
         Task TaskDO = Task.builder()
-                .taskId(task.getTaskId())
+                .id(task.getId())
                 .status(TaskStatusEnum.EXECUTED)
                 .updateTime(LocalDateTime.now())
                 .build();
-        taskService.updateByTaskId(TaskDO);
+        taskService.updateById(TaskDO);
     }
 
     private void updatePic(SDResponse resp) {
@@ -120,10 +120,10 @@ public class ImageTaskInvoker {
         }
         Task task = taskList.get(0);
         Task taskDo = Task.builder()
-                .taskId(task.getTaskId())
+                .id(task.getId())
                 .status(TaskStatusEnum.IN_QUEUE)
                 .build();
-        taskService.update(taskDo);
+        taskService.updateById(taskDo);
         imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
     }
 

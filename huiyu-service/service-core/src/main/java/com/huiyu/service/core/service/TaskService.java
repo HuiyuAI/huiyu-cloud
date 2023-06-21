@@ -11,9 +11,7 @@ public interface TaskService {
 
     boolean insertTask(Task task);
 
-    boolean update(Task task);
+    boolean updateById(Task task);
 
-    boolean updateByTaskId(Task task);
-
-    Task getByIdNotStatus(Long taskId);
+    Task getById(Long taskId);
 }

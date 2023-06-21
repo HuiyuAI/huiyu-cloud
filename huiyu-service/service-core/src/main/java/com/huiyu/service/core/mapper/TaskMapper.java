@@ -16,9 +16,7 @@ public interface TaskMapper {
 
     int insertTask(Task task);
 
-    int update(Task task);
+    int updateById(Task task);
 
-    int updateByTaskId(Task task);
-
-    Task getByIdNotStatus(Long taskId);
+    Task getById(Long taskId);
 }

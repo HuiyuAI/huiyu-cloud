@@ -94,7 +94,7 @@ public class ImageTaskService {
             Task copyTask = new Task();
             BeanUtil.copyProperties(task, copyTask);
 
-            copyTask.setTaskId(IdUtils.nextSnowflakeId());
+            copyTask.setId(IdUtils.nextSnowflakeId());
             dto.setResImageUuid(IdUtil.fastUUID());
             copyTask.setBody(JacksonUtils.toJsonStr(dto));
             copyTask.setNum(1);
@@ -104,7 +104,7 @@ public class ImageTaskService {
     }
 
     private void insertTask(Task task) {
-        if (taskService.getByIdNotStatus(task.getTaskId()) != null) {
+        if (taskService.getById(task.getId()) != null) {
             return;
         }
         boolean result = taskService.insertTask(task);

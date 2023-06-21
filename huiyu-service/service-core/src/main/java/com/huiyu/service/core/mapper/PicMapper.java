@@ -21,4 +21,6 @@ public interface PicMapper {
     int deleteByUuid(String uuid);
 
     Pic getByUuid(String uuid);
+
+    Pic getByUuidNotStatus(String uuid);
 }

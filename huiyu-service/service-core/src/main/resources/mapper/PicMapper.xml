@@ -51,6 +51,14 @@
           and uuid = #{uuid}
     </select>
 
+    <select id="getByUuidNotStatus" resultMap="picMap">
+        select *
+        from pic
+        where is_delete = 0
+          and uuid = #{uuid}
+    </select>
+
+
     <select id="getParentPicIdById" resultType="java.lang.Long">
         select parent_pic_id
         from pic

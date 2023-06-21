@@ -113,7 +113,7 @@ public class ImageTaskService {
 
     private void insertPic(Task task) {
         Pic pic = SDTaskConverter.convert(task);
-        if (picService.getByUuid(pic.getUuid()) != null) {
+        if (picService.getByUuidNotStatus(pic.getUuid()) != null) {
             return;
         }
         pic.setStatus(PicStatusEnum.GENERATING);

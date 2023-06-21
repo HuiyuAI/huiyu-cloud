@@ -22,7 +22,7 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
     private IntegralRecordService integralRecordService;
 
     /**
-     * 更细积分
+     * 更新积分
      *
      * @param userId    更新的用户id
      * @param integral  需要操作的积分数值
@@ -32,6 +32,9 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
      */
     @Override
     public boolean updateIntegral(Long userId, Integer integral, IntegralSourceRecordEnum source, IntegralOperationRecordEnum operation) {
+        if (integral == null || integral <= 0) {
+            throw new IllegalArgumentException("积分数值不合法");
+        }
         // 获取用户积分
         int userIntegral = userService.getIntegralById(userId);
 
@@ -41,7 +44,7 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
             userIntegral -= integral;
         }
 
-        // 修改用户积分
+        // 修改用户积分 TODO 并发修改
         User user = User.builder()
                 .id(userId)
                 .integral(userIntegral)

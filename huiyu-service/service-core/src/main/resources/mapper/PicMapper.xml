@@ -35,13 +35,6 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
-    <select id="getById" resultMap="picMap">
-        select *
-        from pic
-        where is_delete = 0
-          and id = #{id}
-    </select>
-
     <select id="getByUserId" resultMap="picMap">
         select *
         from pic
@@ -55,6 +48,13 @@
         from pic
         where is_delete = 0
           and status = 1
+          and uuid = #{uuid}
+    </select>
+
+    <select id="getByUuidOnly" resultMap="picMap">
+        select *
+        from pic
+        where is_delete = 0
           and uuid = #{uuid}
     </select>
 

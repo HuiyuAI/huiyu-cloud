@@ -16,8 +16,8 @@ public class PicServiceImpl implements PicService {
     private PicMapper picMapper;
 
     @Override
-    public Pic getById(Long id) {
-        return picMapper.getById(id);
+    public Pic getByUuidOnly(String uuid) {
+        return picMapper.getByUuidOnly(uuid);
     }
 
     @Override

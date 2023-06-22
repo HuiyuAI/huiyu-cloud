@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface PicService {
 
-    Pic getById(Long id);
-
     List<Pic> getPicsByUserId(Long userId);
 
     Long getParentPicIdById(Long id);
@@ -19,4 +17,6 @@ public interface PicService {
     boolean deleteByUuid(String uuid);
 
     Pic getByUuid(String uuid);
+
+    Pic getByUuidOnly(String uuid);
 }

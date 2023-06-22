@@ -52,6 +52,27 @@ public class ImageTaskService {
         execGenerate(tasks, task.getExecSource());
     }
 
+    private List<Task> splitTask(Task task, Dto dto) {
+        List<Task> taskList = Lists.newArrayList();
+        if (task.getNum() == 1) {
+            dto.setResImageUuid(IdUtil.fastUUID());
+            task.setBody(JacksonUtils.toJsonStr(dto));
+            taskList.add(task);
+            return taskList;
+        }
+        for (int i = 0; i < task.getNum(); i++) {
+            Task copyTask = new Task();
+            BeanUtil.copyProperties(task, copyTask);
+
+            copyTask.setId(IdUtils.nextSnowflakeId());
+            dto.setResImageUuid(IdUtil.fastUUID());
+            copyTask.setBody(JacksonUtils.toJsonStr(dto));
+            copyTask.setNum(1);
+            taskList.add(copyTask);
+        }
+        return taskList;
+    }
+
     public void execGenerate(List<Task> tasks, String taskExecSource) {
         Optional<ThreadPoolExecutorDecorator> executorOptional = submitRequestExecutorList.stream()
                 .filter(decorator -> StringUtils.equals(taskExecSource, decorator.getSourceName()))
@@ -82,27 +103,6 @@ public class ImageTaskService {
 
     }
 
-    private List<Task> splitTask(Task task, Dto dto) {
-        List<Task> taskList = Lists.newArrayList();
-        if (task.getNum() == 1) {
-            dto.setResImageUuid(IdUtil.fastUUID());
-            task.setBody(JacksonUtils.toJsonStr(dto));
-            taskList.add(task);
-            return taskList;
-        }
-        for (int i = 0; i < task.getNum(); i++) {
-            Task copyTask = new Task();
-            BeanUtil.copyProperties(task, copyTask);
-
-            copyTask.setId(IdUtils.nextSnowflakeId());
-            dto.setResImageUuid(IdUtil.fastUUID());
-            copyTask.setBody(JacksonUtils.toJsonStr(dto));
-            copyTask.setNum(1);
-            taskList.add(copyTask);
-        }
-        return taskList;
-    }
-
     private void insertTask(Task task) {
         if (taskService.getById(task.getId()) != null) {
             return;
@@ -112,7 +112,7 @@ public class ImageTaskService {
 
     private void insertPic(Task task) {
         Pic pic = SDTaskConverter.convert(task);
-        if (picService.getById(pic.getId()) != null) {
+        if (picService.getByUuidOnly(pic.getUuid()) != null) {
             return;
         }
         pic.setStatus(PicStatusEnum.GENERATING);

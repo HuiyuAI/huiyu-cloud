@@ -72,4 +72,6 @@ public interface UserService {
      * @return 积分数
      */
     int getIntegralById(Long id);
+
+    boolean updateIntegralById(Long id, Integer integral);
 }

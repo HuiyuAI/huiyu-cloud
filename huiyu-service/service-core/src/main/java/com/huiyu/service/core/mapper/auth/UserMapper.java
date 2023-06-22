@@ -2,6 +2,7 @@ package com.huiyu.service.core.mapper.auth;
 
 import com.huiyu.service.api.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -86,4 +87,6 @@ public interface UserMapper {
      * @return 积分数
      */
     int getIntegralById(Long id);
+
+    int updateIntegralById(@Param("id") Long id, @Param("integral") Integer integral);
 }

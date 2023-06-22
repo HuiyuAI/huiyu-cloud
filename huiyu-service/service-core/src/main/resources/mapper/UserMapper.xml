@@ -144,6 +144,13 @@
         and id = #{id}
     </update>
 
+    <update id="updateIntegralById">
+        update user
+        set integral = integral + #{integral}
+        where is_delete = 0
+        and id = #{id}
+    </update>
+
     <!--通过主键删除-->
     <delete id="deleteById">
         update user

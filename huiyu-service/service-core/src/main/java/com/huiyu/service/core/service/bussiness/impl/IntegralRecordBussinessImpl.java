@@ -1,7 +1,5 @@
 package com.huiyu.service.core.service.bussiness.impl;
 
-import com.huiyu.service.api.entity.User;
-import com.huiyu.service.core.config.executor.ThreadTransactionManager;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.IntegralRecord;
@@ -38,49 +36,27 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
         if (integral == null || integral <= 0) {
             throw new IllegalArgumentException("积分数值不合法");
         }
-        // 获取用户积分
-        int userIntegral = userService.getIntegralById(userId);
 
-        if (operation == IntegralOperationRecordEnum.ADD) {
-            userIntegral += integral;
-        } else {
-            userIntegral -= integral;
+        if (operation == IntegralOperationRecordEnum.REDUCE) {
+            integral = -integral;
         }
-        // todo 并发会导致其他线程操作失败，重试机制
-        boolean startResult = ThreadTransactionManager.startTransaction();
-        if (startResult) {
-            try {
-                // 修改用户积分
-                User user = User.builder()
-                        .id(userId)
-                        .integral(userIntegral)
-                        .build();
-                boolean update = userService.update(user);
+        // 修改用户积分
+        boolean update = userService.updateIntegralById(userId, integral);
 
-                if (!update) {
-                    return false;
-                }
-                // 记录积分表
-                IntegralRecord integralRecord = IntegralRecord.builder()
-                        .userId(String.valueOf(userId))
-                        .recordNo(IdUtils.getUuId())
-                        .fraction(integral)
-                        .operationType(operation)
-                        .operationSource(source)
-                        .createTime(LocalDateTime.now())
-                        .updateTime(LocalDateTime.now())
-                        .isDelete(0)
-                        .build();
-                boolean isInsert = integralRecordService.insertRecord(integralRecord);
-                if (!isInsert) {
-                    throw new RuntimeException("流水表插入失败");
-                }
-                ThreadTransactionManager.transactionCommit.apply(null, null);
-                return true;
-            } catch (Exception e) {
-                ThreadTransactionManager.transactionRollback.apply(e);
-            }
+        if (!update) {
+            return false;
         }
-        return false;
+        // 记录积分表
+        IntegralRecord integralRecord = IntegralRecord.builder()
+                .userId(String.valueOf(userId))
+                .recordNo(IdUtils.getUuId())
+                .fraction(integral)
+                .operationType(operation)
+                .operationSource(source)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .isDelete(0)
+                .build();
+        return integralRecordService.insertRecord(integralRecord);
     }
 }

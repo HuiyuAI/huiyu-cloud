@@ -110,4 +110,9 @@ public class UserServiceImpl implements UserService {
     public int getIntegralById(Long id) {
         return userMapper.getIntegralById(id);
     }
+
+    @Override
+    public boolean updateIntegralById(Long id, Integer integral) {
+        return userMapper.updateIntegralById(id, integral) > 0;
+    }
 }

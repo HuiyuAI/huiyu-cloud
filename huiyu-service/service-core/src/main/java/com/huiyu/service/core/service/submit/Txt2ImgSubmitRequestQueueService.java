@@ -28,7 +28,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         task.setId(IdUtils.nextSnowflakeId());
         task.setUserId(txt2ImgCmd.getUserId());
         task.setType(TaskTypeEnum.TXT2IMG);
-        task.setStatus(TaskStatusEnum.UN_EXECUTED);
+        task.setStatus(TaskStatusEnum.IN_QUEUE);
         task.setExecSource("local");
         task.setCreateTime(now);
         task.setUpdateTime(now);

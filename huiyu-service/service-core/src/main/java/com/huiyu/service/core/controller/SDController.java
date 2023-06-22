@@ -47,28 +47,38 @@ public class SDController {
     @MethodMonitor
     @PostMapping("/txt2img")
     public R<?> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
-        // 1. 校验用户积分
-        Long userId = JwtUtils.getId();
-        int countIntegral = SDCmdCountIntegral.countByCmd(cmd);
-        int integral = userService.getIntegralById(1L);
-        if (integral < countIntegral) {
-            return R.error("积分不足");
-        }
-        // 2. 参数校验(数值范围)，描述词违禁词检测
+        // 1. 参数校验(数值范围)
         NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
         if (!validate.getKey()) {
             return R.error(validate.getValue());
         }
-        // 3. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
 
-        cmd.setIntegral(countIntegral);
+        // 2. 校验用户积分
+//        Long userId = JwtUtils.getId();
+        Long userId = 1L;
+        int calcIntegral = SDCmdCountIntegral.calcIntegralConsume(cmd);
+        int integral = userService.getIntegralById(userId);
+        if (integral < calcIntegral) {
+            return R.error("积分不足");
+        }
+        cmd.setIntegral(calcIntegral);
         cmd.setUserId(1L);
-        // 4. 提交任务队列
 
+
+        // 3. 描述词违禁词检测
+
+
+
+        // 4. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
+
+
+
+        // 5. 提交任务队列
         imageGenerates.stream()
                 .filter(imageGenerate -> imageGenerate.isSupport(cmd))
                 .forEach(imageGenerate -> imageGenerate.generate(cmd));
-        // 5. 处理用户界面
+
+        // 6. 处理用户界面
 
         return R.ok();
     }

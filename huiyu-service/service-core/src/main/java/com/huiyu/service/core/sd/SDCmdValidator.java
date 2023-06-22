@@ -55,9 +55,6 @@ public class SDCmdValidator {
             cmd.setSeed(-1L);
         }
 
-        // TODO 校验prompt和negativePrompt是否包含敏感词
-
-
         return NewPair.of(true, null);
     }
 

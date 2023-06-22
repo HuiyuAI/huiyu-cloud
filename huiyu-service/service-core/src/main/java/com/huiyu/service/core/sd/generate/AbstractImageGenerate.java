@@ -3,7 +3,7 @@ package com.huiyu.service.core.sd.generate;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.model.cmd.Cmd;
-import com.huiyu.service.core.service.bussiness.IntegralRecordBussiness;
+import com.huiyu.service.core.service.business.IntegralRecordBusiness;
 import com.huiyu.service.core.service.submit.AbstractSubmitRequestQueueService;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,7 +22,7 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     private List<AbstractSubmitRequestQueueService<T>> submitRequestQueueServiceList;
 
     @Resource
-    private IntegralRecordBussiness integralRecordBussiness;
+    private IntegralRecordBusiness integralRecordBusiness;
 
     @Override
     public void generate(T t) {
@@ -55,7 +55,7 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     private boolean changeUserIntegral(T t) {
-        return integralRecordBussiness.updateIntegral(1L, t.getIntegral(),
+        return integralRecordBusiness.updateIntegral(1L, t.getIntegral(),
                 IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE);
     }
 }

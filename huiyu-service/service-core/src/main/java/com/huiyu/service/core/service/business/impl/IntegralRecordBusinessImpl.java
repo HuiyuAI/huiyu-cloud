@@ -1,11 +1,11 @@
-package com.huiyu.service.core.service.bussiness.impl;
+package com.huiyu.service.core.service.business.impl;
 
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.IntegralRecord;
 import com.huiyu.service.core.service.IntegralRecordService;
 import com.huiyu.service.core.service.auth.UserService;
-import com.huiyu.service.core.service.bussiness.IntegralRecordBussiness;
+import com.huiyu.service.core.service.business.IntegralRecordBusiness;
 import com.huiyu.service.core.utils.IdUtils;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 @Service
-public class IntegralRecordBusinessImpl implements IntegralRecordBussiness {
+public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
 
     @Resource
     private UserService userService;

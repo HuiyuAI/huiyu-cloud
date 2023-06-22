@@ -1,6 +1,6 @@
-package com.huiyu.service.core.service.bussiness.impl;
+package com.huiyu.service.core.service.business.impl;
 
-import com.huiyu.service.core.service.bussiness.PicBussiness;
+import com.huiyu.service.core.service.business.PicBusiness;
 import com.huiyu.service.core.constant.StateEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicExt;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class PicBussinessImpl implements PicBussiness {
+public class PicBusinessImpl implements PicBusiness {
 
     @Resource
     private PicExtService picExtService;
@@ -20,7 +20,7 @@ public class PicBussinessImpl implements PicBussiness {
      *
      * @param pic   图片信息
      * @param state 需要的状态
-     * @return      是否操作成功
+     * @return 是否操作成功
      */
     @Override
     public boolean share(Pic pic, StateEnum state) {

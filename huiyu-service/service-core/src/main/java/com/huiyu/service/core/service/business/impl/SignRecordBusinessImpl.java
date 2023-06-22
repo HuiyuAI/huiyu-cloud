@@ -1,25 +1,25 @@
-package com.huiyu.service.core.service.bussiness.impl;
+package com.huiyu.service.core.service.business.impl;
 
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.constant.SignRecordStatusEnum;
 import com.huiyu.service.core.entity.SignRecord;
 import com.huiyu.service.core.service.SignRecordService;
-import com.huiyu.service.core.service.bussiness.IntegralRecordBussiness;
-import com.huiyu.service.core.service.bussiness.SignRecordBussiness;
+import com.huiyu.service.core.service.business.IntegralRecordBusiness;
+import com.huiyu.service.core.service.business.SignRecordBusiness;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
 
 @Service
-public class SignRecordBussinessImpl implements SignRecordBussiness {
+public class SignRecordBusinessImpl implements SignRecordBusiness {
 
     @Resource
     private SignRecordService signRecordService;
 
     @Resource
-    private IntegralRecordBussiness integralRecordBussiness;
+    private IntegralRecordBusiness integralRecordBusiness;
 
     @Override
     public boolean signIn(Long userId) {
@@ -28,7 +28,7 @@ public class SignRecordBussinessImpl implements SignRecordBussiness {
             return false;
         }
         // 签到积分奖励
-        return integralRecordBussiness.updateIntegral(userId, 1, IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD);
+        return integralRecordBusiness.updateIntegral(userId, 1, IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD);
     }
 
     private boolean isSignIn(Long userId) {

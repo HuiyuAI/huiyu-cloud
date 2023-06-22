@@ -33,7 +33,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         Task task = taskDtoPair.getKey();
         Dto dto = taskDtoPair.getValue();
         CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor());
-//                .handle(ThreadTransactionManager.transactionCommit);
     }
 
     public abstract NewPair<Task, Dto> convertTask(T t);

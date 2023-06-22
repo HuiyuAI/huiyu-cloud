@@ -1,5 +1,5 @@
-spring:
-  main:
-    allow-circular-references: true
-  profiles:
-    active: dev
+#spring:
+#  main:
+#    allow-circular-references: true
+#  profiles:
+#    active: dev

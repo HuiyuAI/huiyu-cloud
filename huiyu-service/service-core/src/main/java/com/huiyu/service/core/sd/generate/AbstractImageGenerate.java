@@ -1,5 +1,7 @@
 package com.huiyu.service.core.sd.generate;
 
+import cn.hutool.core.util.IdUtil;
+import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.model.cmd.Cmd;
@@ -40,7 +42,7 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     public void preExec(T t) {
-        boolean insertResult = changeUserIntegral(t);
+        boolean insertResult = deductUserIntegral(t);
     }
 
     public void afterExec() {
@@ -54,7 +56,7 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
         return StringUtils.equals(typeName, name);
     }
 
-    private boolean changeUserIntegral(T t) {
+    private boolean deductUserIntegral(T t) {
         return integralRecordBusiness.updateIntegral(t.getUserId(), t.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE);
     }
 }

@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="taskMap" type="com.huiyu.service.core.entity.Task">
         <result column="id" property="id"/>
+        <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
         <result column="body" property="body"/>
@@ -16,8 +17,8 @@
     </resultMap>
 
     <insert id="insertTask">
-        insert into task (id, user_id, type, body, status, exec_source, create_time, update_time, is_delete)
-        values (#{id}, #{userId}, #{type}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        insert into task (id, request_uuid, user_id, type, body, status, exec_source, create_time, update_time, is_delete)
+        values (#{id}, #{requestUuid}, #{userId}, #{type}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">

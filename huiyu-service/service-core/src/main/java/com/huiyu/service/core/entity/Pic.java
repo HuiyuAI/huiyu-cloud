@@ -29,6 +29,10 @@ public class Pic implements Serializable {
      */
     private String uuid;
     /**
+     * 请求uuid
+     */
+    private String requestUuid;
+    /**
      * 用户id
      */
     private Long userId;

@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
 import com.google.common.collect.Lists;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
@@ -50,6 +51,8 @@ public class ImageTaskService {
         List<Task> tasks = splitTask(task, dto);
 
         execGenerate(tasks, task.getExecSource());
+
+        RequestContext.REQUEST_UUID_CONTEXT.remove();
     }
 
     private List<Task> splitTask(Task task, Dto dto) {
@@ -107,7 +110,9 @@ public class ImageTaskService {
         if (taskService.getById(task.getId()) != null) {
             return;
         }
-        boolean result = taskService.insertTask(task);
+        String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
+        task.setRequestUuid(requestUuid);
+        taskService.insertTask(task);
     }
 
     private void insertPic(Task task) {
@@ -115,6 +120,8 @@ public class ImageTaskService {
         if (picService.getByUuidOnly(pic.getUuid()) != null) {
             return;
         }
+        String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
+        pic.setRequestUuid(requestUuid);
         pic.setStatus(PicStatusEnum.GENERATING);
         picService.insert(pic);
     }

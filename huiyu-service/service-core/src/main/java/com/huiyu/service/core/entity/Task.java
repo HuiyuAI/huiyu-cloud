@@ -22,6 +22,10 @@ public class Task implements Serializable {
      */
     private Long id;
     /**
+     * 请求uuid
+     */
+    private String requestUuid;
+    /**
      * 用户id
      */
     private Long userId;

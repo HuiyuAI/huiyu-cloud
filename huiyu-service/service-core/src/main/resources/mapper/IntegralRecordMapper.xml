@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="baseResult" type="com.huiyu.service.core.entity.IntegralRecord">
         <result column="id" property="id"/>
-        <result column="record_no" property="recordNo"/>
+        <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
         <result column="num" property="num"/>
         <result column="operation_type" property="operationType" jdbcType="INTEGER"/>
@@ -16,8 +16,8 @@
     </resultMap>
 
     <insert id="insertRecord">
-        insert into integral_record (id, record_no, user_id, num, operation_type, operation_source)
-        values (#{id}, #{recordNo}, #{userId}, #{num}, #{operationType}, #{operationSource})
+        insert into integral_record (id, request_uuid, user_id, num, operation_type, operation_source)
+        values (#{id}, #{requestUuid}, #{userId}, #{num}, #{operationType}, #{operationSource})
     </insert>
 
     <select id="getByUserId" resultMap="baseResult">

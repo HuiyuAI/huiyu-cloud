@@ -33,9 +33,7 @@ public class TaskExecutionRejectedHandler implements RejectedExecutionHandler {
                         .status(TaskStatusEnum.UN_EXECUTED)
                         .build();
                 taskService.updateById(wrapper);
-                return;
             }
-            taskService.insertTask(task);
         } finally {
             TASK_INFO_CONTEXT.remove();
         }

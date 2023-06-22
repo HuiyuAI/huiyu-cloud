@@ -25,9 +25,9 @@ public class IntegralRecord implements Serializable {
 
     private Long id;
     /**
-     * 记录ID
+     * 请求uuid
      */
-    private String recordNo;
+    private String requestUuid;
     /**
      * 用户ID
      */

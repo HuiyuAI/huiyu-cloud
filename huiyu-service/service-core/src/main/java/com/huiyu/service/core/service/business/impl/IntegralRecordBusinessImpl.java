@@ -1,6 +1,7 @@
 package com.huiyu.service.core.service.business.impl;
 
 import cn.hutool.core.util.IdUtil;
+import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.IntegralRecord;
@@ -8,11 +9,15 @@ import com.huiyu.service.core.service.IntegralRecordService;
 import com.huiyu.service.core.service.auth.UserService;
 import com.huiyu.service.core.service.business.IntegralRecordBusiness;
 import com.huiyu.service.core.utils.IdUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
 
@@ -32,6 +37,7 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
      * @param operation 积分增减
      * @return 是否更新成功
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateIntegral(Long userId, Integer integral, IntegralSourceRecordEnum source, IntegralOperationRecordEnum operation) {
         if (integral == null || integral <= 0) {
@@ -41,19 +47,26 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
         if (operation == IntegralOperationRecordEnum.REDUCE) {
             integral = -integral;
         }
-        // todo 并发会导致其他线程操作失败，重试机制
-        // 修改用户积分
-        boolean update = userService.updateIntegralById(userId, integral);
 
-        if (!update) {
-            return false;
+        // 修改用户积分
+        boolean isUpdateIntegralOK = userService.updateIntegralById(userId, integral);
+        if (!isUpdateIntegralOK) {
+            log.error("更新用户积分失败，userId：{}，integral：{}, source：{}, operation：{}", userId, integral, source, operation);
+            throw new RuntimeException("异常错误");
         }
+
+        // 关联请求uuid
+        String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
+        if (StringUtils.isEmpty(requestUuid)) {
+            requestUuid = IdUtil.fastUUID();
+        }
+
         // 记录积分表
         LocalDateTime now = LocalDateTime.now();
         IntegralRecord integralRecord = IntegralRecord.builder()
                 .id(IdUtils.nextSnowflakeId())
                 .userId(userId)
-                .recordNo(IdUtil.fastUUID())
+                .requestUuid(requestUuid)
                 .num(integral)
                 .operationType(operation)
                 .operationSource(source)
@@ -61,11 +74,12 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
                 .updateTime(now)
                 .isDelete(0)
                 .build();
-        boolean isInsert = integralRecordService.insertRecord(integralRecord);
-        if (!isInsert) {
-            throw new RuntimeException("流水表插入失败");
+        boolean isInsertIntegralRecordOK = integralRecordService.insertRecord(integralRecord);
+        if (!isInsertIntegralRecordOK) {
+            log.error("记录积分流水表失败，userId：{}，integral：{}, source：{}, operation：{}", userId, integral, source, operation);
+            throw new RuntimeException("异常错误");
         }
 
-        return isInsert;
+        return true;
     }
 }

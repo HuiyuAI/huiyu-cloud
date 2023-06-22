@@ -1,8 +1,10 @@
 package com.huiyu.service.core.controller;
 
+import cn.hutool.core.util.IdUtil;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.MethodMonitor;
+import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdCountIntegral;
 import com.huiyu.service.core.sd.SDCmdValidator;
@@ -68,11 +70,11 @@ public class SDController {
         // 3. 描述词违禁词检测
 
 
-
         // 4. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
 
 
-
+        String requestUuid = IdUtil.fastUUID();
+        RequestContext.REQUEST_UUID_CONTEXT.set(requestUuid);
         // 5. 提交任务队列
         imageGenerates.stream()
                 .filter(imageGenerate -> imageGenerate.isSupport(cmd))
@@ -80,7 +82,7 @@ public class SDController {
 
         // 6. 处理用户界面
 
-        return R.ok();
+        return R.ok(requestUuid);
     }
 
 }

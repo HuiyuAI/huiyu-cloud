@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 @Service
-public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
+public class IntegralRecordBusinessImpl implements IntegralRecordBussiness {
 
     @Resource
     private UserService userService;
@@ -40,6 +40,7 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
         if (operation == IntegralOperationRecordEnum.REDUCE) {
             integral = -integral;
         }
+        // todo 并发会导致其他线程操作失败，重试机制
         // 修改用户积分
         boolean update = userService.updateIntegralById(userId, integral);
 
@@ -57,6 +58,11 @@ public class IntegralRecordBussinessImpl implements IntegralRecordBussiness {
                 .updateTime(LocalDateTime.now())
                 .isDelete(0)
                 .build();
-        return integralRecordService.insertRecord(integralRecord);
+        boolean isInsert = integralRecordService.insertRecord(integralRecord);
+        if (!isInsert) {
+            throw new RuntimeException("流水表插入失败");
+        }
+
+        return isInsert;
     }
 }

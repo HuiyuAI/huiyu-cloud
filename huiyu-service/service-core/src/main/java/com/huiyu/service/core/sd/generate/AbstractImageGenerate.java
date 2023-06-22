@@ -1,6 +1,5 @@
 package com.huiyu.service.core.sd.generate;
 
-import com.huiyu.service.core.config.executor.ThreadTransactionManager;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.model.cmd.Cmd;
@@ -41,14 +40,7 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     public void preExec(T t) {
-//        boolean startResult = ThreadTransactionManager.startTransaction();
-        if (true) {
-            try {
-                boolean insertResult = changeUserIntegral(t);
-            } catch (Exception e) {
-                ThreadTransactionManager.transactionRollback.apply(e);
-            }
-        }
+        boolean insertResult = changeUserIntegral(t);
     }
 
     public void afterExec() {

@@ -7,7 +7,7 @@
         <result column="id" property="id"/>
         <result column="record_no" property="recordNo"/>
         <result column="user_id" property="userId"/>
-        <result column="fraction" property="fraction"/>
+        <result column="num" property="num"/>
         <result column="operation_type" property="operationType" jdbcType="INTEGER"/>
         <result column="operation_source" property="operationSource"/>
         <result column="create_time" property="createTime"/>
@@ -16,45 +16,14 @@
     </resultMap>
 
     <insert id="insertRecord">
-        insert into integral_record
-            (record_no, user_id, fraction, operation_type, operation_source)
-        values (#{integralRecord.recordNo}, #{integralRecord.userId}, #{integralRecord.fraction},
-                #{integralRecord.operationType}, #{integralRecord.operationSource})
-
+        insert into integral_record (id, record_no, user_id, num, operation_type, operation_source)
+        values (#{id}, #{recordNo}, #{userId}, #{num}, #{operationType}, #{operationSource})
     </insert>
-
-
-    <update id="update">
-
-        update integral_record
-        <set>
-            <if test="recordNo != null">
-                record_no = #{recordNo},
-            </if>
-            <if test="userId != null">
-                user_id = #{userId},
-            </if>
-            <if test="fraction != null">
-                fraction = #{fraction},
-            </if>
-            <if test="operationType != null">
-                operation_type = #{operationType},
-            </if>
-            <if test="operationSource != null">
-                operation_source = #{operationSource},
-            </if>
-            <if test="isDelete != null">
-                is_delete = #{isDelete},
-            </if>
-        </set>
-        where record_no = #{recordNo}
-    </update>
 
     <select id="getByUserId" resultMap="baseResult">
         select *
         from integral_record
         where user_id = #{userId};
     </select>
-
 
 </mapper>

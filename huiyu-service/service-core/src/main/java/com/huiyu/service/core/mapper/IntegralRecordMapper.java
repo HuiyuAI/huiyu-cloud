@@ -2,7 +2,6 @@ package com.huiyu.service.core.mapper;
 
 import com.huiyu.service.core.entity.IntegralRecord;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,10 +10,8 @@ import java.util.List;
 @Repository
 public interface IntegralRecordMapper {
 
-    int insertRecord(@Param("integralRecord") IntegralRecord integralRecord);
+    int insertRecord(IntegralRecord integralRecord);
 
-    List<IntegralRecord> getByUserId(@Param("userId") String userId);
-
-    int update(IntegralRecord integralRecord);
+    List<IntegralRecord> getByUserId(Long userId);
 
 }

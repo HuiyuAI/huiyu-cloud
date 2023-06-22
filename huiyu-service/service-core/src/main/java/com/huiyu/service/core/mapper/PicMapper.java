@@ -10,6 +10,8 @@ import java.util.List;
 @Mapper
 @Repository
 public interface PicMapper {
+    Pic getById(Long id);
+
     List<Pic> getByUserId(@Param("userId") Long userId);
 
     Long getParentPicIdById(Long id);
@@ -21,6 +23,4 @@ public interface PicMapper {
     int deleteByUuid(String uuid);
 
     Pic getByUuid(String uuid);
-
-    Pic getByUuidNotStatus(String uuid);
 }

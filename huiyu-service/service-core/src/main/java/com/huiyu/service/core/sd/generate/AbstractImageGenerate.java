@@ -55,7 +55,6 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     private boolean changeUserIntegral(T t) {
-        return integralRecordBusiness.updateIntegral(1L, t.getIntegral(),
-                IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE);
+        return integralRecordBusiness.updateIntegral(t.getUserId(), t.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE);
     }
 }

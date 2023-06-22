@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.business.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.IntegralRecord;
@@ -48,14 +49,16 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
             return false;
         }
         // 记录积分表
+        LocalDateTime now = LocalDateTime.now();
         IntegralRecord integralRecord = IntegralRecord.builder()
-                .userId(String.valueOf(userId))
-                .recordNo(IdUtils.getUuId())
-                .fraction(integral)
+                .id(IdUtils.nextSnowflakeId())
+                .userId(userId)
+                .recordNo(IdUtil.fastUUID())
+                .num(integral)
                 .operationType(operation)
                 .operationSource(source)
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
+                .createTime(now)
+                .updateTime(now)
                 .isDelete(0)
                 .build();
         boolean isInsert = integralRecordService.insertRecord(integralRecord);

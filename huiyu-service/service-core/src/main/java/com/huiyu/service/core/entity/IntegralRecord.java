@@ -31,11 +31,11 @@ public class IntegralRecord implements Serializable {
     /**
      * 用户ID
      */
-    private String userId;
+    private Long userId;
     /**
-     * 分数
+     * 积分
      */
-    private Integer fraction;
+    private Integer num;
     /**
      * 增加为1，减少为0
      */

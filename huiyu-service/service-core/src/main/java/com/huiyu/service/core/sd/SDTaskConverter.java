@@ -9,6 +9,7 @@ import com.huiyu.service.core.sd.dto.ExtraDto;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.sd.dto.UpscaleDto;
+import com.huiyu.service.core.utils.IdUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ public class SDTaskConverter {
 
     private static Pic convertTxt2Img(Task task) {
         Txt2ImgDto dto = JacksonUtils.toBean(task.getBody(), Txt2ImgDto.class);
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = task.getCreateTime();
 
         int width = dto.getWidth();
         int height = dto.getHeight();
@@ -49,6 +50,7 @@ public class SDTaskConverter {
         }
 
         return Pic.builder()
+                .id(IdUtils.nextSnowflakeId())
                 .uuid(dto.getResImageUuid())
                 .userId(task.getUserId())
                 .taskId(task.getId())

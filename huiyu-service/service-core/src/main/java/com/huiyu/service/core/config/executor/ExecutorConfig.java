@@ -28,7 +28,7 @@ public class ExecutorConfig {
         executor.setQueueCapacity(5);
         executor.setThreadNamePrefix("SUBMIT");
         executor.setMonitorName("submitRequestExecutor_test1");
-        executor.setRejectedExecutionHandler(new MessageExecutionRejectedHandler());
+        executor.setRejectedExecutionHandler(new TaskExecutionRejectedHandler());
         executor.setTaskDecorator(runnable -> {
             String traceId = MDC.get(TRACE_ID);
             return () -> {

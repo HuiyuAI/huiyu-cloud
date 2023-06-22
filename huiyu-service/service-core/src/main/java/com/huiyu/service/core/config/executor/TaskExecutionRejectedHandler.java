@@ -18,7 +18,7 @@ import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
  * @Description: 自定义拒绝策略
  **/
 @Slf4j
-public class MessageExecutionRejectedHandler implements RejectedExecutionHandler {
+public class TaskExecutionRejectedHandler implements RejectedExecutionHandler {
 
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {

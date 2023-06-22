@@ -8,9 +8,6 @@ public interface IntegralRecordService {
 
     boolean insertRecord(IntegralRecord integralRecord);
 
-    List<IntegralRecord> getRecordByUserId(String userId);
+    List<IntegralRecord> getRecordByUserId(Long userId);
 
-    boolean updateRecord(IntegralRecord integralRecord);
-
-    boolean delete(IntegralRecord integralRecord);
 }

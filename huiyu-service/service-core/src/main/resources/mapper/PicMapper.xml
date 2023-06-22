@@ -35,6 +35,13 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
+    <select id="getById" resultMap="picMap">
+        select *
+        from pic
+        where is_delete = 0
+          and id = #{id}
+    </select>
+
     <select id="getByUserId" resultMap="picMap">
         select *
         from pic
@@ -51,14 +58,6 @@
           and uuid = #{uuid}
     </select>
 
-    <select id="getByUuidNotStatus" resultMap="picMap">
-        select *
-        from pic
-        where is_delete = 0
-          and uuid = #{uuid}
-    </select>
-
-
     <select id="getParentPicIdById" resultType="java.lang.Long">
         select parent_pic_id
         from pic
@@ -67,12 +66,12 @@
     </select>
 
     <insert id="insert">
-        insert into pic (uuid, user_id, task_id, model_id, parent_pic_id, reference_pic_id, status, path,
+        insert into pic (id, uuid, user_id, task_id, model_id, parent_pic_id, reference_pic_id, status, path,
                          prompt, negative_prompt, width, height, seed, subseed,
                          model_code, vae, sampler_name, steps, cfg,
                          enable_hr, hr_upscaler, denoising_strength, hr_scale, alwayson_scripts, infotexts,
                          create_time, update_time, is_delete)
-        values (#{uuid}, #{userId}, #{taskId}, #{modelId}, #{parentPicId}, #{referencePicId}, #{status}, #{path},
+        values (#{id}, #{uuid}, #{userId}, #{taskId}, #{modelId}, #{parentPicId}, #{referencePicId}, #{status}, #{path},
                 #{prompt}, #{negativePrompt}, #{width}, #{height}, #{seed}, #{subseed},
                 #{modelCode}, #{vae}, #{samplerName}, #{steps}, #{cfg},
                 #{enableHr}, #{hrUpscaler}, #{denoisingStrength}, #{hrScale}, #{alwaysonScripts}, #{infotexts},

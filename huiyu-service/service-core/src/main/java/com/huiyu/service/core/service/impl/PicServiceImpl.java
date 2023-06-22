@@ -16,6 +16,11 @@ public class PicServiceImpl implements PicService {
     private PicMapper picMapper;
 
     @Override
+    public Pic getById(Long id) {
+        return picMapper.getById(id);
+    }
+
+    @Override
     public List<Pic> getPicsByUserId(Long userId) {
         return picMapper.getByUserId(userId);
     }
@@ -50,10 +55,5 @@ public class PicServiceImpl implements PicService {
     @Override
     public Pic getByUuid(String uuid) {
         return picMapper.getByUuid(uuid);
-    }
-
-    @Override
-    public Pic getByUuidNotStatus(String uuid) {
-        return picMapper.getByUuidNotStatus(uuid);
     }
 }

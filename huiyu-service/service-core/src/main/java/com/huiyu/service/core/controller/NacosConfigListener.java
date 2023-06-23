@@ -20,10 +20,13 @@ import org.springframework.context.annotation.Configuration;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Resource;
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -106,23 +109,34 @@ public class NacosConfigListener implements InitializingBean, ApplicationContext
                 .findFirst().orElse(null);
         if (Objects.nonNull(onChangeMethod)) {
             String jsonStr = null;
-
+            Object param = null;
             if (dataId.endsWith(".yaml") && StringUtils.isNotEmpty(config)) {
                 Yaml yaml = new Yaml();
                 Object load = yaml.load(config);
                 jsonStr = JSONUtil.toJsonStr(load);
+            } else if (dataId.endsWith(".properties")) {
+                Properties properties = new Properties();
+                properties.load(new StringReader(config));
+                Enumeration<?> enumeration = properties.propertyNames();
+                Map<String, String> map = new HashMap<>();
+                while (enumeration.hasMoreElements()) {
+                    String key = (String) enumeration.nextElement();
+                    String value = (String) properties.get(key);
+                    map.put(key, value);
+                }
+                param = map;
             } else if (dataId.endsWith(".json") && StringUtils.isNotEmpty(config)) {
                 jsonStr = config;
             }
             Class<?> parameterTypes = onChangeMethod.getParameterTypes()[0];
 
-            Object param = null;
-
-            if (parameterTypes == List.class) {
-                parameterTypes = getParamType(onChangeMethod);
-                param = JSONUtil.parseArray(jsonStr).toList(parameterTypes);
-            } else {
-                param = JSONUtil.toBean(jsonStr, parameterTypes);
+            if (Objects.isNull(param)) {
+                if (parameterTypes == List.class) {
+                    parameterTypes = getParamType(onChangeMethod);
+                    param = JSONUtil.parseArray(jsonStr).toList(parameterTypes);
+                } else {
+                    param = JSONUtil.toBean(jsonStr, parameterTypes);
+                }
             }
 
             bean.onChange(param);

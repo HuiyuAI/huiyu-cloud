@@ -6,6 +6,7 @@ import com.huiyu.service.core.config.executor.TaskExecutionRejectedHandler;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.service.submit.ImageTaskService;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
 import javax.annotation.Resource;
@@ -20,6 +21,7 @@ import static com.huiyu.service.core.config.executor.ExecutorConfig.TRACE_ID;
  * @Date 2023-06-24  01:47
  */
 
+@Slf4j
 @HConfig(dataId = "huiyu-service-example.yaml")
 public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.ExampleItem>> {
 
@@ -50,6 +52,7 @@ public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.Exa
     }
 
     public ThreadPoolExecutorDecorator creatExecutor(String ip, String source) {
+        log.info("增加AI实例ip:{},source:{}", ip, source);
         MonitorThreadPoolTaskExecutor executor = new MonitorThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);

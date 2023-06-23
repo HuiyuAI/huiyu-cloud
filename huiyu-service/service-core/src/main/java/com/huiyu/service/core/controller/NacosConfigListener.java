@@ -100,9 +100,9 @@ public class NacosConfigListener implements InitializingBean, ApplicationContext
         String dataId = annotation.dataId();
         String group = annotation.group();
         String config = configService.getConfig(dataId, group, 3000);
-        Method[] methods = aClass.getMethods();
+        Method[] methods = aClass.getDeclaredMethods();
         Method onChangeMethod = Arrays.stream(methods)
-                .filter(method -> method.getName().equals("onChange"))
+                .filter(method -> method.getName().equals("onChange") && !method.isBridge())
                 .findFirst().orElse(null);
         if (Objects.nonNull(onChangeMethod)) {
             String jsonStr = null;

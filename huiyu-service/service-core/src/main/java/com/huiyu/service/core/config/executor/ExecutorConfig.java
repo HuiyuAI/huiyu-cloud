@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync
 public class ExecutorConfig {
 
-    private static final String TRACE_ID = "TraceId";
+    public static final String TRACE_ID = "TraceId";
 
     @Bean(name = "submitRequestExecutor")
     public ThreadPoolExecutorDecorator submitRequestExecutor() {

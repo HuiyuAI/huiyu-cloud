@@ -16,4 +16,6 @@ public class ThreadPoolExecutorDecorator {
 
     private String sourceName;
 
+    private String ip;
+
 }

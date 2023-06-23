@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -34,8 +35,8 @@ import static com.huiyu.service.core.config.executor.CompletableFutureExceptionH
 @Slf4j
 public class ImageTaskService {
 
-    @Resource
-    private List<ThreadPoolExecutorDecorator> submitRequestExecutorList;
+    //    @Resource
+    private List<ThreadPoolExecutorDecorator> submitRequestExecutorList = new ArrayList<>();
 
     @Resource
     private ImageTaskInvoker imageTaskInvokerList;
@@ -126,4 +127,11 @@ public class ImageTaskService {
         picService.insert(pic);
     }
 
+    public List<ThreadPoolExecutorDecorator> getSubmitRequestExecutorList() {
+        return submitRequestExecutorList;
+    }
+
+    public void setSubmitRequestExecutorList(List<ThreadPoolExecutorDecorator> submitRequestExecutorList) {
+        this.submitRequestExecutorList = submitRequestExecutorList;
+    }
 }

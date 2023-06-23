@@ -14,7 +14,7 @@ spring:
         username: nacos
         password: huiyuai
         # 默认命名空间public 如果加上会重复打印日志
-        #        namespace: public
+#        namespace: public
         group: DEFAULT_GROUP
         prefix: huiyu-service
         file-extension: yml

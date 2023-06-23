@@ -21,7 +21,10 @@ import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -103,17 +106,41 @@ public class NacosConfigListener implements InitializingBean, ApplicationContext
                 .findFirst().orElse(null);
         if (Objects.nonNull(onChangeMethod)) {
             String jsonStr = null;
-            Class<?> parameterTypes = onChangeMethod.getParameterTypes()[0];
+
             if (dataId.endsWith(".yaml") && StringUtils.isNotEmpty(config)) {
                 Yaml yaml = new Yaml();
-                Map<String, Object> map = yaml.load(config);
-                jsonStr = JSONUtil.toJsonStr(map);
+                Object load = yaml.load(config);
+                jsonStr = JSONUtil.toJsonStr(load);
             } else if (dataId.endsWith(".json") && StringUtils.isNotEmpty(config)) {
                 jsonStr = config;
             }
-            Object param = JSONUtil.toBean(jsonStr, parameterTypes);
+            Class<?> parameterTypes = onChangeMethod.getParameterTypes()[0];
+
+            Object param = null;
+
+            if (parameterTypes == List.class) {
+                parameterTypes = getParamType(onChangeMethod);
+                param = JSONUtil.parseArray(jsonStr).toList(parameterTypes);
+            } else {
+                param = JSONUtil.toBean(jsonStr, parameterTypes);
+            }
+
             bean.onChange(param);
         }
+    }
+
+    public Class<?> getParamType(Method method) {
+        ParameterizedType genericParameterType = (ParameterizedType) method.getGenericParameterTypes()[0];
+        while (Objects.nonNull(genericParameterType)) {
+            Type actualTypeArgument = genericParameterType.getActualTypeArguments()[0];
+            if (actualTypeArgument instanceof ParameterizedType) {
+                genericParameterType = (ParameterizedType) actualTypeArgument;
+            } else {
+                return (Class<?>) actualTypeArgument;
+            }
+
+        }
+        return null;
     }
 
     private ConfigService getConfigService() throws NacosException {

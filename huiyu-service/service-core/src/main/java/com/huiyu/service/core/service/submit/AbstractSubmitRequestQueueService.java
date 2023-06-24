@@ -30,7 +30,9 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
 
     public void submitToSplit(T t) {
         NewPair<Task, Dto> taskDtoPair = convertTask(t);
+        String execSource = chooseExecSource(t);
         Task task = taskDtoPair.getKey();
+        task.setExecSource(execSource);
         Dto dto = taskDtoPair.getValue();
         CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor());
     }
@@ -44,6 +46,8 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         String name = t.getClass().getName();
         return StringUtils.equals(typeName, name);
     }
+
+    public abstract String chooseExecSource(T t);
 
 
 }

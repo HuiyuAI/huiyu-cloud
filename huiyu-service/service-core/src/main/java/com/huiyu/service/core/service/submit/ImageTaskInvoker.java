@@ -24,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.huiyu.service.core.config.TaskContext.INVOKER_URL_CONTEXT;
+
 /**
  * @author wAnG
  * @Date 2023-06-13  00:07
@@ -129,7 +131,7 @@ public class ImageTaskInvoker {
 
     private String getUrl() {
         // todo 多数据源操作后续会放在threadLocal里面
-        return SDAPIConstant.BASE_URL + SDAPIConstant.TXT2IMG;
+        return INVOKER_URL_CONTEXT.get() + SDAPIConstant.TXT2IMG;
     }
 
 

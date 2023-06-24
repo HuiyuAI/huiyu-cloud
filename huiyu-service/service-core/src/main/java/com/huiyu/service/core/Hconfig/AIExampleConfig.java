@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.huiyu.service.core.config.TaskContext.INVOKER_URL_CONTEXT;
 import static com.huiyu.service.core.config.executor.ExecutorConfig.TRACE_ID;
 
 
@@ -22,8 +23,8 @@ import static com.huiyu.service.core.config.executor.ExecutorConfig.TRACE_ID;
  */
 
 @Slf4j
-@HConfig(dataId = "huiyu-service-example.yaml")
-public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.ExampleItem>> {
+@HConfig(dataId = "huiyu-service-example.json")
+public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeData> {
 
     @Resource
     private ImageTaskService imageTaskService;
@@ -31,8 +32,8 @@ public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.Exa
     private List<ExampleItem> exampleItems;
 
     @Override
-    public void onChange(List<ExampleItem> exampleItem) {
-        this.exampleItems = exampleItem;
+    public void onChange(ChangeData data) {
+        this.exampleItems = data.getData();
         changeExecutor();
     }
 
@@ -41,12 +42,27 @@ public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.Exa
         List<String> executorMarkList = submitRequestExecutorList.stream()
                 .map(executor -> executor.getIp() + executor.getSourceName())
                 .collect(Collectors.toList());
+        List<String> exampleItemsConfigList = exampleItems.stream()
+                .map(exampleItem -> exampleItem.getIp() + exampleItem.getSource())
+                .collect(Collectors.toList());
+
+        // 计算增加的配置
         List<ExampleItem> addConfig = exampleItems.stream()
                 .filter(exampleItem -> !executorMarkList.contains(exampleItem.getIp() + exampleItem.getSource()))
                 .collect(Collectors.toList());
         List<ThreadPoolExecutorDecorator> newExecutorList = addConfig.stream()
                 .map(config -> creatExecutor(config.getIp(), config.getSource()))
                 .collect(Collectors.toList());
+
+        // 计算减少的配置
+        submitRequestExecutorList = submitRequestExecutorList.stream()
+                .filter(submitRequestExecutor -> {
+                    if (!exampleItemsConfigList.contains(submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName())) {
+                        submitRequestExecutor.getThreadPoolExecutor().shutdown();
+                        return false;
+                    }
+                    return true;
+                }).collect(Collectors.toList());
         newExecutorList.addAll(submitRequestExecutorList);
         imageTaskService.setSubmitRequestExecutorList(newExecutorList);
     }
@@ -63,11 +79,13 @@ public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.Exa
         executor.setTaskDecorator(runnable -> {
             String traceId = MDC.get(TRACE_ID);
             return () -> {
+                INVOKER_URL_CONTEXT.set(ip);
                 MDC.put(TRACE_ID, traceId);
                 try {
                     runnable.run();
                 } finally {
                     MDC.clear();
+                    INVOKER_URL_CONTEXT.remove();
                 }
             };
         });
@@ -79,6 +97,10 @@ public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.Exa
                 .build();
     }
 
+    public List<ExampleItem> getExampleItems() {
+        return exampleItems;
+    }
+
     @Data
     public static class ExampleItem {
 
@@ -86,5 +108,10 @@ public class AIExampleConfig implements HConfigOnChange<List<AIExampleConfig.Exa
 
         private String source;
 
+    }
+
+    @Data
+    public static class ChangeData {
+        List<ExampleItem> data;
     }
 }

@@ -21,6 +21,11 @@ public class PicServiceImpl implements PicService {
     }
 
     @Override
+    public Pic getByTaskId(Long taskId) {
+        return picMapper.getByTaskId(taskId);
+    }
+
+    @Override
     public List<Pic> getPicsByUserId(Long userId) {
         return picMapper.getByUserId(userId);
     }

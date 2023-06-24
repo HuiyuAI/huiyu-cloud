@@ -67,7 +67,7 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
                 .id(IdUtils.nextSnowflakeId())
                 .userId(userId)
                 .requestUuid(requestUuid)
-                .num(integral)
+                .num(Math.abs(integral))
                 .operationType(operation)
                 .operationSource(source)
                 .createTime(now)

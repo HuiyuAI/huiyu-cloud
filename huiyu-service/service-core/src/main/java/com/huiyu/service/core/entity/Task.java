@@ -42,6 +42,10 @@ public class Task implements Serializable {
      */
     private TaskStatusEnum status;
     /**
+     * 重试次数
+     */
+    private Integer retryCount;
+    /**
      * 执行源
      */
     private String execSource;

@@ -23,4 +23,6 @@ public interface PicMapper {
     Pic getByUuid(String uuid);
 
     Pic getByUuidOnly(String uuid);
+
+    Pic getByTaskId(Long taskId);
 }

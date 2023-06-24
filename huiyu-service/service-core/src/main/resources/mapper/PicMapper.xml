@@ -66,6 +66,13 @@
           and id = #{id}
     </select>
 
+    <select id="getByTaskId" resultMap="picMap">
+        select *
+        from pic
+        where is_delete = 0
+          and task_id = #{taskId}
+    </select>
+
     <insert id="insert">
         insert into pic (id, uuid, request_uuid, user_id, task_id, model_id, parent_pic_id, reference_pic_id, status, path,
                          prompt, negative_prompt, width, height, seed, subseed,

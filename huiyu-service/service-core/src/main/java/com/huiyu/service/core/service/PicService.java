@@ -19,4 +19,6 @@ public interface PicService {
     Pic getByUuid(String uuid);
 
     Pic getByUuidOnly(String uuid);
+
+    Pic getByTaskId(Long taskId);
 }

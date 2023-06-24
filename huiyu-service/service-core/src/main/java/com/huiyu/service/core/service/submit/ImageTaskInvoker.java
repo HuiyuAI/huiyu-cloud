@@ -3,6 +3,7 @@ package com.huiyu.service.core.service.submit;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.Monitor;
+import com.huiyu.service.core.config.TaskContext;
 import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
@@ -47,7 +48,7 @@ public class ImageTaskInvoker {
     private PicService picService;
 
     public void invokerGenerate(Task task) {
-
+        TaskContext.TASK_SUBMIT_CONTEXT.set(task);
 
         SDResponse resp = invokerHttp(task);
 

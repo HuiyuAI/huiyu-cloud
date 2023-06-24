@@ -67,6 +67,7 @@ public class SDController {
 
 
         // 3. 描述词违禁词检测
+//        wxMaSecCheckService.checkMessage(cmd.getPrompt());
 
 
         // 4. 检验用户图片库存是否满(库存是否需要根据用户级别增加)

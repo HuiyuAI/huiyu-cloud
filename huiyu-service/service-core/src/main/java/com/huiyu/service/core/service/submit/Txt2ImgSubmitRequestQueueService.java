@@ -29,8 +29,6 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
 
     @Override
     public NewPair<Task, Dto> convertTask(Txt2ImgCmd txt2ImgCmd) {
-
-
         Task task = new Task();
         Txt2ImgDto txt2ImgDto = SDCmdConverter.convert(txt2ImgCmd);
 

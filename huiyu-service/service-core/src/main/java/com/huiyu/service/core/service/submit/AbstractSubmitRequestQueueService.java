@@ -37,8 +37,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor());
     }
 
-    public abstract NewPair<Task, Dto> convertTask(T t);
-
     public boolean isSupport(T t) {
         ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
         Type actualTypeArgument = parameterizedType.getActualTypeArguments()[0];
@@ -46,6 +44,8 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         String name = t.getClass().getName();
         return StringUtils.equals(typeName, name);
     }
+
+    public abstract NewPair<Task, Dto> convertTask(T t);
 
     public abstract String chooseExecSource(T t);
 

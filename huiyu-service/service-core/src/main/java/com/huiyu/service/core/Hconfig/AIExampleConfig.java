@@ -68,7 +68,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
     }
 
     public ThreadPoolExecutorDecorator creatExecutor(String ip, String source) {
-        log.info("增加AI实例ip:{},source:{}", ip, source);
+        log.info("增加AI实例ip: {}, source: {}", ip, source);
         MonitorThreadPoolTaskExecutor executor = new MonitorThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);

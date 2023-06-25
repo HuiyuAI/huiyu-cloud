@@ -1,7 +1,11 @@
 package com.huiyu.service.core.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.result.R;
+import com.huiyu.common.web.util.JwtUtils;
+import com.huiyu.service.core.convert.PicConvert;
+import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicDto;
 import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.PicService;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import java.util.List;
 
 /**
@@ -31,8 +37,13 @@ public class PicController {
      * 画夹分页
      */
     @GetMapping("/page")
-    public R<IPage<PicVo>> list(PicDto dto, Integer pageNum, Integer pageSize) {
-        return R.ok();
+    public R<IPage<PicVo>> page(@Valid PicDto dto, Integer pageNum, @Max(value = 100, message = "异常错误") Integer pageSize) {
+//        Long userId = JwtUtils.getId();
+        Long userId = 1L;
+        dto.setUserId(userId);
+        IPage<Pic> picPage = picService.queryPage(new Page<>(pageNum, pageSize), dto);
+        Page<PicVo> picVoPage = PicConvert.INSTANCE.toVOPage(picPage);
+        return R.ok(picVoPage);
     }
 
     /**

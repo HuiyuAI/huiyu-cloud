@@ -1,7 +1,10 @@
 package com.huiyu.service.core.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
+import com.huiyu.service.core.model.dto.PicDto;
 import com.huiyu.service.core.service.PicService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -10,10 +13,21 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class PicServiceImpl implements PicService {
+public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicService {
 
     @Resource
     private PicMapper picMapper;
+
+    @Override
+    public IPage<Pic> queryPage(IPage<Pic> page, PicDto dto) {
+        if (dto.getUserId() == null) {
+            throw new RuntimeException("异常错误");
+        }
+        return super.lambdaQuery()
+                .eq(Pic::getUserId, dto.getUserId())
+                .le(Pic::getCreateTime, dto.getQueryDeadline())
+                .page(page);
+    }
 
     @Override
     public Pic getByUuidOnly(String uuid) {

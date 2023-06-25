@@ -7,10 +7,13 @@ import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.sd.SDTaskConverter;
 import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.sd.dto.Img2ImgDto;
+import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
 import com.huiyu.service.core.utils.IdUtils;
@@ -69,9 +72,25 @@ public class ImageTaskService {
             BeanUtil.copyProperties(task, copyTask);
 
             copyTask.setId(IdUtils.nextSnowflakeId());
+            copyTask.setNum(1);
+
+            TaskTypeEnum type = task.getType();
+            switch (type) {
+                case TXT2IMG:
+                    Txt2ImgDto txt2ImgDto = (Txt2ImgDto) dto;
+                    if (-1 != txt2ImgDto.getSeed() && i != 0) {
+                        txt2ImgDto.setSeed(txt2ImgDto.getSeed() + 1);
+                    }
+                    break;
+                case IMG2IMG:
+                    Img2ImgDto img2ImgDto = (Img2ImgDto) dto;
+                    break;
+                default:
+                    break;
+            }
             dto.setResImageUuid(IdUtil.fastUUID());
             copyTask.setBody(JacksonUtils.toJsonStr(dto));
-            copyTask.setNum(1);
+
             taskList.add(copyTask);
         }
         return taskList;

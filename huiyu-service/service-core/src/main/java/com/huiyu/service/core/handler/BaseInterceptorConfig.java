@@ -1,15 +1,11 @@
 package com.huiyu.service.core.handler;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @Auther: wAnG
@@ -18,16 +14,10 @@ import java.util.Date;
  */
 
 @Configuration
-public class BaseInterceptorConfig extends WebMvcConfigurationSupport {
+public class BaseInterceptorConfig implements WebMvcConfigurer {
 
     @Resource
     private RequestInterceptor requestInterceptor;
-
-    @Resource
-    private Converter<String, LocalDateTime> localDateTimeConverter;
-
-    @Resource
-    private Converter<String, Date> dateConverter;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -39,16 +29,9 @@ public class BaseInterceptorConfig extends WebMvcConfigurationSupport {
     }
 
     @Override
-    protected void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestInterceptor)
                 .addPathPatterns("/**");
-        super.addInterceptors(registry);
     }
 
-    @Override
-    protected void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(localDateTimeConverter);
-        registry.addConverter(dateConverter);
-        super.addFormatters(registry);
-    }
 }

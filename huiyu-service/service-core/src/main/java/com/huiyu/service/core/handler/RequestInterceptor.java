@@ -1,13 +1,17 @@
 package com.huiyu.service.core.handler;
 
+import com.huiyu.service.core.entity.RequestLog;
+import com.huiyu.service.core.service.RequestLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 
 /**
  * @Auther: wAnG
@@ -19,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 public class RequestInterceptor implements HandlerInterceptor {
 
     private final Logger log = LoggerFactory.getLogger("paramLog");
+
+    @Resource
+    private RequestLogService requestLogService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -53,6 +60,17 @@ public class RequestInterceptor implements HandlerInterceptor {
                         "status : [{}] | body : [{}]\n" +
                         "====================  ResponseEnd  ====================",
                 totalTime, IP, method, requestURI, remoteName, status, body);
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        RequestLog requestLog = RequestLog.builder()
+                .ipAddress(request.getRemoteAddr())
+                .url(request.getRequestURI())
+                .method(request.getMethod())
+                .createTime(LocalDateTime.now())
+                .build();
+        requestLogService.insert(requestLog);
     }
 
 }

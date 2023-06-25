@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.RequestLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="RequestLogMap" type="com.huiyu.service.core.entity.RequestLog">
+        <result column="id" property="id"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="method" property="method"/>
+        <result column="url" property="url"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert">
+        insert into request_log (ip_address, method, url, create_time)
+        values (#{ipAddress}, #{method}, #{url}, #{createTime})
+    </insert>
+</mapper>

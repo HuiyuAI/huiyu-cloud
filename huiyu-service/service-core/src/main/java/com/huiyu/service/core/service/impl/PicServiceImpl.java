@@ -26,6 +26,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
         return super.lambdaQuery()
                 .eq(Pic::getUserId, dto.getUserId())
                 .le(Pic::getCreateTime, dto.getQueryDeadline())
+                .orderByDesc(Pic::getCreateTime)
                 .page(page);
     }
 

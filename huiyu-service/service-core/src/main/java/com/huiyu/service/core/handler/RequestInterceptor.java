@@ -1,5 +1,6 @@
 package com.huiyu.service.core.handler;
 
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.entity.RequestLog;
 import com.huiyu.service.core.service.RequestLogService;
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class RequestInterceptor implements HandlerInterceptor {
                         "totalTime : {}ms ==> IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}] |\n" +
                         "status : [{}] | body : [{}]\n" +
                         "====================  ResponseEnd  ====================",
-                totalTime, IP, method, requestURI, remoteName, status, body);
+                totalTime, IP, method, requestURI, remoteName, status, JacksonUtils.toJsonStr(body));
     }
 
     @Override

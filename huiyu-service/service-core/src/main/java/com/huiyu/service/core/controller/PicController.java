@@ -37,11 +37,11 @@ public class PicController {
      * 画夹分页
      */
     @GetMapping("/page")
-    public R<IPage<PicVo>> page(@Valid PicDto dto, Integer pageNum, @Max(value = 100, message = "异常错误") Integer pageSize) {
+    public R<IPage<PicVo>> page(@Valid PicDto dto, Integer pageNum, @Valid @Max(value = 100, message = "异常错误") Integer pageSize) {
 //        Long userId = JwtUtils.getId();
         Long userId = 1L;
         dto.setUserId(userId);
-        IPage<Pic> picPage = picService.queryPage(new Page<>(pageNum, pageSize), dto);
+        IPage<Pic> picPage = picService.queryPage(Page.of(pageNum, pageSize), dto);
         Page<PicVo> picVoPage = PicConvert.INSTANCE.toVOPage(picPage);
         return R.ok(picVoPage);
     }

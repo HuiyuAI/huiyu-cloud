@@ -14,6 +14,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.concurrent.CompletableFuture;
 
+import static com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
+
 /**
  * @author wAnG
  * @Date 2023-06-12  23:30
@@ -34,7 +36,8 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         Task task = taskDtoPair.getKey();
         task.setExecSource(execSource);
         Dto dto = taskDtoPair.getValue();
-        CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor());
+        CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
+                .exceptionally(ExceptionLogHandle);
     }
 
     public boolean isSupport(T t) {

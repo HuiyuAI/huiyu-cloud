@@ -2,7 +2,8 @@ package com.huiyu.service.core.config.executor;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.Executor;
 
 /**
  * @author wAnG
@@ -12,7 +13,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Builder
 public class ThreadPoolExecutorDecorator {
 
-    private ThreadPoolTaskExecutor threadPoolExecutor;
+    private Executor threadPoolExecutor;
 
     private String sourceName;
 

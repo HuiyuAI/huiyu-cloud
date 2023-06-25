@@ -1,5 +1,6 @@
 package com.huiyu.service.core.Hconfig;
 
+import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.huiyu.service.core.Hconfig.annotation.HConfig;
 import com.huiyu.service.core.config.executor.MonitorThreadPoolTaskExecutor;
 import com.huiyu.service.core.config.executor.TaskExecutionRejectedHandler;
@@ -8,9 +9,11 @@ import com.huiyu.service.core.service.submit.ImageTaskService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 import static com.huiyu.service.core.config.TaskContext.INVOKER_URL_CONTEXT;
@@ -58,7 +61,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         submitRequestExecutorList = submitRequestExecutorList.stream()
                 .filter(submitRequestExecutor -> {
                     if (!exampleItemsConfigList.contains(submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName())) {
-                        submitRequestExecutor.getThreadPoolExecutor().shutdown();
+                        ((ThreadPoolTaskExecutor) TtlExecutors.unwrap(submitRequestExecutor.getThreadPoolExecutor())).shutdown();
                         return false;
                     }
                     return true;
@@ -90,8 +93,9 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
             };
         });
         executor.initialize();
+        Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
         return ThreadPoolExecutorDecorator.builder()
-                .threadPoolExecutor(executor)
+                .threadPoolExecutor(ttlExecutor)
                 .sourceName(source)
                 .ip(ip)
                 .build();

@@ -1,11 +1,13 @@
 package com.huiyu.service.core.config.executor;
 
+import com.alibaba.ttl.threadpool.TtlExecutors;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -66,8 +68,9 @@ public class ExecutorConfig {
             };
         });
         executor.initialize();
+        Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
         return ThreadPoolExecutorDecorator.builder()
-                .threadPoolExecutor(executor)
+                .threadPoolExecutor(ttlExecutor)
                 .sourceName("split")
                 .build();
     }

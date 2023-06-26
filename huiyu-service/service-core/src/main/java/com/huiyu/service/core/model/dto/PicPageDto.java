@@ -3,6 +3,7 @@ package com.huiyu.service.core.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
@@ -16,11 +17,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PicDto {
-    /**
-     * uuid
-     */
-    private String uuid;
+@EqualsAndHashCode(callSuper = true)
+public class PicPageDto extends PageDto {
     /**
      * 用户id
      */
@@ -28,6 +26,6 @@ public class PicDto {
     /**
      * 查询截止时间
      */
-    @NotNull(message = "异常错误")
+    @NotNull(message = "queryDeadline不能为空")
     private LocalDateTime queryDeadline;
 }

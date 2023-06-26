@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
-import com.huiyu.service.core.model.dto.PicDto;
+import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.service.PicService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     private PicMapper picMapper;
 
     @Override
-    public IPage<Pic> queryPage(IPage<Pic> page, PicDto dto) {
+    public IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto) {
         if (dto.getUserId() == null) {
             throw new RuntimeException("异常错误");
         }

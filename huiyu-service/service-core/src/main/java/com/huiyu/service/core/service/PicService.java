@@ -3,7 +3,7 @@ package com.huiyu.service.core.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.core.entity.Pic;
-import com.huiyu.service.core.model.dto.PicDto;
+import com.huiyu.service.core.model.dto.PicPageDto;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface PicService extends IService<Pic> {
      * @param dto  筛选条件
      * @return 查询结果
      */
-    IPage<Pic> queryPage(IPage<Pic> page, PicDto dto);
+    IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto);
 
     List<Pic> getPicsByUserId(Long userId);
 

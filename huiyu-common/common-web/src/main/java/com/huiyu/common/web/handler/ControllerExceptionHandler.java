@@ -2,6 +2,7 @@ package com.huiyu.common.web.handler;
 
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,6 +55,15 @@ public class ControllerExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public <T> R<T> processException(MethodArgumentNotValidException e) {
+        log.warn("参数校验异常: {}", e.getMessage());
+        return R.error(e.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
+    /**
+     * 捕获参数校验异常
+     */
+    @ExceptionHandler(BindException.class)
+    public <T> R<T> processException(BindException e) {
         log.warn("参数校验异常: {}", e.getMessage());
         return R.error(e.getBindingResult().getFieldError().getDefaultMessage());
     }

@@ -3,12 +3,15 @@ package com.huiyu.service.core.config.executor;
 import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.config.TaskContext;
+import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
+import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
+import com.huiyu.service.core.service.business.IntegralRecordBusiness;
 import com.huiyu.service.core.service.submit.ImageTaskService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +43,7 @@ public class CompletableFutureExceptionHandle {
         TaskService taskService = SpringContext.getBean(TaskService.class);
         ImageTaskService imageTaskService = SpringContext.getBean(ImageTaskService.class);
         PicService picService = SpringContext.getBean(PicService.class);
+        IntegralRecordBusiness integralRecordBusiness = SpringContext.getBean(IntegralRecordBusiness.class);
         // 重试次数上限
         Task task = TaskContext.TASK_SUBMIT_CONTEXT.get();
         if (task == null) {
@@ -50,7 +54,9 @@ public class CompletableFutureExceptionHandle {
             task.setStatus(TaskStatusEnum.UN_EXECUTED);
             imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
         } else {
-            // todo 回退消耗(积分或者卷)
+            // 回退积分
+            integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.BACK, IntegralOperationRecordEnum.ADD);
+
             Task TaskDO = Task.builder()
                     .id(task.getId())
                     .status(TaskStatusEnum.DISCARD)

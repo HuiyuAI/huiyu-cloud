@@ -6,6 +6,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface RequestLimit {
-    int limit() default 5;
-    long interval() default 1000;
+    int maxCount() default 5;
+    int seconds() default 1;
 }

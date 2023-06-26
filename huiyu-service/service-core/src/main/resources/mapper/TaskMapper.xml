@@ -9,6 +9,7 @@
         <result column="user_id" property="userId"/>
         <result column="type" property="type"/>
         <result column="body" property="body"/>
+        <result column="integral" property="integral"/>
         <result column="status" property="status"/>
         <result column="exec_source" property="execSource"/>
         <result column="create_time" property="createTime"/>
@@ -17,8 +18,8 @@
     </resultMap>
 
     <insert id="insertTask">
-        insert into task (id, request_uuid, user_id, type, body, status, exec_source, create_time, update_time, is_delete)
-        values (#{id}, #{requestUuid}, #{userId}, #{type}, #{body}, #{status}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
+        insert into task (id, request_uuid, user_id, type, body, status,integral, exec_source, create_time, update_time, is_delete)
+        values (#{id}, #{requestUuid}, #{userId}, #{type}, #{body}, #{status}, #{integral}, #{execSource}, #{createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <select id="getByStatus" resultMap="taskMap">
@@ -48,6 +49,9 @@
             </if>
             <if test="body != null and body != ''">
                 body = #{body},
+            </if>
+            <if test="integral != null and integral != ''">
+                integral = #{integral},
             </if>
             <if test="status != null">
                 status = #{status},

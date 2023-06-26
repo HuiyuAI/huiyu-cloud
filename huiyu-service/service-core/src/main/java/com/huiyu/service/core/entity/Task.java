@@ -46,6 +46,10 @@ public class Task implements Serializable {
      */
     private Integer retryCount;
     /**
+     * 消耗积分
+     */
+    private Integer integral;
+    /**
      * 执行源
      */
     private String execSource;

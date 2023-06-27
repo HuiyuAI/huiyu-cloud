@@ -8,8 +8,6 @@ import com.huiyu.service.core.utils.NewPair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Random;
 
 /**
  * @author wAnG
@@ -25,11 +23,4 @@ public class Img2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         return null;
     }
 
-    @Override
-    public String chooseExecSource(Img2ImgCmd img2ImgCmd) {
-        List<AIExampleConfig.ExampleItem> exampleItems = aiExampleConfig.getExampleItems();
-        Random random = new Random();
-        int i = random.nextInt(exampleItems.size());
-        return exampleItems.get(i).getSource();
-    }
 }

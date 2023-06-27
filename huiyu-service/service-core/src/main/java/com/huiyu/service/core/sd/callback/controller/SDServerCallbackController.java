@@ -3,6 +3,7 @@ package com.huiyu.service.core.sd.callback.controller;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
@@ -37,6 +38,7 @@ public class SDServerCallbackController {
      * @return ok
      */
     @PostMapping("/uploadSuccessCallback")
+    @MethodMonitor
     public R<?> uploadSuccessCallback(@RequestBody UploadSuccessCallbackCmd cmd) {
         log.info("图片上传成功回调: {}", JacksonUtils.toJsonStr(cmd));
         if (!HuiyuConstant.callbackToken.equals(cmd.getToken())) {

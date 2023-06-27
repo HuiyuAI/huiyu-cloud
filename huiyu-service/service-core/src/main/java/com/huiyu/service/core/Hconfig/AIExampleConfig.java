@@ -6,13 +6,18 @@ import com.huiyu.service.core.config.executor.MonitorThreadPoolTaskExecutor;
 import com.huiyu.service.core.config.executor.TaskExecutionRejectedHandler;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.service.submit.ImageTaskService;
+import com.huiyu.service.core.service.submit.chooseStrategy.ExecChooseContext;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
@@ -26,18 +31,41 @@ import static com.huiyu.service.core.config.executor.ExecutorConfig.TRACE_ID;
  */
 
 @Slf4j
-@HConfig(dataId = "huiyu-service-example.json")
+@HConfig(dataId = "example", suffix = HConfigType.JSON)
 public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeData> {
 
     @Resource
     private ImageTaskService imageTaskService;
 
-    private List<ExampleItem> exampleItems;
+    private List<ExampleItem> exampleItems = new ArrayList<>();
 
     @Override
     public void onChange(ChangeData data) {
+        if (!CollectionUtils.isEmpty(exampleItems)) {
+            removeExecutor(data.getData());
+        }
         this.exampleItems = data.getData();
         changeExecutor();
+    }
+
+    private void removeExecutor(List<ExampleItem> newExampleItems) {
+        List<ThreadPoolExecutorDecorator> submitRequestExecutorList = imageTaskService.getSubmitRequestExecutorList();
+
+        Map<Object, ExampleItem> exampleItemsConfigMap = newExampleItems.stream()
+                .collect(Collectors.toMap(exampleItem -> exampleItem.getIp() + exampleItem.getSource(), exampleItem -> exampleItem));
+
+        // 计算减少的配置
+        submitRequestExecutorList
+                .forEach(submitRequestExecutor -> {
+                    String mapKey = submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName();
+                    if (Objects.isNull(exampleItemsConfigMap.get(mapKey))) {
+                        ExampleItem exampleItem = exampleItemsConfigMap.get(mapKey);
+                        synchronized (exampleItem) {
+                            ExecChooseContext.examplePoint.remove(exampleItem);
+                        }
+                        ((ThreadPoolTaskExecutor) TtlExecutors.unwrap(submitRequestExecutor.getThreadPoolExecutor())).shutdown();
+                    }
+                });
     }
 
     private void changeExecutor() {
@@ -45,9 +73,8 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         List<String> executorMarkList = submitRequestExecutorList.stream()
                 .map(executor -> executor.getIp() + executor.getSourceName())
                 .collect(Collectors.toList());
-        List<String> exampleItemsConfigList = exampleItems.stream()
-                .map(exampleItem -> exampleItem.getIp() + exampleItem.getSource())
-                .collect(Collectors.toList());
+        Map<Object, ExampleItem> exampleItemsConfigMap = exampleItems.stream()
+                .collect(Collectors.toMap(exampleItem -> exampleItem.getIp() + exampleItem.getSource(), exampleItem -> exampleItem));
 
         // 计算增加的配置
         List<ExampleItem> addConfig = exampleItems.stream()
@@ -60,8 +87,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         // 计算减少的配置
         submitRequestExecutorList = submitRequestExecutorList.stream()
                 .filter(submitRequestExecutor -> {
-                    if (!exampleItemsConfigList.contains(submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName())) {
-                        ((ThreadPoolTaskExecutor) TtlExecutors.unwrap(submitRequestExecutor.getThreadPoolExecutor())).shutdown();
+                    if (Objects.isNull(exampleItemsConfigMap.get(submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName()))) {
                         return false;
                     }
                     return true;
@@ -75,7 +101,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         MonitorThreadPoolTaskExecutor executor = new MonitorThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
-        executor.setQueueCapacity(5);
+        executor.setQueueCapacity(1000);
         executor.setThreadNamePrefix("SUBMIT");
         executor.setMonitorName("submitRequestExecutor_test1");
         executor.setRejectedExecutionHandler(new TaskExecutionRejectedHandler());
@@ -111,6 +137,11 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         private String ip;
 
         private String source;
+
+        /**
+         * 不同实例的执行效率
+         */
+        private Integer efficiency;
 
     }
 

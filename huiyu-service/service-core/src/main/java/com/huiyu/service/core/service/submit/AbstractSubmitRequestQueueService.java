@@ -1,9 +1,11 @@
 package com.huiyu.service.core.service.submit;
 
+import com.huiyu.service.core.Hconfig.HotFileConfig;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.service.submit.chooseStrategy.ExecChooseStrategy;
 import com.huiyu.service.core.utils.NewPair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
@@ -30,9 +34,20 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     @Resource
     private ImageTaskService imageTaskService;
 
+    @Resource
+    private List<ExecChooseStrategy<T>> execChooseStrategyList;
+
+    @Resource
+    private HotFileConfig hotFileConfig;
+
     public void submitToSplit(T t) {
         NewPair<Task, Dto> taskDtoPair = convertTask(t);
-        String execSource = chooseExecSource(t);
+        Integer execStrategy = hotFileConfig.getExecStrategy();
+        String execSource = execChooseStrategyList.stream()
+                .filter(strategy -> Objects.equals(strategy.getType().getCode(), execStrategy))
+                .map(strategy -> strategy.chooseExecSource(t))
+                .findFirst()
+                .get();
         Task task = taskDtoPair.getKey();
         task.setExecSource(execSource);
         Dto dto = taskDtoPair.getValue();
@@ -49,8 +64,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     }
 
     public abstract NewPair<Task, Dto> convertTask(T t);
-
-    public abstract String chooseExecSource(T t);
 
 
 }

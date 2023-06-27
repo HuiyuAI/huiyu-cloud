@@ -1,4 +1,4 @@
-package com.huiyu.service.core.controller;
+package com.huiyu.service.core.Hconfig;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.commons.lang.StringUtils;
@@ -8,7 +8,7 @@ import com.alibaba.nacos.api.config.ConfigChangeEvent;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.client.config.listener.impl.AbstractConfigChangeListener;
-import com.huiyu.service.core.Hconfig.HConfigOnChange;
+import com.google.common.base.Joiner;
 import com.huiyu.service.core.Hconfig.annotation.HConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -57,7 +57,14 @@ public class NacosConfigListener implements InitializingBean, ApplicationContext
     @Value("${spring.cloud.nacos.config.password}")
     private String password;
 
+    @Value("${spring.application.name}")
+    private String serverName;
+
     private ConfigService configService;
+
+    private final Joiner UNDER_LINE = Joiner.on("-");
+
+    private final Joiner POINT = Joiner.on(".");
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -73,7 +80,8 @@ public class NacosConfigListener implements InitializingBean, ApplicationContext
                 .forEach(bean -> {
                     Class<? extends HConfigOnChange> aClass = bean.getClass();
                     HConfig annotation = aClass.getAnnotation(HConfig.class);
-                    String dataId = annotation.dataId();
+                    String type = annotation.suffix().getType();
+                    String dataId = POINT.join(UNDER_LINE.join(serverName, annotation.dataId()), type);
                     String group = annotation.group();
                     try {
                         log.info("加载自定义配置文件dataId:{},group:{}", dataId, group);
@@ -100,7 +108,8 @@ public class NacosConfigListener implements InitializingBean, ApplicationContext
 
     private void changeConfig(Class<? extends HConfigOnChange> aClass, HConfigOnChange bean) throws Exception {
         HConfig annotation = aClass.getAnnotation(HConfig.class);
-        String dataId = annotation.dataId();
+        String type = annotation.suffix().getType();
+        String dataId = POINT.join(UNDER_LINE.join(serverName, annotation.dataId()), type);
         String group = annotation.group();
         String config = configService.getConfig(dataId, group, 3000);
         Method[] methods = aClass.getDeclaredMethods();

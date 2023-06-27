@@ -1,5 +1,6 @@
 package com.huiyu.service.core.Hconfig.annotation;
 
+import com.huiyu.service.core.Hconfig.HConfigType;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;
@@ -21,4 +22,6 @@ public @interface HConfig {
     String dataId();
 
     String group() default "DEFAULT_GROUP";
+
+    HConfigType suffix();
 }

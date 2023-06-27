@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Random;
 
 /**
  * @author wAnG
@@ -47,13 +45,6 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         return new NewPair<>(task, txt2ImgDto);
     }
 
-    @Override
-    public String chooseExecSource(Txt2ImgCmd txt2ImgCmd) {
-        List<AIExampleConfig.ExampleItem> exampleItems = aiExampleConfig.getExampleItems();
-        Random random = new Random();
-        int i = random.nextInt(exampleItems.size());
-        return exampleItems.get(i).getSource();
-    }
 
 
 }

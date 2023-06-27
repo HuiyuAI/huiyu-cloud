@@ -1,30 +1,20 @@
 package com.huiyu.service.core.aspect;
 
-import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimit;
-import com.sun.xml.internal.ws.client.ResponseContext;
-import com.sun.xml.internal.ws.client.ResponseContextReceiver;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.protocol.ResponseContent;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Aspect
 @Component

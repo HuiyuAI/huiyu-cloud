@@ -1,7 +1,5 @@
 package com.huiyu.service.core.sd.generate;
 
-import cn.hutool.core.util.IdUtil;
-import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.model.cmd.Cmd;

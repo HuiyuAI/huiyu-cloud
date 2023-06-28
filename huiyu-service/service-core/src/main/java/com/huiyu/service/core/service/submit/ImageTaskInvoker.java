@@ -1,7 +1,6 @@
 package com.huiyu.service.core.service.submit;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.config.TaskContext;
 import com.huiyu.service.core.constant.HuiyuConstant;
@@ -39,22 +38,17 @@ public class ImageTaskInvoker {
     private RestTemplate restTemplate;
 
     @Resource
-    private ImageTaskService imageTaskService;
-
-    @Resource
     private TaskService taskService;
 
     @Resource
     private PicService picService;
 
-    public void invokerGenerate(Task task) {
+    public void invokerGenerate(Task task, String ip) {
         TaskContext.TASK_SUBMIT_CONTEXT.set(task);
 
         SDResponse resp = invokerHttp(task);
 
         generateEnd(task, resp);
-
-        findNextTask();
     }
 
 
@@ -115,11 +109,11 @@ public class ImageTaskInvoker {
         log.info("测试图片生成 url: {}", imgUrl);
     }
 
-    private void findNextTask() {
+    public Task findNextTask(String source) {
         // 寻找新的任务放入线程池
-        List<Task> taskList = taskService.getByStatus(TaskStatusEnum.UN_EXECUTED, 1);
+        List<Task> taskList = taskService.getByStatus(TaskStatusEnum.UN_EXECUTED, 1, source);
         if (taskList.isEmpty()) {
-            return;
+            return null;
         }
         Task task = taskList.get(0);
         Task taskDo = Task.builder()
@@ -127,7 +121,7 @@ public class ImageTaskInvoker {
                 .status(TaskStatusEnum.IN_QUEUE)
                 .build();
         taskService.updateById(taskDo);
-        imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
+        return task;
     }
 
     private String getUrl() {

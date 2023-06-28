@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public interface TaskService {
-    List<Task> getByStatus(TaskStatusEnum status, int limit);
+    List<Task> getByStatus(TaskStatusEnum status, int limit, String source);
 
     boolean insertTask(Task task);
 

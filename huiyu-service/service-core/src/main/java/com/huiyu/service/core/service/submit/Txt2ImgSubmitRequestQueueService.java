@@ -1,6 +1,6 @@
 package com.huiyu.service.core.service.submit;
 
-import com.huiyu.service.core.Hconfig.AIExampleConfig;
+import com.huiyu.service.core.Hconfig.config.AIExampleConfig;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Task;
@@ -34,7 +34,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         task.setId(IdUtils.nextSnowflakeId());
         task.setUserId(txt2ImgCmd.getUserId());
         task.setType(TaskTypeEnum.TXT2IMG);
-        task.setStatus(TaskStatusEnum.IN_QUEUE);
+        task.setStatus(TaskStatusEnum.UN_EXECUTED);
         task.setExecSource("local");
         task.setRetryCount(0);
         task.setIntegral(txt2ImgCmd.getIntegral() / txt2ImgCmd.getCount());

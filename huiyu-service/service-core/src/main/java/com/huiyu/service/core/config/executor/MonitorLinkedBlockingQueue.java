@@ -18,6 +18,7 @@ public class MonitorLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
     private String monitorName;
 
     public MonitorLinkedBlockingQueue(String monitorName) {
+        super();
         this.monitorName = monitorName;
     }
 

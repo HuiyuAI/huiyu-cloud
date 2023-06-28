@@ -27,8 +27,9 @@
         from task
         where is_delete = 0
           and status = #{status}
+          and exec_source = #{source}
         ORDER BY create_time asc
-            limit #{limit}
+        limit #{limit}
     </select>
 
     <select id="getById" resultMap="taskMap">

@@ -25,10 +25,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
-import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
-import static com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
 
 /**
  * @author wAnG
@@ -107,15 +103,14 @@ public class ImageTaskService {
         }
 
         // todo 缺少多级队列
-        executorOptional.ifPresent(executor -> {
-            tasks.forEach(taskItem -> {
-                preInvoker(taskItem);
-                TASK_INFO_CONTEXT.set(taskItem);
-                CompletableFuture.runAsync(() -> imageTaskInvokerList.invokerGenerate(taskItem), executor.getThreadPoolExecutor())
-                        .exceptionally(ExceptionLogHandle);
-                TASK_INFO_CONTEXT.remove();
+        synchronized (executorOptional.get()) {
+            executorOptional.ifPresent(executor -> {
+                tasks.forEach(taskItem -> {
+                    preInvoker(taskItem);
+                    executor.commit();
+                });
             });
-        });
+        }
     }
 
     private void preInvoker(Task task) {

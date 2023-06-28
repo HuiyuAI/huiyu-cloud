@@ -1,7 +1,9 @@
-package com.huiyu.service.core.Hconfig;
+package com.huiyu.service.core.Hconfig.config;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
-import com.huiyu.service.core.Hconfig.annotation.HConfig;
+import com.huiyu.service.core.Hconfig.base.HConfigOnChange;
+import com.huiyu.service.core.Hconfig.base.HConfigType;
+import com.huiyu.service.core.Hconfig.base.annotation.HConfig;
 import com.huiyu.service.core.config.executor.MonitorThreadPoolTaskExecutor;
 import com.huiyu.service.core.config.executor.TaskExecutionRejectedHandler;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
@@ -10,7 +12,7 @@ import com.huiyu.service.core.service.submit.chooseStrategy.ExecChooseContext;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -32,6 +34,7 @@ import static com.huiyu.service.core.config.executor.ExecutorConfig.TRACE_ID;
 
 @Slf4j
 @HConfig(dataId = "example", suffix = HConfigType.JSON)
+@DependsOn("springContext")
 public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeData> {
 
     @Resource
@@ -51,19 +54,22 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
     private void removeExecutor(List<ExampleItem> newExampleItems) {
         List<ThreadPoolExecutorDecorator> submitRequestExecutorList = imageTaskService.getSubmitRequestExecutorList();
 
-        Map<Object, ExampleItem> exampleItemsConfigMap = newExampleItems.stream()
+        Map<Object, ExampleItem> newExampleItemsConfigMap = newExampleItems.stream()
+                .collect(Collectors.toMap(exampleItem -> exampleItem.getIp() + exampleItem.getSource(), exampleItem -> exampleItem));
+
+        Map<Object, ExampleItem> oldExampleItemsConfigMap = exampleItems.stream()
                 .collect(Collectors.toMap(exampleItem -> exampleItem.getIp() + exampleItem.getSource(), exampleItem -> exampleItem));
 
         // 计算减少的配置
         submitRequestExecutorList
                 .forEach(submitRequestExecutor -> {
-                    String mapKey = submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName();
-                    if (Objects.isNull(exampleItemsConfigMap.get(mapKey))) {
-                        ExampleItem exampleItem = exampleItemsConfigMap.get(mapKey);
+                    String mapKey = submitRequestExecutor.getUniqueKey();
+                    if (Objects.isNull(newExampleItemsConfigMap.get(mapKey))) {
+                        ExampleItem exampleItem = oldExampleItemsConfigMap.get(mapKey);
                         synchronized (exampleItem) {
                             ExecChooseContext.examplePoint.remove(exampleItem);
                         }
-                        ((ThreadPoolTaskExecutor) TtlExecutors.unwrap(submitRequestExecutor.getThreadPoolExecutor())).shutdown();
+                        submitRequestExecutor.shutdown();
                     }
                 });
     }
@@ -86,12 +92,8 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
 
         // 计算减少的配置
         submitRequestExecutorList = submitRequestExecutorList.stream()
-                .filter(submitRequestExecutor -> {
-                    if (Objects.isNull(exampleItemsConfigMap.get(submitRequestExecutor.getIp() + submitRequestExecutor.getSourceName()))) {
-                        return false;
-                    }
-                    return true;
-                }).collect(Collectors.toList());
+                .filter(submitRequestExecutor -> !Objects.isNull(exampleItemsConfigMap.get(submitRequestExecutor.getUniqueKey())))
+                .collect(Collectors.toList());
         newExecutorList.addAll(submitRequestExecutorList);
         imageTaskService.setSubmitRequestExecutorList(newExecutorList);
     }
@@ -120,11 +122,13 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         });
         executor.initialize();
         Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
-        return ThreadPoolExecutorDecorator.builder()
+        ThreadPoolExecutorDecorator executorDecorator = ThreadPoolExecutorDecorator.builder()
                 .threadPoolExecutor(ttlExecutor)
                 .sourceName(source)
                 .ip(ip)
                 .build();
+        executorDecorator.start();
+        return executorDecorator;
     }
 
     public List<ExampleItem> getExampleItems() {

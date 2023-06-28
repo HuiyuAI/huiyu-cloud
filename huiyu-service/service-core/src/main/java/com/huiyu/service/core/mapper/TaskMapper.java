@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface TaskMapper {
 
-    List<Task> getByStatus(@Param("status") TaskStatusEnum status, @Param("limit") int limit);
+    List<Task> getByStatus(@Param("status") TaskStatusEnum status, @Param("limit") int limit, @Param("source") String source);
 
     int insertTask(Task task);
 

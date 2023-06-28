@@ -32,7 +32,7 @@ public class PicBusinessImpl implements PicBusiness {
         if (picExt != null) {
             // 已分享
             picExt.setEnable(state);
-            return picExtService.update(picExt) > 0;
+            return picExtService.update(picExt);
         } else {
             // 未分享
             picExt = PicExt.builder()
@@ -41,7 +41,7 @@ public class PicBusinessImpl implements PicBusiness {
                     .path(pic.getPath())
                     .enable(state)
                     .build();
-            return picExtService.insertPicExt(picExt) > 0;
+            return picExtService.insert(picExt);
         }
     }
 }

@@ -11,7 +11,7 @@
         <result column="path" property="path"/>
     </resultMap>
 
-    <insert id="insertPicExt">
+    <insert id="insert">
         insert into pic_e
             (pic_id, views, enable, path)
         values (#{picExt.picId}, #{picExt.views}, #{picExt.enable}, #{picExt.path})
@@ -20,9 +20,6 @@
     <update id="update">
         update pic_e
         <set>
-            <if test="id != null">
-                id = #{id},
-            </if>
             <if test="picId != null and picId != ''">
                 pic_id = #{picId},
             </if>

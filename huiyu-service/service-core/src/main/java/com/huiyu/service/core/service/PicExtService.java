@@ -6,7 +6,7 @@ public interface PicExtService {
 
     PicExt getByPicId(Long picId);
 
-    int insertPicExt(PicExt picExt);
+    boolean insert(PicExt picExt);
 
-    int update(PicExt picExt);
+    boolean update(PicExt picExt);
 }

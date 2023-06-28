@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface PicExtMapper {
     PicExt getByPicId(Long picId);
 
-    int insertPicExt(PicExt picExt);
+    int insert(PicExt picExt);
 
     int update(PicExt picExt);
 }

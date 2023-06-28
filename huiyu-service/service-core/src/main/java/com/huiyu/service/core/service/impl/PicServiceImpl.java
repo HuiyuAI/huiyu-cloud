@@ -24,6 +24,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
             throw new RuntimeException("异常错误");
         }
         return super.lambdaQuery()
+                .select(Pic::getUuid, Pic::getPath, Pic::getStatus)
                 .eq(Pic::getUserId, dto.getUserId())
                 .le(Pic::getCreateTime, dto.getQueryDeadline())
                 .orderByDesc(Pic::getCreateTime)

@@ -65,7 +65,7 @@ public class SDController {
             return R.error("积分不足");
         }
         cmd.setIntegral(calcIntegral);
-        cmd.setUserId(1L);
+        cmd.setUserId(userId);
 
 
         // 3. 描述词违禁词检测

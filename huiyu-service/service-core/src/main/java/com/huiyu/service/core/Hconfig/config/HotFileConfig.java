@@ -1,6 +1,8 @@
-package com.huiyu.service.core.Hconfig;
+package com.huiyu.service.core.Hconfig.config;
 
-import com.huiyu.service.core.Hconfig.annotation.HConfig;
+import com.huiyu.service.core.Hconfig.base.HConfigOnChange;
+import com.huiyu.service.core.Hconfig.base.HConfigType;
+import com.huiyu.service.core.Hconfig.base.annotation.HConfig;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;

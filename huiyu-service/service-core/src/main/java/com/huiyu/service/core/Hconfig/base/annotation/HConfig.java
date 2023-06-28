@@ -1,6 +1,6 @@
-package com.huiyu.service.core.Hconfig.annotation;
+package com.huiyu.service.core.Hconfig.base.annotation;
 
-import com.huiyu.service.core.Hconfig.HConfigType;
+import com.huiyu.service.core.Hconfig.base.HConfigType;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;

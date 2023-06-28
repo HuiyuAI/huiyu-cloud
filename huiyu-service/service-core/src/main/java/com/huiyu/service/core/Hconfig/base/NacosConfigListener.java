@@ -1,4 +1,4 @@
-package com.huiyu.service.core.Hconfig;
+package com.huiyu.service.core.Hconfig.base;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.cloud.commons.lang.StringUtils;
@@ -9,7 +9,7 @@ import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.client.config.listener.impl.AbstractConfigChangeListener;
 import com.google.common.base.Joiner;
-import com.huiyu.service.core.Hconfig.annotation.HConfig;
+import com.huiyu.service.core.Hconfig.base.annotation.HConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;

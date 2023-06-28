@@ -1,6 +1,6 @@
 package com.huiyu.service.core.service.submit.chooseStrategy;
 
-import com.huiyu.service.core.Hconfig.AIExampleConfig;
+import com.huiyu.service.core.Hconfig.config.AIExampleConfig;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.service.submit.chooseStrategy.constant.ExecStrategyTypeEnum;
 import lombok.extern.slf4j.Slf4j;

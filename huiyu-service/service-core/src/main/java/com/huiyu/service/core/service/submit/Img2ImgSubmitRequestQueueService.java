@@ -1,6 +1,6 @@
 package com.huiyu.service.core.service.submit;
 
-import com.huiyu.service.core.Hconfig.AIExampleConfig;
+import com.huiyu.service.core.Hconfig.config.AIExampleConfig;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.sd.dto.Dto;

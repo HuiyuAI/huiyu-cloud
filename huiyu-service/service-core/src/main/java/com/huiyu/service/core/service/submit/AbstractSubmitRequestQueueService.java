@@ -1,6 +1,6 @@
 package com.huiyu.service.core.service.submit;
 
-import com.huiyu.service.core.Hconfig.HotFileConfig;
+import com.huiyu.service.core.Hconfig.config.HotFileConfig;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;

@@ -1,6 +1,6 @@
 package com.huiyu.service.core.service.submit.chooseStrategy;
 
-import com.huiyu.service.core.Hconfig.AIExampleConfig;
+import com.huiyu.service.core.Hconfig.config.AIExampleConfig;
 
 import java.math.BigInteger;
 import java.util.Map;

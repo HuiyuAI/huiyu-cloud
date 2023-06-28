@@ -1,4 +1,4 @@
-package com.huiyu.service.core.Hconfig;
+package com.huiyu.service.core.Hconfig.base;
 
 /**
  * @author wAnG

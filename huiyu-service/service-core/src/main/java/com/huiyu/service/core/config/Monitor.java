@@ -34,6 +34,7 @@ public class Monitor implements InitializingBean {
 
     public static void recordOne(String monitorName) {
         try {
+            monitorName = replaceName(monitorName);
             Counter monitor = exitsCounter(monitorName);
             if (Objects.isNull(monitor)) {
                 monitor = Counter.build().name(monitorName).help(monitorName).register(collectorRegistry);
@@ -47,6 +48,7 @@ public class Monitor implements InitializingBean {
 
     public static void recordTime(String monitorName, long time) {
         try {
+            monitorName = replaceName(monitorName);
             Summary summary = exitsSummary(monitorName);
             if (Objects.isNull(summary)) {
                 summary = Summary.build().name(monitorName).help(monitorName).register(collectorRegistry);
@@ -60,6 +62,7 @@ public class Monitor implements InitializingBean {
 
     public static void recordInc(String monitorName) {
         try {
+            monitorName = replaceName(monitorName);
             Gauge gauge = exitsGauge(monitorName);
             if (Objects.isNull(gauge)) {
                 gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
@@ -73,6 +76,7 @@ public class Monitor implements InitializingBean {
 
     public static void recordDec(String monitorName) {
         try {
+            monitorName = replaceName(monitorName);
             Gauge gauge = exitsGauge(monitorName);
             if (Objects.isNull(gauge)) {
                 gauge = Gauge.build().name(monitorName).help(monitorName).register(collectorRegistry);
@@ -97,9 +101,13 @@ public class Monitor implements InitializingBean {
         return gaugeNameMap.get(monitorName);
     }
 
+    private static String replaceName(String monitorName) {
+        return monitorName.replaceAll("\\.", "_").replaceAll(":", "").replaceAll("/", "");
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         Monitor.collectorRegistry = SpringContext.getBean(CollectorRegistry.class);
     }
+
 }

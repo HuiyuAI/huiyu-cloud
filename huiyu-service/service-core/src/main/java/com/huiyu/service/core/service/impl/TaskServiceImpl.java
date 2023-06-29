@@ -31,6 +31,10 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.updateById(task) > 0;
     }
 
+    public boolean batchUpdateBySource(String replaceExecSource, String targetExecSource, long limit) {
+        return taskMapper.batchUpdateBySource(replaceExecSource, targetExecSource, limit) > 0;
+    }
+
     @Override
     public Task getById(Long taskId) {
         return taskMapper.getById(taskId);

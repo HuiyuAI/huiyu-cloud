@@ -1,8 +1,10 @@
 package com.huiyu.service.core.service.submit.chooseStrategy;
 
 import com.huiyu.service.core.Hconfig.config.AIExampleConfig;
+import com.huiyu.service.core.config.executor.MonitorLinkedBlockingQueue;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,5 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ExecChooseContext {
 
     public static final Map<AIExampleConfig.ExampleItem, BigInteger> examplePoint = new ConcurrentHashMap<>();
+
+    public static final Map<String, MonitorLinkedBlockingQueue<Byte>> submitQueueList = new HashMap<>();
 
 }

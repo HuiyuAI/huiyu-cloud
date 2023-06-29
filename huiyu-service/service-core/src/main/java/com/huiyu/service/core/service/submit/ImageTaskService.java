@@ -95,7 +95,7 @@ public class ImageTaskService {
     public void execGenerate(List<Task> tasks, String taskExecSource) {
         Optional<ThreadPoolExecutorDecorator> executorOptional = submitRequestExecutorList.stream()
                 .filter(decorator -> StringUtils.equals(taskExecSource, decorator.getSourceName()))
-                .findFirst();
+                .findAny();
 
         if (!executorOptional.isPresent()) {
             log.error("未分配执行源");

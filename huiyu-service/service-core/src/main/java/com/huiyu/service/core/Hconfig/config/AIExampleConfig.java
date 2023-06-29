@@ -4,9 +4,11 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.huiyu.service.core.Hconfig.base.HConfigOnChange;
 import com.huiyu.service.core.Hconfig.base.HConfigType;
 import com.huiyu.service.core.Hconfig.base.annotation.HConfig;
+import com.huiyu.service.core.config.executor.MonitorLinkedBlockingQueue;
 import com.huiyu.service.core.config.executor.MonitorThreadPoolTaskExecutor;
 import com.huiyu.service.core.config.executor.TaskExecutionRejectedHandler;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.service.impl.TaskServiceImpl;
 import com.huiyu.service.core.service.submit.ImageTaskService;
 import com.huiyu.service.core.service.submit.chooseStrategy.ExecChooseContext;
 import lombok.Data;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.huiyu.service.core.config.TaskContext.INVOKER_URL_CONTEXT;
@@ -39,6 +42,9 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
 
     @Resource
     private ImageTaskService imageTaskService;
+
+    @Resource
+    private TaskServiceImpl taskService;
 
     private List<ExampleItem> exampleItems = new ArrayList<>();
 
@@ -69,6 +75,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
                         synchronized (exampleItem) {
                             ExecChooseContext.examplePoint.remove(exampleItem);
                         }
+                        reloadDecQueue(submitRequestExecutor.getTaskQueue(), submitRequestExecutor.getSourceName());
                         submitRequestExecutor.shutdown();
                     }
                 });
@@ -105,7 +112,6 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         executor.setMaxPoolSize(1);
         executor.setQueueCapacity(1000);
         executor.setThreadNamePrefix("SUBMIT");
-        executor.setMonitorName("submitRequestExecutor_test1");
         executor.setRejectedExecutionHandler(new TaskExecutionRejectedHandler());
         executor.setTaskDecorator(runnable -> {
             String traceId = MDC.get(TRACE_ID);
@@ -125,10 +131,66 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         ThreadPoolExecutorDecorator executorDecorator = ThreadPoolExecutorDecorator.builder()
                 .threadPoolExecutor(ttlExecutor)
                 .sourceName(source)
+                .monitorName("submitRequestExecutor_" + ip + "_" + source)
                 .ip(ip)
                 .build();
         executorDecorator.start();
+        MonitorLinkedBlockingQueue<Byte> taskQueue = executorDecorator.getTaskQueue();
+        reloadAddQueue(taskQueue, executorDecorator.getSourceName());
         return executorDecorator;
+    }
+
+    private void reloadAddQueue(MonitorLinkedBlockingQueue<Byte> taskQueue, String source) {
+        synchronized (ExecChooseContext.submitQueueList) {
+            ExecChooseContext.submitQueueList.put(source, taskQueue);
+            long taskCount = ExecChooseContext.submitQueueList.values().stream()
+                    .map(item -> item.size())
+                    .count();
+            if (taskCount == 0) {
+                return;
+            }
+
+            long queueSize = ExecChooseContext.submitQueueList.size();
+            long avgTask = taskCount / queueSize;
+
+            ExecChooseContext.submitQueueList.forEach((replaceSource, replaceQueue) -> {
+                long count = replaceQueue.size() - avgTask;
+                if (count < 0) {
+                    count = 0;
+                }
+                taskService.batchUpdateBySource(source, replaceSource, count);
+                for (int i = 0; i < count; i++) {
+                    try {
+                        taskQueue.offer(replaceQueue.poll(100, TimeUnit.MILLISECONDS));
+                    } catch (InterruptedException e) {
+                        log.error("reload_error", e);
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
+    private void reloadDecQueue(MonitorLinkedBlockingQueue<Byte> taskQueue, String source) {
+        synchronized (ExecChooseContext.submitQueueList) {
+            ExecChooseContext.submitQueueList.remove(source);
+            int taskCount = taskQueue.size();
+            long queueSize = ExecChooseContext.submitQueueList.size();
+
+            long avgTask = taskCount / queueSize;
+
+            ExecChooseContext.submitQueueList.forEach((targetSource, targetQueue) -> {
+                taskService.batchUpdateBySource(source, targetSource, avgTask);
+                for (int i = 0; i < avgTask; i++) {
+                    try {
+                        targetQueue.add(taskQueue.poll(100, TimeUnit.MILLISECONDS));
+                    } catch (InterruptedException e) {
+                        log.error("reload_error", e);
+                        break;
+                    }
+                }
+            });
+        }
     }
 
     public List<ExampleItem> getExampleItems() {

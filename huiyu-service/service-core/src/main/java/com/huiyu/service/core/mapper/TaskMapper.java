@@ -18,5 +18,8 @@ public interface TaskMapper {
 
     int updateById(Task task);
 
+    int batchUpdateBySource(@Param("replaceExecSource") String replaceExecSource
+            , @Param("targetExecSource") String targetExecSource, @Param("limit") long limit);
+
     Task getById(Long taskId);
 }

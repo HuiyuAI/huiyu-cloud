@@ -24,8 +24,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.huiyu.service.core.config.TaskContext.INVOKER_URL_CONTEXT;
-
 /**
  * @author wAnG
  * @Date 2023-06-13  00:07
@@ -46,15 +44,14 @@ public class ImageTaskInvoker {
     public void invokerGenerate(Task task, String ip) {
         TaskContext.TASK_SUBMIT_CONTEXT.set(task);
 
-        SDResponse resp = invokerHttp(task);
+        SDResponse resp = invokerHttp(task, ip);
 
         generateEnd(task, resp);
     }
 
 
-
-    private SDResponse invokerHttp(Task task) {
-        String url = getUrl();
+    private SDResponse invokerHttp(Task task, String ip) {
+        String url = ip + getUrl();
         log.info("请求Python端生成图片 url: {}, body: {}", url, task.getBody());
 
         HttpHeaders headers = new HttpHeaders();
@@ -125,8 +122,7 @@ public class ImageTaskInvoker {
     }
 
     private String getUrl() {
-        // todo 多数据源操作后续会放在threadLocal里面
-        return INVOKER_URL_CONTEXT.get() + SDAPIConstant.TXT2IMG;
+        return SDAPIConstant.TXT2IMG;
     }
 
 

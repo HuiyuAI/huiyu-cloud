@@ -10,7 +10,7 @@ import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.sd.SDTaskConverter;
+import com.huiyu.service.core.sd.SDTask2PicConverter;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
@@ -132,7 +132,7 @@ public class ImageTaskService {
     }
 
     private void insertPic(Task task) {
-        Pic pic = SDTaskConverter.convert(task);
+        Pic pic = SDTask2PicConverter.convert(task);
         if (picService.getByUuidOnly(pic.getUuid()) != null) {
             return;
         }

@@ -5,7 +5,7 @@ import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
-import com.huiyu.service.core.sd.SDCmdConverter;
+import com.huiyu.service.core.sd.SDCmd2DtoConverter;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.utils.IdUtils;
@@ -28,7 +28,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
     @Override
     public NewPair<Task, Dto> convertTask(Txt2ImgCmd txt2ImgCmd) {
         Task task = new Task();
-        Txt2ImgDto txt2ImgDto = SDCmdConverter.convert(txt2ImgCmd);
+        Txt2ImgDto txt2ImgDto = SDCmd2DtoConverter.convert(txt2ImgCmd);
 
         LocalDateTime now = LocalDateTime.now();
         task.setId(IdUtils.nextSnowflakeId());

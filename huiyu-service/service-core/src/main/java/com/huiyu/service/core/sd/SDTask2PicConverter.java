@@ -8,6 +8,7 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.ExtraDto;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
@@ -24,7 +25,7 @@ import java.time.LocalDateTime;
  * @date 2023-06-11
  */
 @Component
-public class SDTaskConverter {
+public class SDTask2PicConverter {
 
     public static Pic convert(Task task) {
         TaskTypeEnum type = task.getType();
@@ -60,6 +61,7 @@ public class SDTaskConverter {
         Cmd cmd = RequestContext.CMD_CONTEXT.get();
         Txt2ImgCmd txt2ImgCmd = (Txt2ImgCmd) cmd;
         ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(txt2ImgCmd.getSize());
+        ImageQualityEnum imageQualityEnum = ImageQualityEnum.getEnumByCode(txt2ImgCmd.getQuality());
 
         return Pic.builder()
                 .id(IdUtils.nextSnowflakeId())
@@ -70,7 +72,7 @@ public class SDTaskConverter {
                 .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)
                 .prompt(dto.getPrompt())
                 .negativePrompt(dto.getNegativePrompt())
-                .quality(txt2ImgCmd.getQuality())
+                .quality(imageQualityEnum)
                 .ratio(imageSizeEnum.getRatio())
                 .width(width)
                 .height(height)

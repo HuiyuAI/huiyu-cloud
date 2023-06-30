@@ -1,6 +1,7 @@
 package com.huiyu.service.core.entity;
 
 import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -79,7 +80,7 @@ public class Pic implements Serializable {
     /**
      * 质量
      */
-    private Integer quality;
+    private ImageQualityEnum quality;
     /**
      * 比例
      */

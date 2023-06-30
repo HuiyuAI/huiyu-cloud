@@ -1,5 +1,6 @@
 package com.huiyu.service.core.sd.constant;
 
+import com.huiyu.service.core.constant.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,7 +15,7 @@ import java.util.Objects;
 @Getter
 @ToString
 @AllArgsConstructor
-public enum ImageQualityEnum {
+public enum ImageQualityEnum implements BaseEnum<Integer> {
 
     HD(1, "高清", false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
     UHD(2, "超清", true, new BigDecimal("0.6"), BigDecimal.valueOf(2), false, 0),
@@ -22,7 +23,7 @@ public enum ImageQualityEnum {
     UNKNOWN(100, "未知", false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
     ;
 
-    private Integer code;
+    private Integer dictKey;
 
     private String desc;
     /**
@@ -48,7 +49,7 @@ public enum ImageQualityEnum {
 
     public static ImageQualityEnum getEnumByCode(Integer code) {
         for (ImageQualityEnum qualityEnum : ImageQualityEnum.values()) {
-            if (Objects.equals(qualityEnum.code, code)) {
+            if (Objects.equals(qualityEnum.dictKey, code)) {
                 return qualityEnum;
             }
         }

@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
  * @date 2023-06-11
  */
 @Component
-public class SDCmdConverter {
+public class SDCmd2DtoConverter {
 
     private static ModelService modelService;
 
     @Autowired
     public void setModelService(ModelService modelService) {
-        SDCmdConverter.modelService = modelService;
+        SDCmd2DtoConverter.modelService = modelService;
     }
 
     public static Txt2ImgDto convert(Txt2ImgCmd cmd) {

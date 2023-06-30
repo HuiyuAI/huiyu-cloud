@@ -45,7 +45,7 @@ public class SDCmdValidator {
 
 
         if (cmd.getCfg() == null) {
-            cmd.setCfg(new BigDecimal("9"));
+            cmd.setCfg(BigDecimal.valueOf(9));
         } else if (cmd.getCfg().remainder(new BigDecimal("0.5")).compareTo(BigDecimal.ZERO) != 0) {
             // cfg必须是0.5的倍数
             return NewPair.of(false, "参数错误");

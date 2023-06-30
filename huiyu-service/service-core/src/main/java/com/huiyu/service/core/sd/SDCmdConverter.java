@@ -11,8 +11,6 @@ import com.huiyu.service.core.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 /**
  * @author Naccl
  * @date 2023-06-11
@@ -41,8 +39,6 @@ public class SDCmdConverter {
         Integer quality = cmd.getQuality();
         ImageQualityEnum imageQualityEnum = ImageQualityEnum.getEnumByCode(quality);
         String hrUpscaler = model.getHrUpscaler();
-        BigDecimal denoisingStrength = new BigDecimal("0.6");
-        BigDecimal hrScale = new BigDecimal("2");
 
         Integer size = cmd.getSize();
         ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
@@ -56,8 +52,8 @@ public class SDCmdConverter {
                 .steps(cmd.getSteps())
                 .enableHr(imageQualityEnum.getEnableHr())
                 .hrUpscaler(hrUpscaler)
-                .denoisingStrength(denoisingStrength)
-                .hrScale(hrScale)
+                .denoisingStrength(imageQualityEnum.getDenoisingStrength())
+                .hrScale(imageQualityEnum.getHrScale())
                 .width(imageSizeEnum.getWidth())
                 .height(imageSizeEnum.getHeight())
                 .batchSize(1)
@@ -65,6 +61,7 @@ public class SDCmdConverter {
                 .cfgScale(cmd.getCfg())
                 .seed(cmd.getSeed())
                 .enableExtra(imageQualityEnum.getEnableExtra())
+                .upscalingResize(imageQualityEnum.getUpscalingResize())
                 .build();
     }
 

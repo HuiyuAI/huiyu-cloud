@@ -53,6 +53,7 @@ public class ImageTaskService {
         execGenerate(tasks, task.getExecSource());
 
         RequestContext.REQUEST_UUID_CONTEXT.remove();
+        RequestContext.CMD_CONTEXT.remove();
     }
 
     private List<Task> splitTask(Task task, Dto dto) {

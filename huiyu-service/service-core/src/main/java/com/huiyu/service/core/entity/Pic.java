@@ -43,7 +43,7 @@ public class Pic implements Serializable {
     /**
      * 模型id
      */
-    private Integer modelId;
+    private Long modelId;
     /**
      * 源图id
      */
@@ -53,7 +53,7 @@ public class Pic implements Serializable {
      */
     private Long referencePicId;
     /**
-     * 状态 0生成中 1已生成
+     * 状态 0生成中 1已生成 2废弃
      */
     private PicStatusEnum status;
     /**
@@ -76,6 +76,14 @@ public class Pic implements Serializable {
      * 高
      */
     private Integer height;
+    /**
+     * 质量
+     */
+    private Integer quality;
+    /**
+     * 比例
+     */
+    private String ratio;
     /**
      * 种子
      */
@@ -120,6 +128,14 @@ public class Pic implements Serializable {
      * 放大倍数 1-4之间两位小数 步进0.05
      */
     private BigDecimal hrScale;
+    /**
+     * 是否启用工序三：高清化extra
+     */
+    private Boolean enableExtra;
+    /**
+     * 高清化extra放大倍数 1-4
+     */
+    private Integer upscalingResize;
     /**
      * controlnet参数
      */

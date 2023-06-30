@@ -106,4 +106,9 @@ public class Txt2ImgDto extends Dto {
      */
     @JsonProperty("enable_extra")
     private Boolean enableExtra;
+    /**
+     * 高清化extra放大倍数 1-4
+     */
+    @JsonProperty("upscaling_resize")
+    private Integer upscalingResize;
 }

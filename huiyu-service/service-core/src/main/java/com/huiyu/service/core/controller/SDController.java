@@ -75,6 +75,8 @@ public class SDController {
 
         String requestUuid = IdUtil.fastUUID();
         RequestContext.REQUEST_UUID_CONTEXT.set(requestUuid);
+        RequestContext.CMD_CONTEXT.set(cmd);
+
         // 5. 提交任务队列
         imageGenerates.stream()
                 .filter(imageGenerate -> imageGenerate.isSupport(cmd))

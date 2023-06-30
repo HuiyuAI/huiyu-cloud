@@ -1,10 +1,14 @@
 package com.huiyu.service.core.sd;
 
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.model.cmd.Cmd;
+import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.ExtraDto;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
@@ -48,17 +52,26 @@ public class SDTaskConverter {
             width = dto.getHrScale().multiply(BigDecimal.valueOf(width)).intValue();
             height = dto.getHrScale().multiply(BigDecimal.valueOf(height)).intValue();
         }
+        if (dto.getEnableExtra()) {
+            width *= dto.getUpscalingResize();
+            height *= dto.getUpscalingResize();
+        }
+
+        Cmd cmd = RequestContext.CMD_CONTEXT.get();
+        Txt2ImgCmd txt2ImgCmd = (Txt2ImgCmd) cmd;
+        ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(txt2ImgCmd.getSize());
 
         return Pic.builder()
                 .id(IdUtils.nextSnowflakeId())
                 .uuid(dto.getResImageUuid())
                 .userId(task.getUserId())
                 .taskId(task.getId())
-                // TODO cmd中的模型id怎么获取
-                .modelId(1)
+                .modelId(txt2ImgCmd.getModelId())
                 .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)
                 .prompt(dto.getPrompt())
                 .negativePrompt(dto.getNegativePrompt())
+                .quality(txt2ImgCmd.getQuality())
+                .ratio(imageSizeEnum.getRatio())
                 .width(width)
                 .height(height)
                 .modelCode(dto.getSdModelCheckpoint())
@@ -70,6 +83,8 @@ public class SDTaskConverter {
                 .hrUpscaler(dto.getHrUpscaler())
                 .denoisingStrength(dto.getDenoisingStrength())
                 .hrScale(dto.getHrScale())
+                .enableExtra(dto.getEnableExtra())
+                .upscalingResize(dto.getUpscalingResize())
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)

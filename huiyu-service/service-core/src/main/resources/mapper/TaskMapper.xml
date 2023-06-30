@@ -73,6 +73,7 @@
         set exec_source = #{targetExecSource}
         where id in (select t.id
                      from (select id
+                           from task
                            where status = 0 and is_delete = 0 and exec_source = #{replaceExecSource}
                            limit #{limit}) as t)
     </update>

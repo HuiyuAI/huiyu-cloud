@@ -31,14 +31,14 @@ public class PointExecChooseStrategy<T extends Cmd> implements ExecChooseStrateg
     public String chooseExecSource(T t) {
         List<AIExampleConfig.ExampleItem> exampleItems = aiExampleConfig.getExampleItems();
         AIExampleConfig.ExampleItem exampleItem = exampleItems.stream()
-                .min(Comparator.comparing(item -> examplePoint.getOrDefault(item, new BigInteger("0"))))
+                .min(Comparator.comparing(item -> examplePoint.getOrDefault(item, BigInteger.ZERO)))
                 .orElseGet(null);
         if (Objects.isNull(exampleItem)) {
             log.error("执行源为空:userId:{}", t.getUserId());
             return null;
         }
         synchronized (exampleItem) {
-            BigInteger point = examplePoint.getOrDefault(exampleItem, new BigInteger("0"));
+            BigInteger point = examplePoint.getOrDefault(exampleItem, BigInteger.ZERO);
 
             examplePoint.put(exampleItem, point.add(new BigInteger(String.valueOf(t.getIntegral() * exampleItem.getEfficiency()))));
         }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -144,7 +145,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         synchronized (ExecChooseContext.submitQueueList) {
             ExecChooseContext.submitQueueList.put(source, taskQueue);
             long taskCount = ExecChooseContext.submitQueueList.values().stream()
-                    .map(item -> item.size())
+                    .map(LinkedBlockingQueue::size)
                     .count();
             if (taskCount == 0) {
                 return;

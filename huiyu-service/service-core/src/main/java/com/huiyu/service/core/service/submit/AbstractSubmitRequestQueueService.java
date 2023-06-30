@@ -47,7 +47,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
                 .filter(strategy -> Objects.equals(strategy.getType().getCode(), execStrategy))
                 .map(strategy -> strategy.chooseExecSource(t))
                 .findFirst()
-                .get();
+                .orElse(null);
         Task task = taskDtoPair.getKey();
         task.setExecSource(execSource);
         Dto dto = taskDtoPair.getValue();

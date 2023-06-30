@@ -101,4 +101,9 @@ public class Txt2ImgDto extends Dto {
      */
     @JsonProperty("seed")
     private Long seed;
+    /**
+     * 是否启用工序三：高清化extra
+     */
+    @JsonProperty("enable_extra")
+    private Boolean enableExtra;
 }

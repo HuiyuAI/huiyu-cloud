@@ -3,6 +3,7 @@ package com.huiyu.service.core.sd;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
@@ -29,7 +30,7 @@ public class SDCmdConverter {
     public static Txt2ImgDto convert(Txt2ImgCmd cmd) {
         Model model = modelService.getById(cmd.getModelId());
 
-        String modelName = model.getCode();
+        String modelCode = model.getCode();
         String vae = model.getVae();
         String sampler = model.getSampler();
 
@@ -37,44 +38,23 @@ public class SDCmdConverter {
         String prompt = cmd.getPrompt();
         String negativePrompt = cmd.getNegativePrompt();
 
-        boolean enableHr = true;
+        Integer quality = cmd.getQuality();
+        ImageQualityEnum imageQualityEnum = ImageQualityEnum.getEnumByCode(quality);
         String hrUpscaler = model.getHrUpscaler();
         BigDecimal denoisingStrength = new BigDecimal("0.6");
         BigDecimal hrScale = new BigDecimal("2");
-
-        // TODO 根据质量等级设置高清化工序
-        switch (cmd.getQuality()) {
-            case 1:
-                // 高清
-                enableHr = false;
-                break;
-            case 2:
-                // 超清
-                enableHr = true;
-                break;
-            case 3:
-                // 超清修复 第一道工序+第二道工序
-                enableHr = true;
-                break;
-            case 4:
-                // 超清精绘 三道工序
-                enableHr = true;
-                break;
-            default:
-                break;
-        }
 
         Integer size = cmd.getSize();
         ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
 
         return Txt2ImgDto.builder()
-                .sdModelCheckpoint(modelName)
+                .sdModelCheckpoint(modelCode)
                 .sdVae(vae)
                 .prompt(prompt)
                 .negativePrompt(negativePrompt)
                 .samplerName(sampler)
                 .steps(cmd.getSteps())
-                .enableHr(enableHr)
+                .enableHr(imageQualityEnum.getEnableHr())
                 .hrUpscaler(hrUpscaler)
                 .denoisingStrength(denoisingStrength)
                 .hrScale(hrScale)
@@ -84,6 +64,7 @@ public class SDCmdConverter {
                 .nIter(1)
                 .cfgScale(cmd.getCfg())
                 .seed(cmd.getSeed())
+                .enableExtra(imageQualityEnum.getEnableExtra())
                 .build();
     }
 

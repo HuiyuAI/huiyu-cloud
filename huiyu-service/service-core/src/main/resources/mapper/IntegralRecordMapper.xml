@@ -23,7 +23,9 @@
     <select id="getByUserId" resultMap="baseResult">
         select *
         from integral_record
-        where user_id = #{userId};
+        where
+            is_delete = 0
+            and user_id = #{userId};
     </select>
 
 </mapper>

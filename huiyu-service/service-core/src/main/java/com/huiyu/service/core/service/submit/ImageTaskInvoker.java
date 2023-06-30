@@ -42,7 +42,6 @@ public class ImageTaskInvoker {
     private PicService picService;
 
     public void invokerGenerate(Task task, String ip) {
-        TaskContext.TASK_SUBMIT_CONTEXT.set(task);
 
         SDResponse resp = invokerHttp(task, ip);
 

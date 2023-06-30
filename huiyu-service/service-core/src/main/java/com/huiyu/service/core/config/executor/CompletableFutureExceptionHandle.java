@@ -32,45 +32,9 @@ public class CompletableFutureExceptionHandle {
         if (e != null) {
             Exception exception = new Exception(e);
             log.error("异步流程出错", exception);
-            // 补充处理
-            compensateHandle();
         }
         TaskContext.TASK_SUBMIT_CONTEXT.remove();
         return null;
     };
-
-    private static void compensateHandle() {
-        TaskService taskService = SpringContext.getBean(TaskService.class);
-        ImageTaskService imageTaskService = SpringContext.getBean(ImageTaskService.class);
-        PicService picService = SpringContext.getBean(PicService.class);
-        IntegralRecordBusiness integralRecordBusiness = SpringContext.getBean(IntegralRecordBusiness.class);
-        // 重试次数上限
-        Task task = TaskContext.TASK_SUBMIT_CONTEXT.get();
-        if (task == null) {
-            return;
-        }
-        if (task.getRetryCount() < 3) {
-            task.setRetryCount(task.getRetryCount() + 1);
-            task.setStatus(TaskStatusEnum.UN_EXECUTED);
-            imageTaskService.execGenerate(Lists.newArrayList(task), task.getExecSource());
-        } else {
-            // 回退积分
-            integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.BACK, IntegralOperationRecordEnum.ADD);
-
-            Task TaskDO = Task.builder()
-                    .id(task.getId())
-                    .status(TaskStatusEnum.DISCARD)
-                    .updateTime(LocalDateTime.now())
-                    .build();
-            taskService.updateById(TaskDO);
-
-            Long taskId = task.getId();
-            Pic pic = picService.getByTaskId(taskId);
-            pic.setStatus(PicStatusEnum.DISCARD);
-            pic.setUpdateTime(LocalDateTime.now());
-            picService.updateByUuid(pic);
-        }
-
-    }
 
 }

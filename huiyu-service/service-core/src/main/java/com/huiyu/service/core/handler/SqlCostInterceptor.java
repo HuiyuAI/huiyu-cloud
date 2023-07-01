@@ -1,8 +1,14 @@
 package com.huiyu.service.core.handler;
 
+import com.baomidou.mybatisplus.core.MybatisParameterHandler;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.config.SpringContext;
+import org.apache.ibatis.executor.statement.RoutingStatementHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.ParameterMode;
 import org.apache.ibatis.plugin.Interceptor;
@@ -18,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,11 +38,15 @@ import java.util.Properties;
 
 @Intercepts({@Signature(type = StatementHandler.class, method = "query", args = {Statement.class, ResultHandler.class}),
         @Signature(type = StatementHandler.class, method = "update", args = {Statement.class}),
-        @Signature(type = StatementHandler.class, method = "batch", args = { Statement.class })})
+        @Signature(type = StatementHandler.class, method = "batch", args = {Statement.class})})
 @Component
 public class SqlCostInterceptor implements Interceptor {
 
     private final Logger log = LoggerFactory.getLogger("DBInfo");
+
+    private static final String MONITOR_COUNT_NAME = "sqlMethodCount";
+
+    private static final String MONITOR_TIME_NAME = "sqlMethodTime";
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -43,7 +54,7 @@ public class SqlCostInterceptor implements Interceptor {
 
         long startTime = System.currentTimeMillis();
         long sqlCost = 0;
-        StatementHandler statementHandler = (StatementHandler)target;
+        StatementHandler statementHandler = (StatementHandler) target;
         List<Object> resultList = null;
         try {
             Object proceed = invocation.proceed();
@@ -52,7 +63,12 @@ public class SqlCostInterceptor implements Interceptor {
             resultList = Collections.singletonList(proceed);
             return proceed;
         } finally {
-            printSqlLog(startTime, statementHandler,resultList,sqlCost);
+            String execName = getExecName(invocation);
+            String simpleName = invocation.getClass().getSimpleName();
+            String methodName = invocation.getMethod().getName();
+            Monitor.recordOne(MONITOR_COUNT_NAME, execName);
+            Monitor.recordTime(MONITOR_TIME_NAME, execName, sqlCost);
+            printSqlLog(startTime, statementHandler, resultList, sqlCost);
         }
     }
 
@@ -115,12 +131,21 @@ public class SqlCostInterceptor implements Interceptor {
             return "null";
         }
         if (paramValue instanceof String) {
-            paramValue =  "'" + paramValue + "'";
+            paramValue = "'" + paramValue + "'";
         }
         if (paramValue instanceof Date) {
-            paramValue =  "'" + paramValue + "'";
+            paramValue = "'" + paramValue + "'";
         }
         return paramValue.toString();
+    }
+
+    private String getExecName(Invocation invocation) throws Exception {
+        MybatisParameterHandler parameterHandler = (MybatisParameterHandler) ((RoutingStatementHandler) invocation.getTarget()).getParameterHandler();
+        Field mappedStatementClazz = parameterHandler.getClass().getDeclaredField("mappedStatement");
+        mappedStatementClazz.setAccessible(true);
+        MappedStatement mappedStatement = (MappedStatement) mappedStatementClazz.get(parameterHandler);
+        List<String> nameList = Splitter.on(".").splitToList(mappedStatement.getId());
+        return Joiner.on("_").join(nameList.subList(nameList.size() - 2, nameList.size()));
     }
 
     @Override

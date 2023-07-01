@@ -36,7 +36,7 @@ public class MonitorLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
     public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
         boolean offer = super.offer(e, timeout, unit);
         if (offer) {
-            Monitor.recordInc(monitorName + QUEUE_MONITOR_SUFFIX);
+            Monitor.recordInc("submitRequestExecutor", monitorName);
         }
         return offer;
     }
@@ -45,7 +45,7 @@ public class MonitorLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
     public boolean offer(E e) {
         boolean offer = super.offer(e);
         if (offer) {
-            Monitor.recordInc(monitorName + QUEUE_MONITOR_SUFFIX);
+            Monitor.recordInc("submitRequestExecutor", monitorName);
         }
         return offer;
     }
@@ -55,7 +55,7 @@ public class MonitorLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
     public E poll(long timeout, TimeUnit unit) throws InterruptedException {
         E poll = super.poll(timeout, unit);
         if (Objects.nonNull(poll)) {
-            Monitor.recordDec(monitorName + QUEUE_MONITOR_SUFFIX);
+            Monitor.recordDec("submitRequestExecutor", monitorName);
         }
         return poll;
     }
@@ -63,7 +63,7 @@ public class MonitorLinkedBlockingQueue<E> extends LinkedBlockingQueue<E> {
     @Override
     public E take() throws InterruptedException {
         E take = super.take();
-        Monitor.recordDec(monitorName + QUEUE_MONITOR_SUFFIX);
+        Monitor.recordDec("submitRequestExecutor", monitorName);
         return take;
     }
 }

@@ -132,7 +132,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         ThreadPoolExecutorDecorator executorDecorator = ThreadPoolExecutorDecorator.builder()
                 .threadPoolExecutor(ttlExecutor)
                 .sourceName(source)
-                .monitorName("submitRequestExecutor_" + ip + "_" + source)
+                .monitorName(source)
                 .ip(ip)
                 .build();
         executorDecorator.start();
@@ -145,8 +145,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
         synchronized (ExecChooseContext.submitQueueList) {
             ExecChooseContext.submitQueueList.put(source, taskQueue);
             long taskCount = ExecChooseContext.submitQueueList.values().stream()
-                    .map(LinkedBlockingQueue::size)
-                    .count();
+                    .mapToInt(LinkedBlockingQueue::size).sum();
             if (taskCount == 0) {
                 return;
             }
@@ -159,7 +158,7 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
                 if (count < 0) {
                     count = 0;
                 }
-                taskService.batchUpdateBySource(source, replaceSource, count);
+                taskService.batchUpdateBySource(replaceSource, source, count);
                 for (int i = 0; i < count; i++) {
                     try {
                         taskQueue.offer(replaceQueue.poll(100, TimeUnit.MILLISECONDS));
@@ -177,6 +176,9 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
             ExecChooseContext.submitQueueList.remove(source);
             int taskCount = taskQueue.size();
             long queueSize = ExecChooseContext.submitQueueList.size();
+            if (queueSize == 0) {
+                return;
+            }
 
             long avgTask = taskCount / queueSize;
 

@@ -19,9 +19,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MethodMonitorAspect {
 
-    private static final String TIME_SUFFIX = "_Time";
 
-    private static final String COUNT_SUFFIX = "_Count";
+    private static final String MONITOR_COUNT_NAME = "methodCount";
+
+    private static final String MONITOR_TIME_NAME = "methodTime";
 
 
     @Around("@annotation(com.huiyu.service.core.aspect.annotation.MethodMonitor)")
@@ -37,8 +38,8 @@ public class MethodMonitorAspect {
             exceptionClass = e.getClass().getSimpleName();
             throw e;
         } finally {
-            Monitor.recordOne(methodName + COUNT_SUFFIX);
-            Monitor.recordTime(methodName + TIME_SUFFIX, stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+            Monitor.recordOne(MONITOR_COUNT_NAME, methodName);
+            Monitor.recordTime(MONITOR_TIME_NAME, methodName, stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
         }
 
 

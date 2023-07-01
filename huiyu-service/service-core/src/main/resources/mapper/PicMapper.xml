@@ -16,6 +16,8 @@
         <result column="path" property="path"/>
         <result column="prompt" property="prompt"/>
         <result column="negative_prompt" property="negativePrompt"/>
+        <result column="quality" property="quality"/>
+        <result column="ratio" property="ratio"/>
         <result column="width" property="width"/>
         <result column="height" property="height"/>
         <result column="seed" property="seed"/>
@@ -29,6 +31,8 @@
         <result column="hr_upscaler" property="hrUpscaler"/>
         <result column="denoising_strength" property="denoisingStrength"/>
         <result column="hr_scale" property="hrScale"/>
+        <result column="enable_extra" property="enableExtra"/>
+        <result column="upscaling_resize" property="upscalingResize"/>
         <result column="alwayson_scripts" property="alwaysonScripts"/>
         <result column="infotexts" property="infotexts"/>
         <result column="create_time" property="createTime"/>
@@ -72,19 +76,6 @@
         where is_delete = 0
           and task_id = #{taskId}
     </select>
-
-    <insert id="insert">
-        insert into pic (id, uuid, request_uuid, user_id, task_id, model_id, parent_pic_id, reference_pic_id, status, path,
-                         prompt, negative_prompt, width, height, seed, subseed,
-                         model_code, vae, sampler_name, steps, cfg,
-                         enable_hr, hr_upscaler, denoising_strength, hr_scale, alwayson_scripts, infotexts,
-                         create_time, update_time, is_delete)
-        values (#{id}, #{uuid}, #{requestUuid}, #{userId}, #{taskId}, #{modelId}, #{parentPicId}, #{referencePicId}, #{status}, #{path},
-                #{prompt}, #{negativePrompt}, #{width}, #{height}, #{seed}, #{subseed},
-                #{modelCode}, #{vae}, #{samplerName}, #{steps}, #{cfg},
-                #{enableHr}, #{hrUpscaler}, #{denoisingStrength}, #{hrScale}, #{alwaysonScripts}, #{infotexts},
-                #{createTime}, #{updateTime}, #{isDelete})
-    </insert>
 
     <update id="updateByUuid">
         update pic

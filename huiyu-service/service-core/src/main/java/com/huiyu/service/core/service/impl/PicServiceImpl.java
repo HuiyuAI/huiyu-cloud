@@ -20,15 +20,20 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
 
     @Override
     public IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto) {
-        if (dto.getUserId() == null) {
-            throw new RuntimeException("异常错误");
-        }
         return super.lambdaQuery()
-                .select(Pic::getUuid, Pic::getPath, Pic::getStatus)
+                .select(Pic::getUuid, Pic::getPath, Pic::getStatus, Pic::getWidth, Pic::getHeight)
                 .eq(Pic::getUserId, dto.getUserId())
                 .le(Pic::getCreateTime, dto.getQueryDeadline())
                 .orderByDesc(Pic::getCreateTime)
                 .page(page);
+    }
+
+    @Override
+    public Pic getByUuidAndUserId(String uuid, Long userId) {
+        return super.lambdaQuery()
+                .eq(Pic::getUuid, uuid)
+                .eq(Pic::getUserId, userId)
+                .one();
     }
 
     @Override
@@ -57,7 +62,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
 
     @Override
     public boolean insert(Pic pic) {
-        return picMapper.insert(pic) > 0;
+        return super.save(pic);
     }
 
     @Override

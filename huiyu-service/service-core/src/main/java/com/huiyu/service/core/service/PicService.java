@@ -17,6 +17,15 @@ public interface PicService extends IService<Pic> {
      */
     IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto);
 
+    /**
+     * 根据uuid和用户id查询图片详情
+     *
+     * @param uuid   图片uuid
+     * @param userId 用户id
+     * @return 图片详情 / 图片与用户不匹配返回null
+     */
+    Pic getByUuidAndUserId(String uuid, Long userId);
+
     List<Pic> getPicsByUserId(Long userId);
 
     Long getParentPicIdById(Long id);

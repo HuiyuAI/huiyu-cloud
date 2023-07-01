@@ -23,17 +23,25 @@ public class PicVo {
      */
     private String uuid;
     /**
-     * 模型id
-     */
-    private Integer modelId;
-    /**
-     * 状态 0生成中 1已生成
+     * 状态
      */
     private PicStatusEnum status;
     /**
      * 图片地址
      */
     private String path;
+    /**
+     * 模型名称
+     */
+    private String modelName;
+    /**
+     * 质量
+     */
+    private String quality;
+    /**
+     * 比例
+     */
+    private String ratio;
     /**
      * 正向描述词
      */
@@ -55,11 +63,11 @@ public class PicVo {
      */
     private Long seed;
     /**
-     * 采样步数 10-30
+     * 采样步数
      */
     private Integer steps;
     /**
-     * 提示词引导系数 1-30 步进0.5
+     * 提示词引导系数
      */
     private BigDecimal cfg;
     /**

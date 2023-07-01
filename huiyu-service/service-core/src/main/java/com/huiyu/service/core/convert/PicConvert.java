@@ -3,6 +3,7 @@ package com.huiyu.service.core.convert;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.entity.Pic;
+import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -41,6 +42,6 @@ public interface PicConvert {
      * @param sourcePage entity分页
      * @return vo分页
      */
-    Page<PicVo> toVOPage(IPage<Pic> sourcePage);
+    Page<PicPageVo> toVOPage(IPage<Pic> sourcePage);
 
 }

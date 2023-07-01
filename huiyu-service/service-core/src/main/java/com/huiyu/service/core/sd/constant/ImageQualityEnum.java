@@ -39,7 +39,7 @@ public enum ImageQualityEnum implements BaseEnum<Integer> {
      */
     private BigDecimal hrScale;
     /**
-     * 是否启用工序三：高清化extra
+     * 是否启用工序三高清化extra
      */
     private Boolean enableExtra;
     /**

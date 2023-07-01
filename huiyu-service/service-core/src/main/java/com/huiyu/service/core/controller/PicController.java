@@ -3,11 +3,10 @@ package com.huiyu.service.core.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.result.R;
-import com.huiyu.service.core.convert.PicConvert;
-import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
-import com.huiyu.service.core.service.PicService;
+import com.huiyu.service.core.service.business.PicBusiness;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,18 +28,17 @@ import java.util.List;
 @RequestMapping("/pic")
 public class PicController {
 
-    private final PicService picService;
+    private final PicBusiness picBusiness;
 
     /**
      * 画夹分页
      */
     @GetMapping("/page")
-    public R<IPage<PicVo>> page(@Valid PicPageDto dto) {
+    public R<IPage<PicPageVo>> page(@Valid PicPageDto dto) {
 //        Long userId = JwtUtils.getId();
         Long userId = 1L;
         dto.setUserId(userId);
-        IPage<Pic> picPage = picService.queryPage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
-        Page<PicVo> picVoPage = PicConvert.INSTANCE.toVOPage(picPage);
+        IPage<PicPageVo> picVoPage = picBusiness.queryVoPage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
         return R.ok(picVoPage);
     }
 
@@ -49,7 +47,10 @@ public class PicController {
      */
     @GetMapping("/get")
     public R<PicVo> get(String uuid) {
-        return R.ok();
+//        Long userId = JwtUtils.getId();
+        Long userId = 1L;
+        PicVo picVo = picBusiness.getPicVo(uuid, userId);
+        return R.ok(picVo);
     }
 
     /**

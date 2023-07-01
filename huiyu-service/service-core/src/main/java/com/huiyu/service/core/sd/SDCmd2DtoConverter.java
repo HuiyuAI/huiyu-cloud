@@ -42,6 +42,14 @@ public class SDCmd2DtoConverter {
 
         Integer size = cmd.getSize();
         ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
+        Integer width = imageSizeEnum.getWidth();
+        Integer height = imageSizeEnum.getHeight();
+
+        if (imageQualityEnum == ImageQualityEnum.HD) {
+            // 高清质量，不启用高分辨率修复，直接翻倍原始尺寸
+            width *= 2;
+            height *= 2;
+        }
 
         return Txt2ImgDto.builder()
                 .sdModelCheckpoint(modelCode)
@@ -54,8 +62,8 @@ public class SDCmd2DtoConverter {
                 .hrUpscaler(hrUpscaler)
                 .denoisingStrength(imageQualityEnum.getDenoisingStrength())
                 .hrScale(imageQualityEnum.getHrScale())
-                .width(imageSizeEnum.getWidth())
-                .height(imageSizeEnum.getHeight())
+                .width(width)
+                .height(height)
                 .batchSize(1)
                 .nIter(1)
                 .cfgScale(cmd.getCfg())

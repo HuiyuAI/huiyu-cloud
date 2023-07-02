@@ -23,6 +23,6 @@ public class InitPermissionRolesCache implements CommandLineRunner {
     @Override
     public void run(String... args) {
         R<Boolean> result = sysPermissionFeignClient.refreshPermRolesRules();
-        log.info("初始化权限角色规则缓存：{}", JSONUtil.toJsonStr(result.getData()));
+        log.info("初始化权限角色规则缓存：{}", result.getData());
     }
 }

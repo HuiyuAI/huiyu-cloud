@@ -2,7 +2,7 @@ package com.huiyu.gateway.authorization;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.json.JSONUtil;
+import com.huiyu.common.core.util.JacksonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -74,7 +74,7 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
         if (!requireCheck) {
             return Mono.just(new AuthorizationDecision(true));
         }
-        log.info("authorizedRoles: {}", JSONUtil.toJsonStr(authorizedRoles));
+        log.info("authorizedRoles: {}", JacksonUtils.toJsonStr(authorizedRoles));
 
         //认证通过且角色匹配的用户可访问当前路径
         return mono

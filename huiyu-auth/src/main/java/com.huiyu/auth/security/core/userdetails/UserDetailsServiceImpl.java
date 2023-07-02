@@ -1,6 +1,6 @@
 package com.huiyu.auth.security.core.userdetails;
 
-import cn.hutool.json.JSONUtil;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.feign.UserFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 && user != null
                 && !(SecurityConstants.ROLE_PREFIX + SecurityConstants.ROLE_USER).equalsIgnoreCase(user.getRole())) {
             SecurityUserDetails userDetails = new SecurityUserDetails(user);
-            log.info("loadUserByUsername userDetails: {}", JSONUtil.toJsonStr(userDetails));
+            log.info("loadUserByUsername userDetails: {}", JacksonUtils.toJsonStr(userDetails));
             // 认证方式:username
             userDetails.setAuthenticationIdentity(AuthenticationIdentityEnum.USERNAME.getValue());
             checkUserDetails(userDetails);
@@ -66,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = result.getData();
         if (result.isSuccess() && user != null) {
             SecurityUserDetails userDetails = new SecurityUserDetails(user);
-            log.info("loadUserByOpenId userDetails: {}", JSONUtil.toJsonStr(userDetails));
+            log.info("loadUserByOpenId userDetails: {}", JacksonUtils.toJsonStr(userDetails));
             // 认证方式:openid
             userDetails.setAuthenticationIdentity(AuthenticationIdentityEnum.OPENID.getValue());
             checkUserDetails(userDetails);

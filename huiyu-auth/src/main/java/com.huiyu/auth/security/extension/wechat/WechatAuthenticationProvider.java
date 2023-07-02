@@ -4,7 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.json.JSONUtil;
+import com.huiyu.common.core.util.JacksonUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -48,14 +48,14 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         WxMaJscode2SessionResult sessionInfo = null;
         try {
             sessionInfo = wxMaService.getUserService().getSessionInfo(code);
-            log.info("wechat sessionInfo={}", JSONUtil.toJsonStr(sessionInfo));
+            log.info("wechat sessionInfo: {}", JacksonUtils.toJsonStr(sessionInfo));
         } catch (WxErrorException e) {
             log.error("请求微信sessionInfo error: {}", e);
         }
         String openid = sessionInfo.getOpenid();
 
         R<User> result = userFeignClient.queryByOpenid(openid);
-        log.info("authenticate result={}", JSONUtil.toJsonStr(result));
+        log.info("authenticate result: {}", JacksonUtils.toJsonStr(result));
         User user = result.getData();
         // 不管有没有查到用户，状态码总是SUCCESS
         if (result.isSuccess() && user == null) {
@@ -64,7 +64,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             String iv = authenticationToken.getIv();
             // 解密 encryptedData 获取用户信息
             WxMaUserInfo userInfo = wxMaService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
-            log.info("userInfo={}", JSONUtil.toJsonStr(userInfo));
+            log.info("userInfo: {}", JacksonUtils.toJsonStr(userInfo));
 
             User newUser = new User();
             newUser.setOpenid(openid);
@@ -73,10 +73,10 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             newUser.setGender(Integer.parseInt(userInfo.getGender()));
             newUser.setEnabled(true);
             newUser.setRole(SecurityConstants.ROLE_PREFIX + SecurityConstants.ROLE_USER);
-            log.info("newUser={}", JSONUtil.toJsonStr(newUser));
+            log.info("newUser: {}", JacksonUtils.toJsonStr(newUser));
             // 注册新用户
             R<User> addResult = userFeignClient.add(newUser);
-            log.info("addResult={}", JSONUtil.toJsonStr(addResult));
+            log.info("addResult: {}", JacksonUtils.toJsonStr(addResult));
         }
         UserDetails userDetails = userDetailsService.loadUserByOpenId(openid);
         WechatAuthenticationToken wechatAuthenticationToken = new WechatAuthenticationToken(userDetails, new HashSet<>());

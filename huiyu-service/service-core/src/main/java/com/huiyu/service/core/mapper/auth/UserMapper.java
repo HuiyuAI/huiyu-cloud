@@ -15,12 +15,12 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper extends BaseMapper<User> {
 
     /**
-     * 通过主键查询单条数据
+     * 通过userId查询单条数据
      *
-     * @param id 主键
+     * @param userId userId
      * @return 实例对象
      */
-    User queryById(Long id);
+    User queryByUserId(Long userId);
 
     /**
      * 通过openid查询单条数据
@@ -39,28 +39,19 @@ public interface UserMapper extends BaseMapper<User> {
     User queryByUsername(String username);
 
     /**
-     * 通过userId查询单条数据
-     *
-     * @param userId userId
-     * @return 实例对象
-     */
-    User queryByUserId(Long userId);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 影响行数
-     */
-    int deleteById(Long id);
-
-    /**
      * 通过主键查询积分
      *
-     * @param id 主键
-     * @return 积分数
+     * @param userId 用户id
+     * @return 积分
      */
-    int getIntegralById(Long id);
+    int getIntegralByUserId(Long userId);
 
-    int updateIntegralById(@Param("id") Long id, @Param("integral") Integer integral);
+    /**
+     * 根据userId增加积分
+     *
+     * @param userId   用户id
+     * @param integral 增加积分
+     * @return 影响行数
+     */
+    int updateIntegralByUserId(@Param("userId") Long userId, @Param("integral") Integer integral);
 }

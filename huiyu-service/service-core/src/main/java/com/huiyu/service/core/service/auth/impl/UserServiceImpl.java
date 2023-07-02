@@ -28,14 +28,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * 通过主键查询单条数据
+     * 通过userId查询单条数据
      *
-     * @param id 主键
+     * @param userId userId
      * @return 实例对象
      */
     @Override
-    public User queryById(Long id) {
-        return userMapper.queryById(id);
+    public User queryByUserId(Long userId) {
+        return userMapper.queryByUserId(userId);
     }
 
     /**
@@ -58,17 +58,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User queryByUsername(String username) {
         return userMapper.queryByUsername(username);
-    }
-
-    /**
-     * 通过userId查询单条数据
-     *
-     * @param userId userId
-     * @return 实例对象
-     */
-    @Override
-    public User queryByUserId(Long userId) {
-        return userMapper.queryByUserId(userId);
     }
 
     /**
@@ -117,24 +106,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return super.updateById(user);
     }
 
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 是否成功
-     */
     @Override
-    public boolean deleteById(Long id) {
-        return userMapper.deleteById(id) > 0;
+    public int getIntegralByUserId(Long userId) {
+        return userMapper.getIntegralByUserId(userId);
     }
 
     @Override
-    public int getIntegralById(Long id) {
-        return userMapper.getIntegralById(id);
-    }
-
-    @Override
-    public boolean updateIntegralById(Long id, Integer integral) {
-        return userMapper.updateIntegralById(id, integral) > 0;
+    public boolean updateIntegralByUserId(Long userId, Integer integral) {
+        return userMapper.updateIntegralByUserId(userId, integral) > 0;
     }
 }

@@ -1,6 +1,7 @@
 package com.huiyu.auth.security.extension.refresh;
 
 import cn.hutool.json.JSONObject;
+import com.huiyu.auth.common.constant.MessageConstant;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.Authentication;
@@ -55,7 +56,7 @@ public class PreAuthenticatedUserDetailsService<T extends Authentication> implem
         String clientId = RequestUtils.getOAuth2ClientId();
         // refresh_token的payload
         JSONObject payload = RequestUtils.getPayloadJSONObject();
-        // 获取认证身份标识，默认是用户名:username
+        // 获取认证身份标识
         AuthenticationIdentityEnum authenticationIdentityEnum = AuthenticationIdentityEnum.getByValue(RequestUtils.getAuthenticationIdentity(payload));
         UserDetailsService userDetailsService = userDetailsServiceMap.get(clientId);
         if (clientId.equals(SecurityConstants.WECHAT_CLIENT_ID)) {
@@ -65,16 +66,18 @@ public class PreAuthenticatedUserDetailsService<T extends Authentication> implem
                 case OPENID:
                     return userDetailsServiceImpl.loadUserByOpenId(RequestUtils.getOpenid(payload));
                 default:
-                    return userDetailsServiceImpl.loadUserByUsername(authentication.getName());
+                    // 后面可能有手机号认证
+                    throw new UsernameNotFoundException(MessageConstant.USER_NOT_FOUND);
             }
         } else if (clientId.equals(SecurityConstants.WEB_ADMIN_CLIENT_ID)) {
             // web管理系统的认证方式通过用户名 username 认证
             switch (authenticationIdentityEnum) {
-                default:
+                case USERNAME:
                     return userDetailsService.loadUserByUsername(authentication.getName());
+                default:
+                    throw new UsernameNotFoundException(MessageConstant.USER_NOT_FOUND);
             }
-        } else {
-            return userDetailsService.loadUserByUsername(authentication.getName());
         }
+        throw new UsernameNotFoundException(MessageConstant.USER_NOT_FOUND);
     }
 }

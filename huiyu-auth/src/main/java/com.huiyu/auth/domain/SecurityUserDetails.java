@@ -18,9 +18,9 @@ import java.util.Collection;
 @Data
 public class SecurityUserDetails implements UserDetails {
     /**
-     * id
+     * 用户id
      */
-    private Long id;
+    private Long userId;
     /**
      * openid
      */
@@ -29,6 +29,10 @@ public class SecurityUserDetails implements UserDetails {
      * 用户名
      */
     private String username;
+    /**
+     * 昵称
+     */
+    private String nickname;
     /**
      * 密码
      */
@@ -57,9 +61,10 @@ public class SecurityUserDetails implements UserDetails {
     private String authenticationIdentity;
 
     public SecurityUserDetails(User user) {
-        this.id = user.getId();
+        this.userId = user.getUserId();
         this.openid = user.getOpenid();
         this.username = user.getUsername();
+        this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.avatar = user.getAvatar();
         this.gender = user.getGender();

@@ -35,7 +35,7 @@ public class PicController {
      */
     @GetMapping("/page")
     public R<IPage<PicPageVo>> page(@Valid PicPageDto dto) {
-//        Long userId = JwtUtils.getId();
+//        Long userId = JwtUtils.getUserId();
         Long userId = 1L;
         dto.setUserId(userId);
         IPage<PicPageVo> picVoPage = picBusiness.queryVoPage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
@@ -47,7 +47,7 @@ public class PicController {
      */
     @GetMapping("/get")
     public R<PicVo> get(String uuid) {
-//        Long userId = JwtUtils.getId();
+//        Long userId = JwtUtils.getUserId();
         Long userId = 1L;
         PicVo picVo = picBusiness.getPicVo(uuid, userId);
         return R.ok(picVo);

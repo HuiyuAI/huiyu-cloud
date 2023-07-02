@@ -7,6 +7,7 @@
         <result property="userId" column="user_id"/>
         <result property="openid" column="openid"/>
         <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
         <result property="password" column="password"/>
         <result property="role" column="role"/>
         <result property="avatar" column="avatar"/>
@@ -21,11 +22,11 @@
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="UserMap">
+    <select id="queryByUserId" resultMap="UserMap">
         select *
         from user
         where is_delete = 0
-          and id = #{id}
+          and user_id = #{userId}
     </select>
 
     <!--查询单个-->
@@ -44,34 +45,18 @@
           and username = #{username}
     </select>
 
-    <!--查询单个-->
-    <select id="queryByUserId" resultMap="UserMap">
-        select *
-        from user
-        where is_delete = 0
-          and id = #{userId}
-    </select>
-
-    <update id="updateIntegralById">
-        update user
-        set integral = integral + #{integral}
-        where is_delete = 0
-          and id = #{id}
-    </update>
-
-    <!--通过主键删除-->
-    <delete id="deleteById">
-        update user
-        set is_delete = 1
-        where is_delete = 0
-          and id = #{id}
-    </delete>
-
-    <!--通过主键查询积分-->
-    <select id="getIntegralById" resultType="java.lang.Integer">
+    <!--查询积分-->
+    <select id="getIntegralByUserId" resultType="java.lang.Integer">
         select integral
         from user
         where is_delete = 0
-          and id = #{id}
+          and user_id = #{userId}
     </select>
+
+    <update id="updateIntegralByUserId">
+        update user
+        set integral = integral + #{integral}
+        where is_delete = 0
+          and user_id = #{userId}
+    </update>
 </mapper>

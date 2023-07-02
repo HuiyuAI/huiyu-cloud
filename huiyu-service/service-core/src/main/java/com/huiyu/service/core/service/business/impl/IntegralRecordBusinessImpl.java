@@ -49,7 +49,7 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
         }
 
         // 修改用户积分
-        boolean isUpdateIntegralOK = userService.updateIntegralById(userId, integral);
+        boolean isUpdateIntegralOK = userService.updateIntegralByUserId(userId, integral);
         if (!isUpdateIntegralOK) {
             log.error("更新用户积分失败，userId：{}，integral：{}, source：{}, operation：{}", userId, integral, source, operation);
             throw new RuntimeException("异常错误");

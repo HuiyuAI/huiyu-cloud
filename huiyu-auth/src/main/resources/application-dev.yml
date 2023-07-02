@@ -25,3 +25,7 @@ logging:
   level:
     root: info
     com.huiyu: debug
+
+huiyu:
+  keypair:
+    password: 123456

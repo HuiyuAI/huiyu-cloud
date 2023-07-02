@@ -30,9 +30,9 @@ public class JwtUtils {
      *
      * @return id
      */
-    public static Long getId() {
+    public static Long getUserId() {
         JSONObject payload = getJwtPayload();
-        return payload == null ? null : payload.getLong("id");
+        return payload == null ? null : payload.getLong("userId");
     }
 
     /**

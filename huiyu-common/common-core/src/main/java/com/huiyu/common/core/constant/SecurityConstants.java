@@ -52,10 +52,6 @@ public class SecurityConstants {
      */
     public static final String AUTHENTICATION_IDENTITY_KEY = "authenticationIdentity";
     /**
-     * openid key
-     */
-    public static final String OPENID = "openid";
-    /**
      * 系统管理web客户端ID
      */
     public static final String WEB_ADMIN_CLIENT_ID = "web-admin";

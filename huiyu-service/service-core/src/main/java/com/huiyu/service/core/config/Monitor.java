@@ -1,5 +1,6 @@
 package com.huiyu.service.core.config;
 
+import io.prometheus.client.Collector;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +27,8 @@ import java.util.Objects;
 public class Monitor implements InitializingBean {
 
     private static CollectorRegistry collectorRegistry;
+
+    private static Map<String, Collector> namesToCollectors;
 
     private static final Map<String, Counter> counterNameMap = new HashMap<>();
 
@@ -115,8 +119,10 @@ public class Monitor implements InitializingBean {
                 build.labelNames(monitorName);
             }
             try {
-                if (Objects.nonNull(collectorRegistry.getSampleValue(monitorName))) {
+                if (Objects.isNull(namesToCollectors.get(monitorName))) {
                     counter = build.register(collectorRegistry);
+                } else {
+                    counter = build.create();
                 }
             } catch (Exception e) {
                 log.error("Monitor_register_error", e);
@@ -137,8 +143,10 @@ public class Monitor implements InitializingBean {
                 build.labelNames(monitorName);
             }
             try {
-                if (Objects.nonNull(collectorRegistry.getSampleValue(monitorName))) {
+                if (Objects.isNull(namesToCollectors.get(monitorName))) {
                     summary = build.register(collectorRegistry);
+                } else {
+                    summary = build.create();
                 }
             } catch (Exception e) {
                 log.error("Monitor_register_error", e);
@@ -152,15 +160,16 @@ public class Monitor implements InitializingBean {
 
     private static Gauge exitsGauge(String monitorName, String labelName) {
         Gauge gauge = gaugeNameMap.get(monitorName);
-
         if (Objects.isNull(gauge)) {
             Gauge.Builder build = Gauge.build().name(monitorName).help(monitorName);
             if (StringUtils.isNotBlank(labelName)) {
                 build.labelNames(monitorName);
             }
             try {
-                if (Objects.nonNull(collectorRegistry.getSampleValue(monitorName))) {
+                if (Objects.isNull(namesToCollectors.get(monitorName))) {
                     gauge = build.register(collectorRegistry);
+                } else {
+                    gauge = build.create();
                 }
             } catch (Exception e) {
                 log.error("Monitor_register_error", e);
@@ -179,6 +188,9 @@ public class Monitor implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         Monitor.collectorRegistry = SpringContext.getBean(CollectorRegistry.class);
+        Field field = collectorRegistry.getClass().getDeclaredField("namesToCollectors");
+        field.setAccessible(true);
+        namesToCollectors = (Map<String, Collector>) field.get(collectorRegistry);
     }
 
 }

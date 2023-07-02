@@ -52,9 +52,9 @@ public class ExecutorConfig {
     @Bean(name = "splitTaskExecutor")
     public ThreadPoolExecutorDecorator splitTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
-        executor.setQueueCapacity(1000);
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(50);
+        executor.setQueueCapacity(2000);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         executor.setTaskDecorator(runnable -> {
             String traceId = MDC.get(TRACE_ID);

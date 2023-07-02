@@ -1,7 +1,7 @@
 package com.huiyu.auth.security.config;
 
 import cn.hutool.core.map.MapUtil;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @author Naccl
  * @date 2022-03-01
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableAuthorizationServer
 @Configuration
 public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {

@@ -3,7 +3,6 @@ package com.huiyu.auth.security.extension.wechat;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import cn.hutool.core.util.RandomUtil;
 import com.huiyu.common.core.util.JacksonUtils;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -48,14 +47,14 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         WxMaJscode2SessionResult sessionInfo = null;
         try {
             sessionInfo = wxMaService.getUserService().getSessionInfo(code);
-            log.info("wechat sessionInfo: {}", JacksonUtils.toJsonStr(sessionInfo));
+            log.info("请求微信sessionInfo: {}", JacksonUtils.toJsonStr(sessionInfo));
         } catch (WxErrorException e) {
             log.error("请求微信sessionInfo error: {}", e);
         }
         String openid = sessionInfo.getOpenid();
 
         R<User> result = userFeignClient.queryByOpenid(openid);
-        log.info("authenticate result: {}", JacksonUtils.toJsonStr(result));
+        log.info("根据openid查询用户结果: {}", JacksonUtils.toJsonStr(result));
         User user = result.getData();
         // 不管有没有查到用户，状态码总是SUCCESS
         if (result.isSuccess() && user == null) {
@@ -64,43 +63,24 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             String iv = authenticationToken.getIv();
             // 解密 encryptedData 获取用户信息
             WxMaUserInfo userInfo = wxMaService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
-            log.info("userInfo: {}", JacksonUtils.toJsonStr(userInfo));
+            log.info("解密微信encryptedData获取用户信息: {}", JacksonUtils.toJsonStr(userInfo));
 
             User newUser = new User();
             newUser.setOpenid(openid);
-            newUser.setUsername(getUniqueUsername(userInfo.getNickName()));
+            newUser.setNickname(userInfo.getNickName());
             newUser.setAvatar(userInfo.getAvatarUrl());
             newUser.setGender(Integer.parseInt(userInfo.getGender()));
             newUser.setEnabled(true);
             newUser.setRole(SecurityConstants.ROLE_PREFIX + SecurityConstants.ROLE_USER);
-            log.info("newUser: {}", JacksonUtils.toJsonStr(newUser));
+            log.info("微信小程序注册新用户: {}", JacksonUtils.toJsonStr(newUser));
             // 注册新用户
             R<User> addResult = userFeignClient.add(newUser);
-            log.info("addResult: {}", JacksonUtils.toJsonStr(addResult));
+            log.info("微信小程序注册新用户结果: {}", JacksonUtils.toJsonStr(addResult));
         }
         UserDetails userDetails = userDetailsService.loadUserByOpenId(openid);
         WechatAuthenticationToken wechatAuthenticationToken = new WechatAuthenticationToken(userDetails, new HashSet<>());
         wechatAuthenticationToken.setDetails(authentication.getDetails());
         return wechatAuthenticationToken;
-    }
-
-    /**
-     * TODO 现在username是唯一的，后面要把loadUserByUsername()改掉
-     * 获取唯一用户名
-     *
-     * @param nickname 原始昵称
-     * @return 唯一用户名
-     */
-    private String getUniqueUsername(String nickname) {
-        // 检查用户名是否存在
-        R<Long> countResult = userFeignClient.count(User.builder().username(nickname).build());
-        if (countResult.isSuccess() && countResult.getData() > 0) {
-            // 用户名已存在，拼上一个随机数
-            nickname = nickname + RandomUtil.randomNumber();
-            // 继续检查是否存在
-            return getUniqueUsername(nickname);
-        }
-        return nickname;
     }
 
     @Override

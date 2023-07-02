@@ -11,12 +11,12 @@ import com.huiyu.service.api.entity.User;
  */
 public interface UserService extends IService<User> {
     /**
-     * 通过主键查询单条数据
+     * 通过userId查询单条数据
      *
-     * @param id 主键
-     * @return 实例对象
+     * @param userId userId
+     * @return 单条数据
      */
-    User queryById(Long id);
+    User queryByUserId(Long userId);
 
     /**
      * 通过openid查询单条数据
@@ -33,14 +33,6 @@ public interface UserService extends IService<User> {
      * @return 实例对象
      */
     User queryByUsername(String username);
-
-    /**
-     * 通过userId查询单条数据
-     *
-     * @param userId userId
-     * @return 单条数据
-     */
-    User queryByUserId(Long userId);
 
     /**
      * 统计总行数
@@ -67,20 +59,19 @@ public interface UserService extends IService<User> {
     boolean update(User user);
 
     /**
-     * 通过主键删除数据
+     * 通过userId查询积分
      *
-     * @param id 主键
-     * @return 是否成功
-     */
-    boolean deleteById(Long id);
-
-    /**
-     * 通过主键查询积分
-     *
-     * @param id 主键
+     * @param userId 用户id
      * @return 积分数
      */
-    int getIntegralById(Long id);
+    int getIntegralByUserId(Long userId);
 
-    boolean updateIntegralById(Long id, Integer integral);
+    /**
+     * 根据userId增加积分
+     *
+     * @param userId   用户id
+     * @param integral 增加的积分
+     * @return 是否成功
+     */
+    boolean updateIntegralByUserId(Long userId, Integer integral);
 }

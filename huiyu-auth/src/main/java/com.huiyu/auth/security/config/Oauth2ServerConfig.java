@@ -2,6 +2,7 @@ package com.huiyu.auth.security.config;
 
 import cn.hutool.core.map.MapUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -49,6 +50,9 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     private final ClientDetailsServiceImpl clientDetailsService;
     private final UserDetailsServiceImpl userDetailsService;
 
+    @Value("${huiyu.keypair.password}")
+    private String keypairPassword;
+
     /**
      * OAuth2客户端
      *
@@ -78,7 +82,8 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         List<TokenGranter> granterList = new ArrayList<>(Arrays.asList(endpoints.getTokenGranter()));
 
         // 添加微信授权模式的授权者
-        granterList.add(new WechatTokenGranter(
+        granterList.add(
+                new WechatTokenGranter(
                         endpoints.getTokenServices(),
                         endpoints.getClientDetailsService(),
                         endpoints.getOAuth2RequestFactory(),
@@ -144,14 +149,15 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     public TokenEnhancer tokenEnhancer() {
         return (accessToken, authentication) -> {
             SecurityUserDetails principal = (SecurityUserDetails) authentication.getPrincipal();
-            Map<String, Object> info = MapUtil.newHashMap(7);
-            info.put("id", principal.getId());
+            Map<String, Object> info = MapUtil.newHashMap(8);
+            info.put("userId", principal.getUserId());
             info.put("openid", principal.getOpenid());
             info.put("username", principal.getUsername());
+            info.put("nickname", principal.getNickname());
             info.put("avatar", principal.getAvatar());
             info.put("gender", principal.getGender());
             info.put("role", principal.getRole());
-            info.put("authenticationIdentity", principal.getAuthenticationIdentity());
+            info.put(SecurityConstants.AUTHENTICATION_IDENTITY_KEY, principal.getAuthenticationIdentity());
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
             return accessToken;
         };
@@ -166,9 +172,9 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Bean
     public KeyPair keyPair() {
-        //从classpath下的证书中获取秘钥对
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), "123456".toCharArray());
-        return keyStoreKeyFactory.getKeyPair("jwt", "123456".toCharArray());
+        // 从classpath下的证书中获取秘钥对
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt.jks"), keypairPassword.toCharArray());
+        return keyStoreKeyFactory.getKeyPair("jwt");
     }
 
 }

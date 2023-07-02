@@ -3,6 +3,7 @@ package com.huiyu.auth.util;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.huiyu.auth.common.enums.AuthenticationIdentityEnum;
 import com.nimbusds.jose.JWSObject;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,6 @@ public class RequestUtils {
         if (payload == null) {
             payload = getPayloadJSONObject();
         }
-        return payload.getStr(SecurityConstants.OPENID);
+        return payload.getStr(AuthenticationIdentityEnum.OPENID.getValue());
     }
 }

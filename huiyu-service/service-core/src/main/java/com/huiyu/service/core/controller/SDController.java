@@ -55,10 +55,10 @@ public class SDController {
         }
 
         // 2. 校验用户积分
-//        Long userId = JwtUtils.getId();
-        Long userId = 10001L;
+//        Long userId = JwtUtils.getUserId();
+        Long userId = 1L;
         int calcIntegral = SDCmdCountIntegral.calcIntegralConsume(cmd);
-        int integral = userService.getIntegralById(userId);
+        int integral = userService.getIntegralByUserId(userId);
         if (integral < calcIntegral) {
             return R.error("积分不足");
         }

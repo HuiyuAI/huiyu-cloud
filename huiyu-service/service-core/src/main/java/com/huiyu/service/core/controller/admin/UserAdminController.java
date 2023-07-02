@@ -28,14 +28,14 @@ public class UserAdminController {
     private final UserService userService;
 
     /**
-     * 通过主键查询单条数据
+     * 通过userId查询单条数据
      *
-     * @param id 主键
+     * @param userId userId
      * @return 单条数据
      */
-    @GetMapping("/{id}")
-    public R<User> queryById(@PathVariable("id") Long id) {
-        return R.ok(userService.queryById(id));
+    @GetMapping("/userId/{userId}")
+    public R<User> queryByUserId(@PathVariable("userId") Long userId) {
+        return R.ok(userService.queryByUserId(userId));
     }
 
     /**
@@ -58,17 +58,6 @@ public class UserAdminController {
     @GetMapping("/username/{username}")
     public R<User> queryByUsername(@PathVariable("username") String username) {
         return R.ok(userService.queryByUsername(username));
-    }
-
-    /**
-     * 通过userId查询单条数据
-     *
-     * @param userId userId
-     * @return 单条数据
-     */
-    @GetMapping("/userId/{userId}")
-    public R<User> queryByUserId(@PathVariable("userId") Long userId) {
-        return R.ok(userService.queryByUserId(userId));
     }
 
     /**
@@ -106,15 +95,4 @@ public class UserAdminController {
         return R.ok();
     }
 
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 删除是否成功
-     */
-    @DeleteMapping("/{id}")
-    public <T> R<T> deleteById(@PathVariable("id") Long id) {
-        userService.deleteById(id);
-        return R.ok();
-    }
 }

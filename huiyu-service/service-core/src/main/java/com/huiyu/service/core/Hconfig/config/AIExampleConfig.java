@@ -4,6 +4,7 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 import com.huiyu.service.core.Hconfig.base.HConfigOnChange;
 import com.huiyu.service.core.Hconfig.base.HConfigType;
 import com.huiyu.service.core.Hconfig.base.annotation.HConfig;
+import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.config.executor.MonitorLinkedBlockingQueue;
 import com.huiyu.service.core.config.executor.MonitorThreadPoolTaskExecutor;
 import com.huiyu.service.core.config.executor.TaskExecutionRejectedHandler;
@@ -177,6 +178,8 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
             int taskCount = taskQueue.size();
             long queueSize = ExecChooseContext.submitQueueList.size();
             if (queueSize == 0) {
+                Monitor.recordOne("no_ai_example");
+                log.error("无Ai实例运行");
                 return;
             }
 
@@ -193,6 +196,21 @@ public class AIExampleConfig implements HConfigOnChange<AIExampleConfig.ChangeDa
                     }
                 }
             });
+            while (taskQueue.size() > 0) {
+                ExecChooseContext.submitQueueList.entrySet().stream()
+                        .findAny()
+                        .map(entry -> {
+                            try {
+                                MonitorLinkedBlockingQueue<Byte> queue = entry.getValue();
+                                String targetSource = entry.getKey();
+                                taskService.batchUpdateBySource(source, targetSource, 1);
+                                return queue.add(taskQueue.poll(100, TimeUnit.MILLISECONDS));
+                            } catch (InterruptedException e) {
+                                log.error("reload_error", e);
+                                return null;
+                            }
+                        });
+            }
         }
     }
 

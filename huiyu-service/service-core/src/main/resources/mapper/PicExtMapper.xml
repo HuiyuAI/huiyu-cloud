@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="picExtMap" type="com.huiyu.service.core.entity.PicExt">
-        <result column="id" property="id"/>
+        <id column="id" property="id"/>
         <result column="pic_id" property="picId"/>
         <result column="views" property="views"/>
         <result column="enable" property="enable" jdbcType="INTEGER"/>

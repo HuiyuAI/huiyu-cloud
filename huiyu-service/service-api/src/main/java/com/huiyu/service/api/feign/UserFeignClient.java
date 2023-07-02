@@ -36,6 +36,15 @@ public interface UserFeignClient {
     R<User> queryByUsername(@PathVariable("username") String username);
 
     /**
+     * 通过userId查询单条数据
+     *
+     * @param userId userId
+     * @return 单条数据
+     */
+    @GetMapping("/admin/user/userId/{userId}")
+    R<User> queryByUserId(@PathVariable("userId") Long userId);
+
+    /**
      * 新增数据
      *
      * @param user 实体

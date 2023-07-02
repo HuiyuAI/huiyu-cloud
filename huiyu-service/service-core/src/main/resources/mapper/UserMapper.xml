@@ -3,17 +3,18 @@
 <mapper namespace="com.huiyu.service.core.mapper.auth.UserMapper">
 
     <resultMap type="com.huiyu.service.api.entity.User" id="UserMap">
-        <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="openid" column="openid" jdbcType="VARCHAR"/>
-        <result property="username" column="username" jdbcType="VARCHAR"/>
-        <result property="password" column="password" jdbcType="VARCHAR"/>
-        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
-        <result property="gender" column="gender" jdbcType="INTEGER"/>
-        <result property="enabled" column="enabled" jdbcType="BOOLEAN"/>
-        <result property="role" column="role" jdbcType="VARCHAR"/>
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="openid" column="openid"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="role" column="role"/>
+        <result property="avatar" column="avatar"/>
+        <result property="gender" column="gender"/>
         <result property="phone" column="phone"/>
         <result property="integral" column="integral"/>
         <result property="level" column="level"/>
+        <result property="enabled" column="enabled"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="isDelete" column="is_delete"/>
@@ -43,112 +44,19 @@
           and username = #{username}
     </select>
 
-    <!--查询指定行数据-->
-    <select id="queryAll" resultMap="UserMap">
+    <!--查询单个-->
+    <select id="queryByUserId" resultMap="UserMap">
         select *
         from user
         where is_delete = 0
-        <if test="id != null">
-            and id = #{id}
-        </if>
-        <if test="openid != null and openid != ''">
-            and openid = #{openid}
-        </if>
-        <if test="username != null and username != ''">
-            and username = #{username}
-        </if>
-        <if test="password != null and password != ''">
-            and password = #{password}
-        </if>
-        <if test="avatar != null and avatar != ''">
-            and avatar = #{avatar}
-        </if>
-        <if test="gender != null">
-            and gender = #{gender}
-        </if>
-        <if test="enabled != null">
-            and enabled = #{enabled}
-        </if>
-        <if test="role != null and role != ''">
-            and role = #{role}
-        </if>
+          and id = #{userId}
     </select>
-
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from user
-        where is_delete = 0
-        <if test="id != null">
-            and id = #{id}
-        </if>
-        <if test="openid != null and openid != ''">
-            and openid = #{openid}
-        </if>
-        <if test="username != null and username != ''">
-            and username = #{username}
-        </if>
-        <if test="password != null and password != ''">
-            and password = #{password}
-        </if>
-        <if test="avatar != null and avatar != ''">
-            and avatar = #{avatar}
-        </if>
-        <if test="gender != null">
-            and gender = #{gender}
-        </if>
-        <if test="enabled != null">
-            and enabled = #{enabled}
-        </if>
-        <if test="role != null and role != ''">
-            and role = #{role}
-        </if>
-    </select>
-
-    <!--新增所有列-->
-    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into user(openid, username, password, avatar, gender, enabled, role)
-        values (#{openid}, #{username}, #{password}, #{avatar}, #{gender}, #{enabled}, #{role})
-    </insert>
-
-    <!--通过主键修改数据-->
-    <update id="update">
-        update user
-        <set>
-            <if test="openid != null and openid != ''">
-                openid = #{openid},
-            </if>
-            <if test="username != null and username != ''">
-                username = #{username},
-            </if>
-            <if test="password != null and password != ''">
-                password = #{password},
-            </if>
-            <if test="avatar != null and avatar != ''">
-                avatar = #{avatar},
-            </if>
-            <if test="gender != null">
-                gender = #{gender},
-            </if>
-            <if test="enabled != null">
-                enabled = #{enabled},
-            </if>
-            <if test="integral != null">
-                integral = #{integral},
-            </if>
-            <if test="role != null and role != ''">
-                role = #{role},
-            </if>
-        </set>
-        where is_delete = 0
-        and id = #{id}
-    </update>
 
     <update id="updateIntegralById">
         update user
         set integral = integral + #{integral}
         where is_delete = 0
-        and id = #{id}
+          and id = #{id}
     </update>
 
     <!--通过主键删除-->

@@ -61,6 +61,17 @@ public class UserAdminController {
     }
 
     /**
+     * 通过userId查询单条数据
+     *
+     * @param userId userId
+     * @return 单条数据
+     */
+    @GetMapping("/userId/{userId}")
+    public R<User> queryByUserId(@PathVariable("userId") Long userId) {
+        return R.ok(userService.queryByUserId(userId));
+    }
+
+    /**
      * 统计总行数
      *
      * @param user 筛选条件

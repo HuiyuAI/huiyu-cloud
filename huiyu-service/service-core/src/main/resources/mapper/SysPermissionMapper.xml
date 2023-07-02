@@ -3,7 +3,7 @@
 <mapper namespace="com.huiyu.service.core.mapper.auth.SysPermissionMapper">
 
     <resultMap type="com.huiyu.service.api.entity.SysPermission" id="SysPermissionMap">
-        <result property="id" column="id" jdbcType="INTEGER"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="urlPerm" column="url_perm" jdbcType="VARCHAR"/>
         <result property="role" column="role" jdbcType="VARCHAR"/>

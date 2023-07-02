@@ -3,12 +3,15 @@ package com.huiyu.service.core.service.auth.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.api.entity.User;
+import com.huiyu.service.core.entity.UserIdSender;
+import com.huiyu.service.core.mapper.UserIdSenderMapper;
 import com.huiyu.service.core.mapper.auth.UserMapper;
 import com.huiyu.service.core.service.auth.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * (User)表服务实现类
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     private final UserMapper userMapper;
+    private final UserIdSenderMapper userIdSenderMapper;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -84,11 +88,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param user 实例对象
      * @return 实例对象
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public User insert(User user) {
         if (StrUtil.isNotBlank(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
+
+        // 从发号表取一个userId
+        UserIdSender userIdSender = userIdSenderMapper.getFirst();
+        user.setUserId(userIdSender.getUserId());
+        userIdSenderMapper.deleteById(userIdSender.getId());
         super.save(user);
         return user;
     }

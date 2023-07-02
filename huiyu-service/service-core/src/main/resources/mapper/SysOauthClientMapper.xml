@@ -3,7 +3,7 @@
 <mapper namespace="com.huiyu.service.core.mapper.auth.SysOauthClientMapper">
 
     <resultMap type="com.huiyu.service.api.entity.SysOauthClient" id="SysOauthClientMap">
-        <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
+        <id property="clientId" column="client_id" jdbcType="VARCHAR"/>
         <result property="resourceIds" column="resource_ids" jdbcType="VARCHAR"/>
         <result property="clientSecret" column="client_secret" jdbcType="VARCHAR"/>
         <result property="scope" column="scope" jdbcType="VARCHAR"/>

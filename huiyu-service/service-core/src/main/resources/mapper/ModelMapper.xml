@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="modelResultMap" type="com.huiyu.service.core.entity.Model">
-        <result column="id" property="id"/>
+        <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="category" property="category"/>
         <result column="description" property="description"/>

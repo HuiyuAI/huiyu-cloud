@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="RequestLogMap" type="com.huiyu.service.core.entity.RequestLog">
-        <result column="id" property="id"/>
+        <id column="id" property="id"/>
         <result column="ip_address" property="ipAddress"/>
         <result column="method" property="method"/>
         <result column="url" property="url"/>

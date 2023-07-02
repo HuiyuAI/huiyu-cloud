@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.auth;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.api.entity.User;
 
 /**
@@ -8,7 +9,7 @@ import com.huiyu.service.api.entity.User;
  * @author Naccl
  * @date 2022-03-08
  */
-public interface UserService {
+public interface UserService extends IService<User> {
     /**
      * 通过主键查询单条数据
      *
@@ -32,6 +33,14 @@ public interface UserService {
      * @return 实例对象
      */
     User queryByUsername(String username);
+
+    /**
+     * 通过userId查询单条数据
+     *
+     * @param userId userId
+     * @return 单条数据
+     */
+    User queryByUserId(Long userId);
 
     /**
      * 统计总行数

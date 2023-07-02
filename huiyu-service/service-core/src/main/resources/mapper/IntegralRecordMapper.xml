@@ -4,7 +4,7 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="baseResult" type="com.huiyu.service.core.entity.IntegralRecord">
-        <result column="id" property="id"/>
+        <id column="id" property="id"/>
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
         <result column="num" property="num"/>

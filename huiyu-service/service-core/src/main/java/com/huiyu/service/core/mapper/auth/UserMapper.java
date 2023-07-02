@@ -1,11 +1,9 @@
 package com.huiyu.service.core.mapper.auth;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.huiyu.service.api.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * (User)表数据库访问层
@@ -14,15 +12,7 @@ import java.util.List;
  * @date 2022-03-08
  */
 @Mapper
-@Repository
-public interface UserMapper {
-    /**
-     * 查询指定行数据
-     *
-     * @param user 查询条件
-     * @return 对象列表
-     */
-    List<User> queryAll(User user);
+public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 通过主键查询单条数据
@@ -49,28 +39,12 @@ public interface UserMapper {
     User queryByUsername(String username);
 
     /**
-     * 统计总行数
+     * 通过userId查询单条数据
      *
-     * @param user 查询条件
-     * @return 总行数
+     * @param userId userId
+     * @return 实例对象
      */
-    long count(User user);
-
-    /**
-     * 新增数据
-     *
-     * @param user 实例对象
-     * @return 影响行数
-     */
-    int insert(User user);
-
-    /**
-     * 修改数据
-     *
-     * @param user 实例对象
-     * @return 影响行数
-     */
-    int update(User user);
+    User queryByUserId(Long userId);
 
     /**
      * 通过主键删除数据

@@ -114,7 +114,13 @@ public class Monitor implements InitializingBean {
             if (StringUtils.isNotBlank(labelName)) {
                 build.labelNames(monitorName);
             }
-            counter = build.register(collectorRegistry);
+            try {
+                if (Objects.nonNull(collectorRegistry.getSampleValue(monitorName))) {
+                    counter = build.register(collectorRegistry);
+                }
+            } catch (Exception e) {
+                log.error("Monitor_register_error", e);
+            }
             counterNameMap.put(monitorName, counter);
             return counter;
         }
@@ -130,7 +136,13 @@ public class Monitor implements InitializingBean {
             if (StringUtils.isNotBlank(labelName)) {
                 build.labelNames(monitorName);
             }
-            summary = build.register(collectorRegistry);
+            try {
+                if (Objects.nonNull(collectorRegistry.getSampleValue(monitorName))) {
+                    summary = build.register(collectorRegistry);
+                }
+            } catch (Exception e) {
+                log.error("Monitor_register_error", e);
+            }
             summaryNameMap.put(monitorName, summary);
             return summary;
         }
@@ -146,7 +158,13 @@ public class Monitor implements InitializingBean {
             if (StringUtils.isNotBlank(labelName)) {
                 build.labelNames(monitorName);
             }
-            gauge = build.register(collectorRegistry);
+            try {
+                if (Objects.nonNull(collectorRegistry.getSampleValue(monitorName))) {
+                    gauge = build.register(collectorRegistry);
+                }
+            } catch (Exception e) {
+                log.error("Monitor_register_error", e);
+            }
             gaugeNameMap.put(monitorName, gauge);
             return gauge;
         }

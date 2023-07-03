@@ -57,6 +57,7 @@ class GenerateThread implements Runnable {
                 imageTaskInvoker.invokerGenerate(nextTask, ip);
             } catch (InterruptedException e) {
                 log.info("线程池销毁响应中断:ip:{},source:{}", ip, source);
+                compensateHandle();
             } catch (Exception e) {
                 log.error("invokerError:", e);
                 compensateHandle();
@@ -81,7 +82,7 @@ class GenerateThread implements Runnable {
             taskQueue.offer(Byte.valueOf("1"));
         } else {
             // 回退积分
-            integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.BACK, IntegralOperationRecordEnum.ADD);
+            integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.BACK, IntegralOperationRecordEnum.ADD, task);
 
             Task TaskDO = Task.builder()
                     .id(task.getId())

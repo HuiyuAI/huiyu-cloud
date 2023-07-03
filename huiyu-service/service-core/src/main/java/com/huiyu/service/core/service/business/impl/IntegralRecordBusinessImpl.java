@@ -1,10 +1,10 @@
 package com.huiyu.service.core.service.business.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.IntegralRecord;
+import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.IntegralRecordService;
 import com.huiyu.service.core.service.auth.UserService;
 import com.huiyu.service.core.service.business.IntegralRecordBusiness;
@@ -35,11 +35,12 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
      * @param integral  需要操作的积分数值
      * @param source    操作来源
      * @param operation 积分增减
+     * @param task      任务
      * @return 是否更新成功
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean updateIntegral(Long userId, Integer integral, IntegralSourceRecordEnum source, IntegralOperationRecordEnum operation) {
+    public boolean updateIntegral(Long userId, Integer integral, IntegralSourceRecordEnum source, IntegralOperationRecordEnum operation, Task task) {
         if (integral == null || integral <= 0) {
             throw new IllegalArgumentException("积分数值不合法");
         }
@@ -56,9 +57,12 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
         }
 
         // 关联请求uuid
-        String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
-        if (StringUtils.isEmpty(requestUuid)) {
-            requestUuid = IdUtil.fastUUID();
+        // 关联taskid
+        Long taskId = 0L;
+        String requestUuid = IdUtil.fastUUID();
+        if (task != null) {
+            taskId = task.getId();
+            requestUuid = task.getRequestUuid();
         }
 
         // 记录积分表
@@ -66,6 +70,7 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
         IntegralRecord integralRecord = IntegralRecord.builder()
                 .id(IdUtils.nextSnowflakeId())
                 .userId(userId)
+                .taskId(taskId)
                 .requestUuid(requestUuid)
                 .num(Math.abs(integral))
                 .operationType(operation)

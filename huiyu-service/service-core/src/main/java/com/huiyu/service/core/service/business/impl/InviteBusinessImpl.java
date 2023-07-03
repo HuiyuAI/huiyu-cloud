@@ -62,7 +62,7 @@ public class InviteBusinessImpl implements InviteBusiness {
         // 2. 更新所有邀请人的积分
         LocalDateTime now = LocalDateTime.now();
         invites.forEach(v -> {
-            integralRecordBusiness.updateIntegral(v.getInvitersId(), hotFileConfig.getInviteIntegral(), IntegralSourceRecordEnum.INVITE_USER, IntegralOperationRecordEnum.ADD);
+            integralRecordBusiness.updateIntegral(v.getInvitersId(), hotFileConfig.getInviteIntegral(), IntegralSourceRecordEnum.INVITE_USER, IntegralOperationRecordEnum.ADD, null);
             v.setUpdateTime(now);
             v.setStatus(InviteStatusEnum.SUCCESS);
         });

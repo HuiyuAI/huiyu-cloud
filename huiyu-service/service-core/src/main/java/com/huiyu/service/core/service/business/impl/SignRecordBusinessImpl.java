@@ -32,7 +32,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
             return false;
         }
         // 签到积分奖励
-        return integralRecordBusiness.updateIntegral(userId, hotFileConfig.getSignInIntegral(), IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD);
+        return integralRecordBusiness.updateIntegral(userId, hotFileConfig.getSignInIntegral(), IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD, null);
     }
 
     private boolean isSignIn(Long userId) {

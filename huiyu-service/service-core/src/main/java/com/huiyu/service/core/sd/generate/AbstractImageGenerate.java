@@ -21,9 +21,6 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     @Resource
     private List<AbstractSubmitRequestQueueService<T>> submitRequestQueueServiceList;
 
-    @Resource
-    private IntegralRecordBusiness integralRecordBusiness;
-
     @Override
     public void generate(T t) {
         preExec(t);
@@ -40,7 +37,7 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     }
 
     public void preExec(T t) {
-        boolean insertResult = deductUserIntegral(t);
+
     }
 
     public void afterExec() {
@@ -52,9 +49,5 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
         String typeName = actualTypeArgument.getTypeName();
         String name = t.getClass().getName();
         return StringUtils.equals(typeName, name);
-    }
-
-    private boolean deductUserIntegral(T t) {
-        return integralRecordBusiness.updateIntegral(t.getUserId(), t.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE);
     }
 }

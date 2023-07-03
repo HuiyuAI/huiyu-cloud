@@ -1,10 +1,14 @@
 package com.huiyu.service.core.service.submit;
 
 import com.huiyu.service.core.Hconfig.config.HotFileConfig;
+import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
+import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
+import com.huiyu.service.core.service.business.IntegralRecordBusiness;
 import com.huiyu.service.core.service.submit.chooseStrategy.ExecChooseStrategy;
 import com.huiyu.service.core.utils.NewPair;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +42,9 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     private List<ExecChooseStrategy<T>> execChooseStrategyList;
 
     @Resource
+    private IntegralRecordBusiness integralRecordBusiness;
+
+    @Resource
     private HotFileConfig hotFileConfig;
 
     public void submitToSplit(T t) {
@@ -50,6 +57,11 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
                 .orElse(null);
         Task task = taskDtoPair.getKey();
         task.setExecSource(execSource);
+        String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
+        task.setRequestUuid(requestUuid);
+        if (!deductUserIntegral(task)) {
+            return;
+        }
         Dto dto = taskDtoPair.getValue();
         CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
                 .exceptionally(ExceptionLogHandle);
@@ -65,5 +77,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
 
     public abstract NewPair<Task, Dto> convertTask(T t);
 
-
+    private boolean deductUserIntegral(Task task) {
+        return integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE, task);
+    }
 }

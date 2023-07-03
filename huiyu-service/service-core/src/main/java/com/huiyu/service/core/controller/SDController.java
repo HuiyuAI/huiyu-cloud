@@ -57,6 +57,7 @@ public class SDController {
 
         // 2. 校验用户积分
         Long userId = JwtUtils.getUserId();
+//        Long userId = 100000L;
         int calcIntegral = SDCmdCountIntegral.calcIntegralConsume(cmd);
         int integral = userService.getIntegralByUserId(userId);
         if (integral < calcIntegral) {

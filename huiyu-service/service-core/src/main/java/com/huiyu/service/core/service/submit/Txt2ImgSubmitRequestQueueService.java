@@ -31,7 +31,7 @@ public class Txt2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueue
         task.setType(TaskTypeEnum.TXT2IMG);
         task.setStatus(TaskStatusEnum.UN_EXECUTED);
         task.setRetryCount(0);
-        task.setIntegral(txt2ImgCmd.getIntegral() / txt2ImgCmd.getCount());
+        task.setIntegral(txt2ImgCmd.getIntegral());
         task.setCreateTime(now);
         task.setUpdateTime(now);
         task.setIsDelete(0);

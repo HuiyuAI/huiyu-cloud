@@ -64,12 +64,14 @@ public class ImageTaskService {
             taskList.add(task);
             return taskList;
         }
+        Integer integral = task.getIntegral();
         for (int i = 0; i < task.getNum(); i++) {
             Task copyTask = new Task();
             BeanUtil.copyProperties(task, copyTask);
 
             copyTask.setId(IdUtils.nextSnowflakeId());
             copyTask.setNum(1);
+            copyTask.setIntegral(integral / task.getNum());
 
             TaskTypeEnum type = task.getType();
             switch (type) {
@@ -126,8 +128,6 @@ public class ImageTaskService {
         if (taskService.getById(task.getId()) != null) {
             return;
         }
-        String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
-        task.setRequestUuid(requestUuid);
         taskService.insertTask(task);
     }
 

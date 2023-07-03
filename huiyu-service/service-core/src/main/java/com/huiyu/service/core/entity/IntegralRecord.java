@@ -33,6 +33,10 @@ public class IntegralRecord implements Serializable {
      */
     private Long userId;
     /**
+     * taskID
+     */
+    private Long taskId;
+    /**
      * 积分
      */
     private Integer num;

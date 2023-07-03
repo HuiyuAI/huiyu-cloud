@@ -7,6 +7,7 @@
         <id column="id" property="id"/>
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
+        <result column="task_id" property="taskId"/>
         <result column="num" property="num"/>
         <result column="operation_type" property="operationType" jdbcType="INTEGER"/>
         <result column="operation_source" property="operationSource"/>
@@ -16,8 +17,8 @@
     </resultMap>
 
     <insert id="insertRecord">
-        insert into integral_record (id, request_uuid, user_id, num, operation_type, operation_source)
-        values (#{id}, #{requestUuid}, #{userId}, #{num}, #{operationType}, #{operationSource})
+        insert into integral_record (id, request_uuid, user_id, task_id, num, operation_type, operation_source)
+        values (#{id}, #{requestUuid}, #{userId}, #{taskId}, #{num}, #{operationType}, #{operationSource})
     </insert>
 
     <select id="getByUserId" resultMap="baseResult">

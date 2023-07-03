@@ -73,6 +73,16 @@ public class Model implements Serializable {
     @TableField("hr_upscaler")
     private String hrUpscaler;
     /**
+     * 默认正向描述词
+     */
+    @TableField("default_prompt")
+    private String defaultPrompt;
+    /**
+     * 默认反向描述词
+     */
+    @TableField("default_negative_prompt")
+    private String defaultNegativePrompt;
+    /**
      * 搭配lora
      */
     @TableField("lora")

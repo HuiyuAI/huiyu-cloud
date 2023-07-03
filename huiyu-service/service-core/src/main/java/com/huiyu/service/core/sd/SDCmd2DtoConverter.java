@@ -31,10 +31,17 @@ public class SDCmd2DtoConverter {
         String modelCode = model.getCode();
         String vae = model.getVae();
         String sampler = model.getSampler();
+        String lora = model.getLora();
+        String defaultPrompt = model.getDefaultPrompt();
+        String defaultNegativePrompt = model.getDefaultNegativePrompt();
 
         // TODO 调用API翻译中文描述词（或根据词库映射）
         String prompt = cmd.getPrompt();
         String negativePrompt = cmd.getNegativePrompt();
+
+        // 过滤prompt中含有<>的内容，防止使用未定义的LoRA
+        prompt = prompt.replaceAll("<.*?>", "");
+        negativePrompt = negativePrompt.replaceAll("<.*?>", "");
 
         Integer quality = cmd.getQuality();
         ImageQualityEnum imageQualityEnum = ImageQualityEnum.getEnumByCode(quality);
@@ -56,6 +63,9 @@ public class SDCmd2DtoConverter {
                 .sdVae(vae)
                 .prompt(prompt)
                 .negativePrompt(negativePrompt)
+                .defaultPrompt(defaultPrompt)
+                .defaultNegativePrompt(defaultNegativePrompt)
+                .lora(lora)
                 .samplerName(sampler)
                 .steps(cmd.getSteps())
                 .enableHr(imageQualityEnum.getEnableHr())

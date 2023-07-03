@@ -42,6 +42,21 @@ public class Txt2ImgDto extends Dto {
     @JsonProperty("negative_prompt")
     private String negativePrompt;
     /**
+     * 默认正向描述词
+     */
+    @JsonProperty("default_prompt")
+    private String defaultPrompt;
+    /**
+     * 默认反向描述词
+     */
+    @JsonProperty("default_negative_prompt")
+    private String defaultNegativePrompt;
+    /**
+     * LoRA
+     */
+    @JsonProperty("lora")
+    private String lora;
+    /**
      * 采样器
      */
     @JsonProperty("sampler_name")

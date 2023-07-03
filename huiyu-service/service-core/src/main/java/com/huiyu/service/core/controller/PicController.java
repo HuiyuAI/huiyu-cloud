@@ -3,6 +3,7 @@ package com.huiyu.service.core.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.result.R;
+import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
@@ -35,8 +36,7 @@ public class PicController {
      */
     @GetMapping("/page")
     public R<IPage<PicPageVo>> page(@Valid PicPageDto dto) {
-//        Long userId = JwtUtils.getUserId();
-        Long userId = 1L;
+        Long userId = JwtUtils.getUserId();
         dto.setUserId(userId);
         IPage<PicPageVo> picVoPage = picBusiness.queryVoPage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
         return R.ok(picVoPage);
@@ -47,8 +47,7 @@ public class PicController {
      */
     @GetMapping("/get")
     public R<PicVo> get(String uuid) {
-//        Long userId = JwtUtils.getUserId();
-        Long userId = 1L;
+        Long userId = JwtUtils.getUserId();
         PicVo picVo = picBusiness.getPicVo(uuid, userId);
         return R.ok(picVo);
     }

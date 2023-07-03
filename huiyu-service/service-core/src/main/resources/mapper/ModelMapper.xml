@@ -13,6 +13,8 @@
         <result column="vae" property="vae"/>
         <result column="sampler" property="sampler"/>
         <result column="hr_upscaler" property="hrUpscaler"/>
+        <result column="default_prompt" property="defaultPrompt"/>
+        <result column="default_negative_prompt" property="defaultNegativePrompt"/>
         <result column="lora" property="lora"/>
         <result column="priority" property="priority"/>
         <result column="enabled" property="enabled"/>

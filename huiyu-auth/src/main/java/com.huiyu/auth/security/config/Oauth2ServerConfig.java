@@ -155,8 +155,6 @@ public class Oauth2ServerConfig extends AuthorizationServerConfigurerAdapter {
             info.put("username", principal.getUsername());
             info.put("nickname", principal.getNickname());
             info.put("avatar", principal.getAvatar());
-            info.put("gender", principal.getGender());
-            info.put("role", principal.getRole());
             info.put(SecurityConstants.AUTHENTICATION_IDENTITY_KEY, principal.getAuthenticationIdentity());
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
             return accessToken;

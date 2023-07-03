@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.business.impl;
 
+import com.huiyu.service.core.Hconfig.config.HotFileConfig;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.constant.SignRecordStatusEnum;
@@ -21,6 +22,9 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
     @Resource
     private IntegralRecordBusiness integralRecordBusiness;
 
+    @Resource
+    private HotFileConfig hotFileConfig;
+
     @Override
     public boolean signIn(Long userId) {
         // 判断用户是否已签到
@@ -28,7 +32,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
             return false;
         }
         // 签到积分奖励
-        return integralRecordBusiness.updateIntegral(userId, 1, IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD);
+        return integralRecordBusiness.updateIntegral(userId, hotFileConfig.getSignInIntegral(), IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD);
     }
 
     private boolean isSignIn(Long userId) {

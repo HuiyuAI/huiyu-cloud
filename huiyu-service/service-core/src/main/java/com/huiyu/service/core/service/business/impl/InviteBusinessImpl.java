@@ -1,6 +1,7 @@
 package com.huiyu.service.core.service.business.impl;
 
 
+import com.huiyu.service.core.Hconfig.config.HotFileConfig;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
 import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.constant.InviteStatusEnum;
@@ -25,8 +26,8 @@ public class InviteBusinessImpl implements InviteBusiness {
     @Resource
     private IntegralRecordBusiness integralRecordBusiness;
 
-    // todo 动态配置
-    private final Integer integral = 10;
+    @Resource
+    private HotFileConfig hotFileConfig;
 
     @Override
     public boolean inviteUser(Long invitersId, String inviteesOpenid) {
@@ -61,7 +62,7 @@ public class InviteBusinessImpl implements InviteBusiness {
         // 2. 更新所有邀请人的积分
         LocalDateTime now = LocalDateTime.now();
         invites.forEach(v -> {
-            integralRecordBusiness.updateIntegral(v.getInvitersId(), integral, IntegralSourceRecordEnum.INVITE_USER, IntegralOperationRecordEnum.ADD);
+            integralRecordBusiness.updateIntegral(v.getInvitersId(), hotFileConfig.getInviteIntegral(), IntegralSourceRecordEnum.INVITE_USER, IntegralOperationRecordEnum.ADD);
             v.setUpdateTime(now);
             v.setStatus(InviteStatusEnum.SUCCESS);
         });

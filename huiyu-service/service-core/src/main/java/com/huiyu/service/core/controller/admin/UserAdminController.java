@@ -79,8 +79,7 @@ public class UserAdminController {
      */
     @PostMapping
     public R<User> add(@RequestBody User user) {
-        long count = userService.count(User.builder().username(user.getUsername()).build());
-        return count > 0 ? R.error("用户名已存在") : R.ok(userService.insert(user));
+        return R.ok(userService.insert(user));
     }
 
     /**

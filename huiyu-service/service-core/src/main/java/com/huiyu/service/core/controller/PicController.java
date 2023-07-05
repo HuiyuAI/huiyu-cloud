@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
+import com.huiyu.service.core.aspect.annotation.RequestLimiter;
+import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
@@ -34,6 +36,8 @@ public class PicController {
     /**
      * 画夹分页
      */
+    @RequestLimiter(seconds = 60, maxCount = 60)
+    @RequestLogger
     @GetMapping("/page")
     public R<IPage<PicPageVo>> page(@Valid PicPageDto dto) {
         Long userId = JwtUtils.getUserId();
@@ -45,6 +49,8 @@ public class PicController {
     /**
      * 详情
      */
+    @RequestLimiter(seconds = 60, maxCount = 60)
+    @RequestLogger
     @GetMapping("/get")
     public R<PicVo> get(String uuid) {
         Long userId = JwtUtils.getUserId();
@@ -55,6 +61,7 @@ public class PicController {
     /**
      * 批量删除
      */
+    @RequestLogger
     @PostMapping("/removeByIds")
     public R<?> remove(@RequestBody List<Long> ids) {
         return R.ok();

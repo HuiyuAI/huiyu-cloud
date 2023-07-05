@@ -4,6 +4,8 @@ import cn.hutool.core.util.IdUtil;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.MethodMonitor;
+import com.huiyu.service.core.aspect.annotation.RequestLimiter;
+import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdCountIntegral;
@@ -47,6 +49,7 @@ public class SDController {
      * @return 校验成功返回等待消息/校验失败返回错误消息
      */
     @MethodMonitor
+    @RequestLogger
     @PostMapping("/txt2img")
     public R<?> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
         // 1. 参数校验(数值范围)

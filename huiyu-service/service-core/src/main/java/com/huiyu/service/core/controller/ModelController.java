@@ -1,6 +1,8 @@
 package com.huiyu.service.core.controller;
 
 import com.huiyu.common.core.result.R;
+import com.huiyu.service.core.aspect.annotation.RequestLimiter;
+import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.convert.ModelConverter;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.model.dto.ModelDto;
@@ -31,6 +33,8 @@ public class ModelController {
     /**
      * 查全部
      */
+    @RequestLimiter(seconds = 60, maxCount = 30)
+    @RequestLogger
     @GetMapping("/list")
     public R<List<ModelVo>> queryAll() {
         List<Model> modelList = modelService.queryAll();

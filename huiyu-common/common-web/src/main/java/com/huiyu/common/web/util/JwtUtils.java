@@ -8,6 +8,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import com.huiyu.common.core.constant.SecurityConstants;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * JWT工具类
  *
@@ -16,13 +18,20 @@ import com.huiyu.common.core.constant.SecurityConstants;
  */
 @Slf4j
 public class JwtUtils {
+    private static final String HUIYU_USER_REQUEST_ATTR = "_HUIYU_USER_REQUEST_ATTR_";
+
     public static JSONObject getJwtPayload() {
-        JSONObject jsonObject = null;
-        String payload = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader(SecurityConstants.JWT_PAYLOAD_KEY);
-        if (StrUtil.isNotBlank(payload)) {
-            jsonObject = JSONUtil.parseObj(payload);
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        Object huiyuUser = request.getAttribute(HUIYU_USER_REQUEST_ATTR);
+
+        if (huiyuUser == null) {
+            String payload = request.getHeader(SecurityConstants.JWT_PAYLOAD_KEY);
+            if (StrUtil.isNotBlank(payload)) {
+                huiyuUser = JSONUtil.parseObj(payload);
+                request.setAttribute(HUIYU_USER_REQUEST_ATTR, huiyuUser);
+            }
         }
-        return jsonObject;
+        return (JSONObject) huiyuUser;
     }
 
     /**

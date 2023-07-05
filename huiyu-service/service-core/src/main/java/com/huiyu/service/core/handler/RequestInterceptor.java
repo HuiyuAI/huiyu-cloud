@@ -1,18 +1,15 @@
 package com.huiyu.service.core.handler;
 
 import com.huiyu.common.core.util.JacksonUtils;
-import com.huiyu.service.core.entity.RequestLog;
-import com.huiyu.service.core.service.RequestLogService;
+import com.huiyu.service.core.utils.IpAddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 
 /**
  * @Auther: wAnG
@@ -25,14 +22,11 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     private final Logger log = LoggerFactory.getLogger("paramLog");
 
-    @Resource
-    private RequestLogService requestLogService;
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
-        String IP = request.getLocalAddr();
+        String IP = IpAddressUtils.getIpAddress(request);
         String remoteName = request.getServerName();
         long startTime = System.currentTimeMillis();
         request.getSession().setAttribute("startTime", startTime);
@@ -53,7 +47,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         Long totalTime = endTime - startTime;
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
-        String IP = request.getLocalAddr();
+        String IP = IpAddressUtils.getIpAddress(request);
         String remoteName = request.getServerName();
         log.info("\n" +
                         "==================== ResponseStart ====================\n" +
@@ -61,17 +55,6 @@ public class RequestInterceptor implements HandlerInterceptor {
                         "status : [{}] | body : [{}]\n" +
                         "====================  ResponseEnd  ====================",
                 totalTime, IP, method, requestURI, remoteName, status, JacksonUtils.toJsonStr(body));
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        RequestLog requestLog = RequestLog.builder()
-                .ipAddress(request.getRemoteAddr())
-                .url(request.getRequestURI())
-                .method(request.getMethod())
-                .createTime(LocalDateTime.now())
-                .build();
-        requestLogService.insert(requestLog);
     }
 
 }

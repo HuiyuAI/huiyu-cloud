@@ -2,6 +2,7 @@ package com.huiyu.service.core.aspect;
 
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimit;
+import com.huiyu.service.core.utils.IpAddressUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -30,7 +31,7 @@ public class RequestLimitAspect {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         int seconds = requestLimit.seconds();
         int maxCount = requestLimit.maxCount();
-        String ip = request.getRemoteAddr();
+        String ip = IpAddressUtils.getIpAddress(request);
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
         String redisKey = ip + ":" + method + ":" + requestURI;
@@ -42,6 +43,7 @@ public class RequestLimitAspect {
             redisTemplate.expire(redisKey, seconds, TimeUnit.SECONDS);
         } else {
             if (count >= maxCount) {
+                String msg = requestLimit.msg();
                 log.error(" error count: {}", count);
 //                throw new RuntimeException("请求频率超限，请稍后重试。");
             } else {

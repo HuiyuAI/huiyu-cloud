@@ -5,14 +5,17 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="RequestLogMap" type="com.huiyu.service.core.entity.RequestLog">
         <id column="id" property="id"/>
-        <result column="ip_address" property="ipAddress"/>
+        <result column="user_id" property="userId"/>
+        <result column="ip" property="ip"/>
         <result column="method" property="method"/>
-        <result column="url" property="url"/>
+        <result column="uri" property="uri"/>
+        <result column="param" property="param"/>
+        <result column="elapsed_time" property="elapsedTime"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
 
     <insert id="insert">
-        insert into request_log (ip_address, method, url, create_time)
-        values (#{ipAddress}, #{method}, #{url}, #{createTime})
+        insert into request_log (id, user_id, ip, method, uri, param, elapsed_time, create_time)
+        values (#{id}, #{userId}, #{ip}, #{method}, #{uri}, #{param}, #{elapsedTime}, #{createTime})
     </insert>
 </mapper>

@@ -14,7 +14,7 @@ public class RequestLogServiceImpl implements RequestLogService {
     private RequestLogMapper requestLogMapper;
 
     @Override
-    public boolean insert(RequestLog requestLog) {
-        return requestLogMapper.insert(requestLog) > 0;
+    public void insert(RequestLog requestLog) {
+        requestLogMapper.insert(requestLog);
     }
 }

@@ -27,4 +27,9 @@ public class PicExtServiceImpl implements PicExtService {
     public boolean update(PicExt picExt) {
         return picExtMapper.update(picExt) > 0;
     }
+
+    @Override
+    public boolean deleteByPicId(Long picId) {
+        return picExtMapper.deleteByPicId(picId) > 0;
+    }
 }

@@ -12,4 +12,6 @@ public interface PicExtMapper {
     int insert(PicExt picExt);
 
     int update(PicExt picExt);
+
+    int deleteByPicId(Long picId);
 }

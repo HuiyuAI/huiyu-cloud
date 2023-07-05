@@ -107,4 +107,10 @@
         set is_delete = 1
         where uuid = #{uuid}
     </update>
+
+    <update id="delete">
+        update pic
+        set is_delete = 1
+        where id = #{id}
+    </update>
 </mapper>

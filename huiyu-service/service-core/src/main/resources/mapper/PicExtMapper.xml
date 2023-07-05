@@ -9,12 +9,15 @@
         <result column="views" property="views"/>
         <result column="enable" property="enable" jdbcType="INTEGER"/>
         <result column="path" property="path"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
     </resultMap>
 
     <insert id="insert">
         insert into pic_e
-            (pic_id, views, enable, path)
-        values (#{picExt.picId}, #{picExt.views}, #{picExt.enable}, #{picExt.path})
+            (pic_id, views, enable, path, create_time, update_time, is_delete)
+        values (#{picExt.picId}, #{picExt.views}, #{picExt.enable}, #{picExt.path}, #{picExt.enable.createTime}, #{updateTime}, #{isDelete})
     </insert>
 
     <update id="update">
@@ -32,16 +35,27 @@
             <if test="path != null and path != ''">
                 path = #{path},
             </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
         </set>
-        where id = #{id}
+        where is_delete = 0
+          and id = #{id};
     </update>
 
     <select id="getByPicId" resultMap="picExtMap">
         select *
         from pic_e
         where enable = 1
+          and is_delete = 0
           and pic_id = #{picId};
     </select>
+
+    <update id="deleteByPicId">
+        update pic_e
+        set is_delete = 1
+        where pic_id = #{picId}
+    </update>
 
 
 </mapper>

@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 public class PicBusinessImpl implements PicBusiness {
@@ -68,11 +70,13 @@ public class PicBusinessImpl implements PicBusiness {
         if (pic.getUserId() == null || pic.getId() == null) {
             return false;
         }
+        LocalDateTime now = LocalDateTime.now();
         // 判断是否存在
         PicExt picExt = picExtService.getByPicId(pic.getId());
         if (picExt != null) {
             // 已分享
             picExt.setEnable(state);
+            picExt.setUpdateTime(now);
             return picExtService.update(picExt);
         } else {
             // 未分享
@@ -81,6 +85,9 @@ public class PicBusinessImpl implements PicBusiness {
                     .views(0)
                     .path(pic.getPath())
                     .enable(state)
+                    .updateTime(now)
+                    .isDelete(0)
+                    .createTime(now)
                     .build();
             return picExtService.insert(picExt);
         }

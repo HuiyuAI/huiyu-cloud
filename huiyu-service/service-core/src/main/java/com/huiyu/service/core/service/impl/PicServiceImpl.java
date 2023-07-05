@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.service.PicExtService;
 import com.huiyu.service.core.service.PicService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,6 +19,9 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
 
     @Resource
     private PicMapper picMapper;
+
+    @Resource
+    private PicExtService picExtService;
 
     @Override
     public IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto) {
@@ -44,6 +49,16 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     @Override
     public Pic getByTaskId(Long taskId) {
         return picMapper.getByTaskId(taskId);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean delete(Long id) {
+        int delete = picMapper.delete(id);
+        if (delete <= 0) {
+            return false;
+        }
+        return picExtService.deleteByPicId(id);
     }
 
     @Override

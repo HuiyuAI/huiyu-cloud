@@ -9,4 +9,6 @@ public interface PicExtService {
     boolean insert(PicExt picExt);
 
     boolean update(PicExt picExt);
+
+    boolean deleteByPicId(Long picId);
 }

@@ -41,4 +41,6 @@ public interface PicService extends IService<Pic> {
     Pic getByUuidOnly(String uuid);
 
     Pic getByTaskId(Long taskId);
+
+    boolean delete(Long id);
 }

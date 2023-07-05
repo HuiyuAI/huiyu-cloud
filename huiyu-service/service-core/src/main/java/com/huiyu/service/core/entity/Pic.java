@@ -1,6 +1,7 @@
 package com.huiyu.service.core.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.huiyu.service.core.constant.PicStatusEnum;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 public class Pic implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @TableField("id")
+    @TableId("id")
     private Long id;
     /**
      * uuid

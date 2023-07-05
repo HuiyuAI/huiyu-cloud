@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.RequestLimitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="requestLimitResultMap" type="com.huiyu.service.core.entity.RequestLimit">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="ip" property="ip"/>
+        <result column="method" property="method"/>
+        <result column="uri" property="uri"/>
+        <result column="param" property="param"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+</mapper>

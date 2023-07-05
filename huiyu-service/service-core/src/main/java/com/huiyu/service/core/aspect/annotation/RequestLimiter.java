@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequestLimit {
+public @interface RequestLimiter {
     /**
      * 限制周期(秒)
      */

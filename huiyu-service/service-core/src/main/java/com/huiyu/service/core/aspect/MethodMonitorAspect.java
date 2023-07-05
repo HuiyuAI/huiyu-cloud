@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @author wAnG
  * @Date 2023-06-17  01:18
  */
+@Order(3)
 @Aspect
 @Component
 public class MethodMonitorAspect {

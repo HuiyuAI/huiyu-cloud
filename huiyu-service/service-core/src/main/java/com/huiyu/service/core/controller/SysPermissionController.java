@@ -3,6 +3,7 @@ package com.huiyu.service.core.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.model.query.SysPermissionQuery;
 import com.huiyu.service.core.service.auth.SysPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,14 +31,14 @@ public class SysPermissionController {
     /**
      * 分页查询
      *
-     * @param sysPermission 筛选条件
-     * @param pageNum       页码
-     * @param pageSize      每页个数
+     * @param query    筛选条件
+     * @param pageNum  页码
+     * @param pageSize 每页个数
      * @return 查询结果
      */
     @GetMapping("/{pageNum}/{pageSize}")
-    public R<IPage<SysPermission>> queryByPage(SysPermission sysPermission, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
-        IPage<SysPermission> pageInfo = sysPermissionService.queryPage(new Page<>(pageNum, pageSize), sysPermission);
+    public R<IPage<SysPermission>> queryByPage(SysPermissionQuery query, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+        IPage<SysPermission> pageInfo = sysPermissionService.queryPage(new Page<>(pageNum, pageSize), query);
         return R.ok(pageInfo);
     }
 

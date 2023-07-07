@@ -3,6 +3,7 @@ package com.huiyu.service.core.service.auth;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.model.query.SysPermissionQuery;
 
 /**
  * (SysPermission)表服务接口
@@ -14,11 +15,11 @@ public interface SysPermissionService extends IService<SysPermission> {
     /**
      * 分页查询
      *
-     * @param page          分页对象
-     * @param sysPermission 筛选条件
+     * @param page  分页对象
+     * @param query 筛选条件
      * @return 查询结果
      */
-    IPage<SysPermission> queryPage(IPage<SysPermission> page, SysPermission sysPermission);
+    IPage<SysPermission> queryPage(IPage<SysPermission> page, SysPermissionQuery query);
 
     /**
      * 通过主键查询单条数据

@@ -10,15 +10,24 @@
         <result property="orderId" column="order_id" jdbcType="INTEGER"/>
     </resultMap>
 
-    <!--查询单个-->
-    <select id="queryById" resultMap="SysPermissionMap">
-        select id,
-               name,
-               url_perm,
-               role,
-               order_id
+    <!-- 分页查询 -->
+    <select id="queryPage" resultType="com.huiyu.service.api.entity.SysPermission">
+        select *
         from sys_permission
-        where id = #{id}
+        <where>
+            <if test="query.name != null and query.name != ''">
+                <bind name="pattern1" value="'%' + query.name + '%'"/>
+                and name like #{pattern1}
+            </if>
+            <if test="query.urlPerm != null and query.urlPerm != ''">
+                <bind name="pattern2" value="'%' + query.urlPerm + '%'"/>
+                and url_perm like #{pattern2}
+            </if>
+            <if test="query.role != null and query.role != ''">
+                and find_in_set (#{query.role}, role)
+            </if>
+        </where>
+        order by order_id
     </select>
 
     <!--查询指定行数据-->
@@ -45,6 +54,17 @@
                 and order_id = #{orderId}
             </if>
         </where>
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SysPermissionMap">
+        select id,
+               name,
+               url_perm,
+               role,
+               order_id
+        from sys_permission
+        where id = #{id}
     </select>
 
     <!--统计总行数-->

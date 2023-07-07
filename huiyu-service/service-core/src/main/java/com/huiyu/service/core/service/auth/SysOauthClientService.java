@@ -3,6 +3,7 @@ package com.huiyu.service.core.service.auth;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.api.entity.SysOauthClient;
+import com.huiyu.service.core.model.query.SysOauthClientQuery;
 
 /**
  * (SysOauthClient)表服务接口
@@ -14,11 +15,11 @@ public interface SysOauthClientService extends IService<SysOauthClient> {
     /**
      * 分页查询
      *
-     * @param page           分页对象
-     * @param sysOauthClient 筛选条件
+     * @param page  分页对象
+     * @param query 筛选条件
      * @return 查询结果
      */
-    IPage<SysOauthClient> queryPage(IPage<SysOauthClient> page, SysOauthClient sysOauthClient);
+    IPage<SysOauthClient> queryPage(IPage<SysOauthClient> page, SysOauthClientQuery query);
 
     /**
      * 通过主键查询单条数据

@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.model.query.SysPermissionQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -35,16 +36,13 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     /**
      * 分页查询
      *
-     * @param page          分页对象
-     * @param sysPermission 筛选条件
+     * @param page  分页对象
+     * @param query 筛选条件
      * @return 查询结果
      */
     @Override
-    public IPage<SysPermission> queryPage(IPage<SysPermission> page, SysPermission sysPermission) {
-        return super.lambdaQuery()
-                .setEntity(sysPermission)
-                .orderByAsc(SysPermission::getOrderId)
-                .page(page);
+    public IPage<SysPermission> queryPage(IPage<SysPermission> page, SysPermissionQuery query) {
+        return super.baseMapper.queryPage(page, query);
     }
 
     /**

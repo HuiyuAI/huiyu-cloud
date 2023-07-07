@@ -1,7 +1,9 @@
 package com.huiyu.service.core.mapper.auth;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.model.query.SysPermissionQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 import org.apache.ibatis.annotations.Param;
@@ -17,6 +19,15 @@ import java.util.List;
 @Mapper
 @Repository
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
+    /**
+     * 分页查询
+     *
+     * @param page  分页对象
+     * @param query 筛选条件
+     * @return 查询结果
+     */
+    IPage<SysPermission> queryPage(@Param("page") IPage<SysPermission> page, @Param("query") SysPermissionQuery query);
+
     /**
      * 查询指定行数据
      *

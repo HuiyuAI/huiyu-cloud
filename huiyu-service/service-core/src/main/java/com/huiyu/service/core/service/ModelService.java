@@ -1,8 +1,10 @@
 package com.huiyu.service.core.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.model.dto.ModelDto;
+import com.huiyu.service.core.model.query.ModelQuery;
 
 import java.util.List;
 
@@ -13,6 +15,20 @@ import java.util.List;
  * @date 2023-06-20
  */
 public interface ModelService extends IService<Model> {
+    /**
+     * 分页查询
+     *
+     * @param page  分页对象
+     * @param query 筛选条件
+     * @return 查询结果
+     */
+    IPage<Model> queryPage(IPage<Model> page, ModelQuery query);
+
+    /**
+     * 获取模型分类列表
+     */
+    List<String> getCategoryList();
+
     /**
      * 查询全部
      */

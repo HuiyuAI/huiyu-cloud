@@ -25,4 +25,8 @@ public class ModelQuery {
      * 名称
      */
     private String name;
+    /**
+     * 分类
+     */
+    private String category;
 }

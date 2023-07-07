@@ -16,6 +16,10 @@ import lombok.AllArgsConstructor;
 public class ModelDto {
 
     /**
+     * 模型id
+     */
+    private Long id;
+    /**
      * 名称
      */
     private String name;
@@ -47,6 +51,14 @@ public class ModelDto {
      * 首选高清化算法
      */
     private String hrUpscaler;
+    /**
+     * 默认正向描述词
+     */
+    private String defaultPrompt;
+    /**
+     * 默认反向描述词
+     */
+    private String defaultNegativePrompt;
     /**
      * 搭配lora
      */

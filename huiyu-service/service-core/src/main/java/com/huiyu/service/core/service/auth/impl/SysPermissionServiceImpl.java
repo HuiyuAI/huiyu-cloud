@@ -3,7 +3,6 @@ package com.huiyu.service.core.service.auth.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.api.entity.SysPermission;
@@ -42,7 +41,10 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
      */
     @Override
     public IPage<SysPermission> queryPage(IPage<SysPermission> page, SysPermission sysPermission) {
-        return super.page(page, new QueryWrapper<>(sysPermission));
+        return super.lambdaQuery()
+                .setEntity(sysPermission)
+                .orderByAsc(SysPermission::getOrderId)
+                .page(page);
     }
 
     /**

@@ -37,6 +37,15 @@ public class JacksonUtils {
         }
     }
 
+    public static byte[] toBytes(Object obj) {
+        try {
+            return objectMapper.writeValueAsBytes(obj);
+        } catch (JsonProcessingException e) {
+            log.error("JacksonUtils.toBytes() error: ", e);
+            return new byte[0];
+        }
+    }
+
     public static <T> T toBean(String jsonString, Class<T> valueType) {
         try {
             return objectMapper.readValue(jsonString, valueType);

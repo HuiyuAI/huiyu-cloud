@@ -2,7 +2,7 @@ package com.huiyu.service.core.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.entity.SysPermission;
 import com.huiyu.service.core.model.query.SysPermissionQuery;
 import com.huiyu.service.core.service.auth.SysPermissionService;
 import lombok.RequiredArgsConstructor;

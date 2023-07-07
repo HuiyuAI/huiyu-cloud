@@ -1,4 +1,4 @@
-package com.huiyu.service.api.entity;
+package com.huiyu.service.core.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

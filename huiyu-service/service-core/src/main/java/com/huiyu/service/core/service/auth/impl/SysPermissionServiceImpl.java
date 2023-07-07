@@ -5,7 +5,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.entity.SysPermission;
 import com.huiyu.service.core.model.query.SysPermissionQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ import com.huiyu.service.core.mapper.auth.SysPermissionMapper;
 import com.huiyu.service.core.service.auth.SysPermissionService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +33,12 @@ import java.util.stream.Collectors;
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements SysPermissionService {
     private final SysPermissionMapper sysPermissionMapper;
     private final RedisTemplate redisTemplate;
+
+    @PostConstruct
+    public void initPermissionRolesCache() {
+        boolean result = this.refreshPermRolesRules();
+        log.info("初始化权限角色规则缓存: {}", result);
+    }
 
     /**
      * 分页查询
@@ -133,7 +140,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         }
         // 规则为空，则添加一个空规则
         redisTemplate.opsForHash().put(RedisKeyConstant.RESOURCE_ROLES_MAP, "placeholder", "['null']");
-        log.info("规则为空");
+        log.info("角色权限规则为空");
         return true;
     }
 }

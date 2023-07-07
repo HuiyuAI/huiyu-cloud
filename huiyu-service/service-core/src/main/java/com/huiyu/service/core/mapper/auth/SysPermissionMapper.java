@@ -2,7 +2,7 @@ package com.huiyu.service.core.mapper.auth;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.entity.SysPermission;
 import com.huiyu.service.core.model.query.SysPermissionQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;

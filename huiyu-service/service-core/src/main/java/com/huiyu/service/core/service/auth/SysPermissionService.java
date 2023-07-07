@@ -2,7 +2,7 @@ package com.huiyu.service.core.service.auth;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.huiyu.service.api.entity.SysPermission;
+import com.huiyu.service.core.entity.SysPermission;
 import com.huiyu.service.core.model.query.SysPermissionQuery;
 
 /**

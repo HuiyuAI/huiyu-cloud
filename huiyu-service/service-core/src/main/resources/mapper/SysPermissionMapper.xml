@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huiyu.service.core.mapper.auth.SysPermissionMapper">
 
-    <resultMap type="com.huiyu.service.api.entity.SysPermission" id="SysPermissionMap">
+    <resultMap type="com.huiyu.service.core.entity.SysPermission" id="SysPermissionMap">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="urlPerm" column="url_perm" jdbcType="VARCHAR"/>
@@ -11,7 +11,7 @@
     </resultMap>
 
     <!-- 分页查询 -->
-    <select id="queryPage" resultType="com.huiyu.service.api.entity.SysPermission">
+    <select id="queryPage" resultType="com.huiyu.service.core.entity.SysPermission">
         select *
         from sys_permission
         <where>

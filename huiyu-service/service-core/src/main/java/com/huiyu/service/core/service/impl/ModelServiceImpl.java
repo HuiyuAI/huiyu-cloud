@@ -21,17 +21,17 @@ import java.util.List;
 public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements ModelService {
 
     @Override
-    public List<Model> queryAll() {
+    public List<Model> queryAll(Boolean enabled) {
         return super.lambdaQuery()
-                .eq(Model::getEnabled, 1)
+                .eq(enabled != null, Model::getEnabled, enabled)
                 .list();
     }
 
     @Override
-    public Model getById(Long id) {
+    public Model getById(Long id, Boolean enabled) {
         return super.lambdaQuery()
                 .eq(Model::getId, id)
-                .eq(Model::getEnabled, 1)
+                .eq(enabled != null, Model::getEnabled, enabled)
                 .one();
     }
 

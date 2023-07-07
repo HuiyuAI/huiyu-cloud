@@ -26,7 +26,7 @@ public class SDCmdValidator {
     }
 
     public static NewPair<Boolean, String> validate(Txt2ImgCmd cmd) {
-        Model model = modelService.getById(cmd.getModelId());
+        Model model = modelService.getById(cmd.getModelId(), true);
         if (model == null) {
             return NewPair.of(false, "模型不存在");
         }

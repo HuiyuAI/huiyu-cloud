@@ -47,7 +47,7 @@ public class PicBusinessImpl implements PicBusiness {
         Assert.notNull(pic, "图片不存在");
         PicVo picVo = PicConvert.INSTANCE.toVO(pic);
 
-        Model model = modelService.getById(pic.getModelId());
+        Model model = modelService.getById(pic.getModelId(), true);
         if (model == null) {
             picVo.setModelName("模型已下架");
         } else {

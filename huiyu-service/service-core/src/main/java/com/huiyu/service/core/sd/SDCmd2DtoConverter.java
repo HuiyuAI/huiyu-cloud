@@ -26,7 +26,7 @@ public class SDCmd2DtoConverter {
     }
 
     public static Txt2ImgDto convert(Txt2ImgCmd cmd) {
-        Model model = modelService.getById(cmd.getModelId());
+        Model model = modelService.getById(cmd.getModelId(), true);
 
         String modelCode = model.getCode();
         String vae = model.getVae();

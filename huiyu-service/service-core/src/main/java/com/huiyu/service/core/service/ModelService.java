@@ -16,12 +16,12 @@ public interface ModelService extends IService<Model> {
     /**
      * 查询全部
      */
-    List<Model> queryAll();
+    List<Model> queryAll(Boolean enabled);
 
     /**
      * 根据id查询
      */
-    Model getById(Long id);
+    Model getById(Long id, Boolean enabled);
 
     /**
      * 新增

@@ -119,15 +119,22 @@ public class Monitor implements InitializingBean {
                 build.labelNames(monitorName);
             }
             try {
-                if (Objects.isNull(namesToCollectors.get(monitorName))) {
-                    counter = build.register(collectorRegistry);
-                } else {
-                    counter = build.create();
+                synchronized (counterNameMap) {
+                    if (Objects.isNull(namesToCollectors.get(monitorName))) {
+                        counter = build.register(collectorRegistry);
+                    } else {
+                        if (Objects.nonNull(counterNameMap.get(monitorName))) {
+                            counter = counterNameMap.get(monitorName);
+                        } else {
+                            counter = build.create();
+                            counterNameMap.put(monitorName, counter);
+                        }
+                        counter = build.create();
+                    }
                 }
             } catch (Exception e) {
                 log.error("Monitor_register_error", e);
             }
-            counterNameMap.put(monitorName, counter);
             return counter;
         }
 
@@ -143,15 +150,22 @@ public class Monitor implements InitializingBean {
                 build.labelNames(monitorName);
             }
             try {
-                if (Objects.isNull(namesToCollectors.get(monitorName))) {
-                    summary = build.register(collectorRegistry);
-                } else {
-                    summary = build.create();
+                synchronized (summaryNameMap) {
+                    if (Objects.isNull(namesToCollectors.get(monitorName))) {
+                        summary = build.register(collectorRegistry);
+                        summaryNameMap.put(monitorName, summary);
+                    } else {
+                        if (Objects.nonNull(summaryNameMap.get(monitorName))) {
+                            summary = summaryNameMap.get(monitorName);
+                        } else {
+                            summary = build.create();
+                            summaryNameMap.put(monitorName, summary);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 log.error("Monitor_register_error", e);
             }
-            summaryNameMap.put(monitorName, summary);
             return summary;
         }
 
@@ -166,15 +180,22 @@ public class Monitor implements InitializingBean {
                 build.labelNames(monitorName);
             }
             try {
-                if (Objects.isNull(namesToCollectors.get(monitorName))) {
-                    gauge = build.register(collectorRegistry);
-                } else {
-                    gauge = build.create();
+                synchronized (gaugeNameMap) {
+                    if (Objects.isNull(namesToCollectors.get(monitorName))) {
+                        gauge = build.register(collectorRegistry);
+                        gaugeNameMap.put(monitorName, gauge);
+                    } else {
+                        if (Objects.nonNull(gaugeNameMap.get(monitorName))) {
+                            gauge = gaugeNameMap.get(monitorName);
+                        } else {
+                            gauge = build.create();
+                            gaugeNameMap.put(monitorName, gauge);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 log.error("Monitor_register_error", e);
             }
-            gaugeNameMap.put(monitorName, gauge);
             return gauge;
         }
 

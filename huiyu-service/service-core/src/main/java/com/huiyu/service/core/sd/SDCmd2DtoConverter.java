@@ -11,6 +11,8 @@ import com.huiyu.service.core.service.ModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 /**
  * @author Naccl
  * @date 2023-06-11
@@ -49,14 +51,8 @@ public class SDCmd2DtoConverter {
 
         Integer size = cmd.getSize();
         ImageSizeEnum imageSizeEnum = ImageSizeEnum.getEnumByCode(size);
-        Integer width = imageSizeEnum.getWidth();
-        Integer height = imageSizeEnum.getHeight();
-
-        if (imageQualityEnum == ImageQualityEnum.HD) {
-            // 高清质量，不启用高分辨率修复，直接翻倍原始尺寸
-            width *= 2;
-            height *= 2;
-        }
+        Integer width = imageQualityEnum.getOriginalScale().multiply(BigDecimal.valueOf(imageSizeEnum.getWidth())).intValue();
+        Integer height = imageQualityEnum.getOriginalScale().multiply(BigDecimal.valueOf(imageSizeEnum.getHeight())).intValue();
 
         return Txt2ImgDto.builder()
                 .sdModelCheckpoint(modelCode)

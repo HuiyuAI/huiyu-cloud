@@ -17,15 +17,19 @@ import java.util.Objects;
 @AllArgsConstructor
 public enum ImageQualityEnum implements BaseEnum<Integer> {
 
-    HD(1, "高清", false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
-    UHD(2, "超清", true, new BigDecimal("0.6"), BigDecimal.valueOf(2), false, 0),
-    UHD4K(3, "超高清4K", true, new BigDecimal("0.6"), BigDecimal.valueOf(2), true, 2),
-    UNKNOWN(100, "未知", false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
+    HD(1, "高清", BigDecimal.valueOf(2), false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
+    UHD(2, "超清", BigDecimal.ONE, true, new BigDecimal("0.6"), BigDecimal.valueOf(2), false, 0),
+    UHD4K(3, "超高清4K", BigDecimal.ONE, true, new BigDecimal("0.6"), BigDecimal.valueOf(2), true, 2),
+    UNKNOWN(100, "未知", BigDecimal.ONE, false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
     ;
 
     private Integer dictKey;
 
     private String desc;
+    /**
+     * 原始尺寸倍率(如果不启用高分辨率修复，应该在原始尺寸基础上乘以该倍率)
+     */
+    private BigDecimal originalScale;
     /**
      * 是否启用高分辨率修复
      */

@@ -15,11 +15,11 @@ import java.util.Objects;
 @AllArgsConstructor
 public enum ImageSizeEnum {
 
-    AVATAR(1, "头像", "1:1", 512, 512),
-    SOCIAL_MEDIA(2, "社交媒体", "3:4", 576, 768),
-    ARTICLE_IMAGE(3, "文章配图", "4:3", 768, 576),
-    PHONE_WALLPAPER(4, "手机壁纸", "9:16", 540, 960),
-    COMPUTER_WALLPAPER(5, "电脑壁纸", "16:9", 960, 540),
+    PHONE_WALLPAPER(1, "手机壁纸", "9:16", 540, 960),
+    COMPUTER_WALLPAPER(2, "电脑壁纸", "16:9", 960, 540),
+    ARTICLE_IMAGE(3, "文章配图", "3:2", 768, 512),
+    SOCIAL_MEDIA(4, "社交媒体", "2:3", 512, 768),
+    AVATAR(5, "头像", "1:1", 512, 512),
     UNKNOWN(100, "未知", "", 0, 0);
 
 

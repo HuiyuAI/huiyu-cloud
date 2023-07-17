@@ -17,8 +17,8 @@ public enum ImageSizeEnum {
 
     PHONE_WALLPAPER(1, "手机壁纸", "9:16", 540, 960),
     COMPUTER_WALLPAPER(2, "电脑壁纸", "16:9", 960, 540),
-    ARTICLE_IMAGE(3, "文章配图", "3:2", 768, 512),
-    SOCIAL_MEDIA(4, "社交媒体", "2:3", 512, 768),
+    SOCIAL_MEDIA(3, "社交媒体", "2:3", 512, 768),
+    ARTICLE_IMAGE(4, "文章配图", "3:2", 768, 512),
     AVATAR(5, "头像", "1:1", 512, 512),
     UNKNOWN(100, "未知", "", 0, 0);
 

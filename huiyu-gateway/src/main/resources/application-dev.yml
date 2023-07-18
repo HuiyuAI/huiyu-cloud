@@ -34,7 +34,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: 'http://localhost:8100/rsa/publicKey' #配置RSA的公钥访问地址
+          jwk-set-uri: 'http://localhost:${server.port}/auth/rsa/publicKey' #配置RSA的公钥访问地址
   redis:
     host: 101.43.14.157
     port: 6378

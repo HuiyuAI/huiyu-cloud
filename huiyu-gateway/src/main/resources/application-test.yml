@@ -5,7 +5,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 101.43.14.157:3333
+        server-addr: localhost:3333
     gateway:
       routes:
         - id: huiyu-auth
@@ -34,9 +34,9 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: 'http://localhost:8100/rsa/publicKey' #配置RSA的公钥访问地址
+          jwk-set-uri: 'http://localhost:${server.port}/auth/rsa/publicKey' #配置RSA的公钥访问地址
   redis:
-    host: 101.43.14.157
+    host: localhost
     port: 6378
     password: 123asdASD
     database: 0

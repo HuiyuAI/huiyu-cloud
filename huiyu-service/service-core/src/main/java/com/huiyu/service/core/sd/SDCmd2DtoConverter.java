@@ -1,5 +1,7 @@
 package com.huiyu.service.core.sd;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.entity.Pic;
@@ -103,7 +105,7 @@ public class SDCmd2DtoConverter {
         Integer height = imageQualityEnum.getOriginalScale().multiply(BigDecimal.valueOf(imageSizeEnum.getHeight())).intValue();
 
         // 脸部修复脚本参数
-        String alwaysonScripts = "{\"ADetailer\": {\"args\": [{\"ad_model\": \"face_yolov8n.pt\"}]}}";
+        JsonNode alwaysonScripts = JacksonUtils.toBean("{\"ADetailer\": {\"args\": [{\"ad_model\": \"face_yolov8n.pt\"}]}}", JsonNode.class);
 
         return RestoreFaceDto.builder()
                 .sdModelCheckpoint(modelCode)

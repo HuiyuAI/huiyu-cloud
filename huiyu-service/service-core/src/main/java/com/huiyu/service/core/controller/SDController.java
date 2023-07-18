@@ -100,7 +100,7 @@ public class SDController {
     @RequestLogger
     @RequestLimiter(seconds = 10, maxCount = 6)
     @PostMapping("/restoreFace")
-    public R<String> restoreFace(RestoreFaceCmd cmd) {
+    public R<String> restoreFace(@Valid @RequestBody RestoreFaceCmd cmd) {
         // 1. 参数校验
         NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
         if (!validate.getKey()) {

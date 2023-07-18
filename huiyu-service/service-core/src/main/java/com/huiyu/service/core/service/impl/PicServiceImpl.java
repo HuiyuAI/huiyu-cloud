@@ -2,6 +2,7 @@ package com.huiyu.service.core.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
 import com.huiyu.service.core.model.dto.PicPageDto;
@@ -34,6 +35,13 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     }
 
     @Override
+    public Pic getByUuidOnly(String uuid) {
+        return super.lambdaQuery()
+                .eq(Pic::getUuid, uuid)
+                .one();
+    }
+
+    @Override
     public Pic getByUuidAndUserId(String uuid, Long userId) {
         return super.lambdaQuery()
                 .eq(Pic::getUuid, uuid)
@@ -42,8 +50,12 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     }
 
     @Override
-    public Pic getByUuidOnly(String uuid) {
-        return picMapper.getByUuidOnly(uuid);
+    public Pic getByUuidAndUserIdAndStatus(String uuid, Long userId, PicStatusEnum status) {
+        return super.lambdaQuery()
+                .eq(Pic::getUuid, uuid)
+                .eq(Pic::getUserId, userId)
+                .eq(Pic::getStatus, status)
+                .one();
     }
 
     @Override
@@ -93,8 +105,4 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
         return picMapper.deleteByUuid(uuid) > 0;
     }
 
-    @Override
-    public Pic getByUuid(String uuid) {
-        return picMapper.getByUuid(uuid);
-    }
 }

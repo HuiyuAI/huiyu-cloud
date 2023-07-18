@@ -12,6 +12,7 @@ import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.ExtraDto;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
+import com.huiyu.service.core.sd.dto.RestoreFaceDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
 import com.huiyu.service.core.sd.dto.UpscaleDto;
 import com.huiyu.service.core.utils.IdUtils;
@@ -38,6 +39,8 @@ public class SDTask2PicConverter {
                 return convertUpscale(task);
             case EXTRA:
                 return convertExtra(task);
+            case RESTORE_FACE:
+                return convertRestoreFace(task);
             default:
                 return null;
         }
@@ -70,6 +73,7 @@ public class SDTask2PicConverter {
                 .taskId(task.getId())
                 .modelId(txt2ImgCmd.getModelId())
                 .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)
+                .type(task.getType())
                 .prompt(dto.getPrompt())
                 .negativePrompt(dto.getNegativePrompt())
                 .quality(imageQualityEnum)
@@ -101,6 +105,7 @@ public class SDTask2PicConverter {
 
         return Pic.builder()
                 .uuid(dto.getResImageUuid())
+                .type(task.getType())
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)
@@ -115,6 +120,7 @@ public class SDTask2PicConverter {
 
         return Pic.builder()
                 .uuid(dto.getResImageUuid())
+                .type(task.getType())
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)
@@ -129,6 +135,56 @@ public class SDTask2PicConverter {
 
         return Pic.builder()
                 .uuid(dto.getResImageUuid())
+                .type(task.getType())
+                .createTime(now)
+                .updateTime(now)
+                .isDelete(0)
+                .build();
+    }
+
+    private static Pic convertRestoreFace(Task task) {
+        RestoreFaceDto dto = JacksonUtils.toBean(task.getBody(), RestoreFaceDto.class);
+        LocalDateTime now = task.getCreateTime();
+
+        int width = dto.getWidth();
+        int height = dto.getHeight();
+        if (dto.getEnableHr()) {
+            width = dto.getHrScale().multiply(BigDecimal.valueOf(width)).intValue();
+            height = dto.getHrScale().multiply(BigDecimal.valueOf(height)).intValue();
+        }
+        if (dto.getEnableExtra()) {
+            width *= dto.getUpscalingResize();
+            height *= dto.getUpscalingResize();
+        }
+
+        Pic parentPic = RequestContext.PARENT_PIC_CONTEXT.get();
+
+        return Pic.builder()
+                .id(IdUtils.nextSnowflakeId())
+                .uuid(dto.getResImageUuid())
+                .userId(task.getUserId())
+                .taskId(task.getId())
+                .modelId(parentPic.getModelId())
+                .parentPicId(parentPic.getId())
+                .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)
+                .type(task.getType())
+                .prompt(dto.getPrompt())
+                .negativePrompt(dto.getNegativePrompt())
+                .quality(parentPic.getQuality())
+                .ratio(parentPic.getRatio())
+                .width(width)
+                .height(height)
+                .modelCode(dto.getSdModelCheckpoint())
+                .vae(dto.getSdVae())
+                .samplerName(dto.getSamplerName())
+                .steps(dto.getSteps())
+                .cfg(dto.getCfgScale())
+                .enableHr(dto.getEnableHr())
+                .hrUpscaler(dto.getHrUpscaler())
+                .denoisingStrength(dto.getDenoisingStrength())
+                .hrScale(dto.getHrScale())
+                .enableExtra(dto.getEnableExtra())
+                .upscalingResize(dto.getUpscalingResize())
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)

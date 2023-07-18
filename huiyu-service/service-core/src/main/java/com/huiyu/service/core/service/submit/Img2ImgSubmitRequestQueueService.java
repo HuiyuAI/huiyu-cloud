@@ -1,13 +1,10 @@
 package com.huiyu.service.core.service.submit;
 
-import com.huiyu.service.core.Hconfig.config.AIExampleConfig;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.utils.NewPair;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @author wAnG
@@ -15,8 +12,6 @@ import javax.annotation.Resource;
  */
 @Service
 public class Img2ImgSubmitRequestQueueService extends AbstractSubmitRequestQueueService<Img2ImgCmd> {
-    @Resource
-    private AIExampleConfig aiExampleConfig;
 
     @Override
     public NewPair<Task, Dto> convertTask(Img2ImgCmd img2ImgCmd) {

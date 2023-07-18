@@ -38,9 +38,6 @@ public class ImageTaskService {
     private List<ThreadPoolExecutorDecorator> submitRequestExecutorList = new ArrayList<>();
 
     @Resource
-    private ImageTaskInvoker imageTaskInvokerList;
-
-    @Resource
     private TaskService taskService;
 
     @Resource
@@ -54,6 +51,8 @@ public class ImageTaskService {
 
         RequestContext.REQUEST_UUID_CONTEXT.remove();
         RequestContext.CMD_CONTEXT.remove();
+        RequestContext.MODEL_CONTEXT.remove();
+        RequestContext.PARENT_PIC_CONTEXT.remove();
     }
 
     private List<Task> splitTask(Task task, Dto dto) {
@@ -64,14 +63,14 @@ public class ImageTaskService {
             taskList.add(task);
             return taskList;
         }
-        Integer integral = task.getIntegral();
+        Integer point = task.getIntegral();
         for (int i = 0; i < task.getNum(); i++) {
             Task copyTask = new Task();
             BeanUtil.copyProperties(task, copyTask);
 
             copyTask.setId(IdUtils.nextSnowflakeId());
             copyTask.setNum(1);
-            copyTask.setIntegral(integral / task.getNum());
+            copyTask.setIntegral(point / task.getNum());
 
             TaskTypeEnum type = task.getType();
             switch (type) {

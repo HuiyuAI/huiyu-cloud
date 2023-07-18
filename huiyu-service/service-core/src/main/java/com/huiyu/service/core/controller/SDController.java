@@ -7,8 +7,9 @@ import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.config.RequestContext;
+import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
-import com.huiyu.service.core.sd.SDCmdCountIntegral;
+import com.huiyu.service.core.sd.SDCmdCountPoint;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
 import com.huiyu.service.core.service.auth.UserService;
@@ -50,8 +51,9 @@ public class SDController {
      */
     @MethodMonitor
     @RequestLogger
+    @RequestLimiter(seconds = 10, maxCount = 6)
     @PostMapping("/txt2img")
-    public R<?> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
+    public R<String> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
         // 1. 参数校验(数值范围)
         NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
         if (!validate.getKey()) {
@@ -60,13 +62,12 @@ public class SDController {
 
         // 2. 校验用户积分
         Long userId = JwtUtils.getUserId();
-//        Long userId = 100000L;
-        int calcIntegral = SDCmdCountIntegral.calcIntegralConsume(cmd);
-        int integral = userService.getIntegralByUserId(userId);
-        if (integral < calcIntegral) {
+        int calcPoint = SDCmdCountPoint.calcPointConsume(cmd);
+        int point = userService.getPointByUserId(userId);
+        if (point < calcPoint) {
             return R.error("积分不足");
         }
-        cmd.setIntegral(calcIntegral);
+        cmd.setPoint(calcPoint);
         cmd.setUserId(userId);
 
 
@@ -87,6 +88,49 @@ public class SDController {
                 .forEach(imageGenerate -> imageGenerate.generate(cmd));
 
         // 6. 处理用户界面
+
+        return R.ok(requestUuid);
+    }
+
+
+    /**
+     * 脸部修复
+     */
+    @MethodMonitor
+    @RequestLogger
+    @RequestLimiter(seconds = 10, maxCount = 6)
+    @PostMapping("/restoreFace")
+    public R<String> restoreFace(RestoreFaceCmd cmd) {
+        // 1. 参数校验
+        NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
+        if (!validate.getKey()) {
+            return R.error(validate.getValue());
+        }
+
+        // 2. 校验用户积分
+        Long userId = JwtUtils.getUserId();
+        int calcPoint = SDCmdCountPoint.calcPointConsume(cmd);
+        int point = userService.getPointByUserId(userId);
+        if (point < calcPoint) {
+            return R.error("积分不足");
+        }
+        cmd.setPoint(calcPoint);
+        cmd.setUserId(userId);
+
+
+        // 3. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
+
+
+        String requestUuid = IdUtil.fastUUID();
+        RequestContext.REQUEST_UUID_CONTEXT.set(requestUuid);
+        RequestContext.CMD_CONTEXT.set(cmd);
+
+        // 4. 提交任务队列
+        imageGenerates.stream()
+                .filter(imageGenerate -> imageGenerate.isSupport(cmd))
+                .forEach(imageGenerate -> imageGenerate.generate(cmd));
+
+        // 5. 处理用户界面
 
         return R.ok(requestUuid);
     }

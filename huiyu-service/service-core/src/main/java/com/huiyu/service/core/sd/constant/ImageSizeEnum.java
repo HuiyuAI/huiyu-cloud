@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 /**
  * @author wAnG
@@ -34,11 +34,10 @@ public enum ImageSizeEnum {
     private Integer height;
 
     public static ImageSizeEnum getEnumByCode(Integer code) {
-        for (ImageSizeEnum sizeEnums : ImageSizeEnum.values()) {
-            if (Objects.equals(sizeEnums.code, code)) {
-                return sizeEnums;
-            }
-        }
-        return ImageSizeEnum.UNKNOWN;
+        return Arrays.stream(ImageSizeEnum.values()).filter(e -> e.getCode().equals(code)).findFirst().orElse(ImageSizeEnum.UNKNOWN);
+    }
+
+    public static ImageSizeEnum getEnumByRatio(String ratio) {
+        return Arrays.stream(ImageSizeEnum.values()).filter(e -> e.getRatio().equals(ratio)).findFirst().orElse(ImageSizeEnum.UNKNOWN);
     }
 }

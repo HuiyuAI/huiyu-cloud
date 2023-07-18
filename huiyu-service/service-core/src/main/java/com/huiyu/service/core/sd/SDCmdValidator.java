@@ -1,9 +1,15 @@
 package com.huiyu.service.core.sd;
 
+import com.huiyu.common.web.util.JwtUtils;
+import com.huiyu.service.core.config.RequestContext;
+import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.entity.Model;
+import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
+import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.service.ModelService;
+import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.utils.NewPair;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +26,16 @@ public class SDCmdValidator {
 
     private static ModelService modelService;
 
+    private static PicService picService;
+
     @Autowired
     public void setModelService(ModelService modelService) {
         SDCmdValidator.modelService = modelService;
+    }
+
+    @Autowired
+    public void setPicService(PicService picService) {
+        SDCmdValidator.picService = picService;
     }
 
     public static NewPair<Boolean, String> validate(Txt2ImgCmd cmd) {
@@ -55,10 +68,30 @@ public class SDCmdValidator {
             cmd.setSeed(-1L);
         }
 
+        RequestContext.MODEL_CONTEXT.set(model);
+
         return NewPair.of(true, null);
     }
 
     public static NewPair<Boolean, String> validate(Img2ImgCmd cmd) {
+        return NewPair.of(true, null);
+    }
+
+    public static NewPair<Boolean, String> validate(RestoreFaceCmd cmd) {
+        Long userId = JwtUtils.getUserId();
+        Pic originPic = picService.getByUuidAndUserIdAndStatus(cmd.getImageUuid(), userId, PicStatusEnum.GENERATED);
+        if (originPic == null) {
+            return NewPair.of(false, "图片不存在");
+        }
+
+        Model model = modelService.getById(originPic.getModelId(), true);
+        if (model == null) {
+            return NewPair.of(false, "该图片不可修复");
+        }
+
+        RequestContext.PARENT_PIC_CONTEXT.set(originPic);
+        RequestContext.MODEL_CONTEXT.set(model);
+
         return NewPair.of(true, null);
     }
 }

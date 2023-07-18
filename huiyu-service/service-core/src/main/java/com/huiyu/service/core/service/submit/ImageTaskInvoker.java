@@ -2,13 +2,11 @@ package com.huiyu.service.core.service.submit;
 
 import com.google.common.base.Stopwatch;
 import com.huiyu.service.core.config.Monitor;
-import com.huiyu.service.core.config.TaskContext;
 import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.constant.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.dto.SDResponse;
-import com.huiyu.service.core.sd.constant.SDAPIConstant;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +48,7 @@ public class ImageTaskInvoker {
 
 
     private SDResponse invokerHttp(Task task, String ip) {
-        String url = ip + getUrl();
+        String url = ip + getSdApi(task);
         log.info("请求Python端生成图片 url: {}, body: {}", url, task.getBody());
 
         HttpHeaders headers = new HttpHeaders();
@@ -120,9 +118,8 @@ public class ImageTaskInvoker {
         return task;
     }
 
-    private String getUrl() {
-        return SDAPIConstant.TXT2IMG;
+    private String getSdApi(Task task) {
+        return task.getType().getSdApi();
     }
-
 
 }

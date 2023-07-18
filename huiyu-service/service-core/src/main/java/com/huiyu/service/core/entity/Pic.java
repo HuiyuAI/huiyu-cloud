@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.constant.TaskTypeEnum;
 import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,6 +77,11 @@ public class Pic implements Serializable {
      */
     @TableField("path")
     private String path;
+    /**
+     * 任务类型
+     */
+    @TableField("type")
+    private TaskTypeEnum type;
     /**
      * 正向描述词
      */

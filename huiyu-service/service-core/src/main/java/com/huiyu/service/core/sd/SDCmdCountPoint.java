@@ -38,6 +38,7 @@ public class SDCmdCountPoint {
 
     private static int calcRestoreFacePointConsume(RestoreFaceCmd cmd) {
         // TODO 热配
+        // 根据原图的积分计算
         int point = 2;
         return point;
     }

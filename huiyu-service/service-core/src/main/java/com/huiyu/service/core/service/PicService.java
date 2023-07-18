@@ -2,6 +2,7 @@ package com.huiyu.service.core.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.huiyu.service.core.constant.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicPageDto;
 
@@ -18,6 +19,14 @@ public interface PicService extends IService<Pic> {
     IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto);
 
     /**
+     * 根据uuid查询图片详情
+     *
+     * @param uuid 图片uuid
+     * @return 图片详情
+     */
+    Pic getByUuidOnly(String uuid);
+
+    /**
      * 根据uuid和用户id查询图片详情
      *
      * @param uuid   图片uuid
@@ -25,6 +34,24 @@ public interface PicService extends IService<Pic> {
      * @return 图片详情 / 图片与用户不匹配返回null
      */
     Pic getByUuidAndUserId(String uuid, Long userId);
+
+    /**
+     * 根据uuid、用户id、状态查询图片详情
+     *
+     * @param uuid   图片uuid
+     * @param userId 用户id
+     * @param status 图片状态
+     * @return 图片详情 / 不匹配返回null
+     */
+    Pic getByUuidAndUserIdAndStatus(String uuid, Long userId, PicStatusEnum status);
+
+    /**
+     * 根据任务id查询图片详情
+     *
+     * @param taskId 任务id
+     * @return 图片详情
+     */
+    Pic getByTaskId(Long taskId);
 
     List<Pic> getPicsByUserId(Long userId);
 
@@ -35,12 +62,6 @@ public interface PicService extends IService<Pic> {
     boolean updateByUuid(Pic pic);
 
     boolean deleteByUuid(String uuid);
-
-    Pic getByUuid(String uuid);
-
-    Pic getByUuidOnly(String uuid);
-
-    Pic getByTaskId(Long taskId);
 
     boolean delete(Long id);
 }

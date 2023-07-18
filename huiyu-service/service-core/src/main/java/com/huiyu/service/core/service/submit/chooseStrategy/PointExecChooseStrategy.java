@@ -40,7 +40,7 @@ public class PointExecChooseStrategy<T extends Cmd> implements ExecChooseStrateg
         synchronized (exampleItem) {
             BigInteger point = examplePoint.getOrDefault(exampleItem, BigInteger.ZERO);
 
-            examplePoint.put(exampleItem, point.add(new BigInteger(String.valueOf(t.getIntegral() * exampleItem.getEfficiency()))));
+            examplePoint.put(exampleItem, point.add(new BigInteger(String.valueOf(t.getPoint() * exampleItem.getEfficiency()))));
         }
         return exampleItem.getSource();
     }

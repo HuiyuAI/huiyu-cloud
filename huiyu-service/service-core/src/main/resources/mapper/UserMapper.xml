@@ -46,16 +46,16 @@
     </select>
 
     <!--查询积分-->
-    <select id="getIntegralByUserId" resultType="java.lang.Integer">
+    <select id="getPointByUserId" resultType="java.lang.Integer">
         select integral
         from user
         where is_delete = 0
           and user_id = #{userId}
     </select>
 
-    <update id="updateIntegralByUserId">
+    <update id="updatePointByUserId">
         update user
-        set integral = integral + #{integral}
+        set integral = integral + #{point}
         where is_delete = 0
           and user_id = #{userId}
     </update>

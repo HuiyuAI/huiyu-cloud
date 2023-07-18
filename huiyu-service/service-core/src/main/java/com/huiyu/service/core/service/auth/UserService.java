@@ -64,14 +64,14 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      * @return 积分数
      */
-    int getIntegralByUserId(Long userId);
+    int getPointByUserId(Long userId);
 
     /**
      * 根据userId增加积分
      *
-     * @param userId   用户id
-     * @param integral 增加的积分
+     * @param userId 用户id
+     * @param point  增加的积分
      * @return 是否成功
      */
-    boolean updateIntegralByUserId(Long userId, Integer integral);
+    boolean updatePointByUserId(Long userId, Integer point);
 }

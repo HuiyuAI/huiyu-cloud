@@ -44,14 +44,14 @@ public interface UserMapper extends BaseMapper<User> {
      * @param userId 用户id
      * @return 积分
      */
-    int getIntegralByUserId(Long userId);
+    int getPointByUserId(Long userId);
 
     /**
      * 根据userId增加积分
      *
-     * @param userId   用户id
-     * @param integral 增加积分
+     * @param userId 用户id
+     * @param point  增加积分
      * @return 影响行数
      */
-    int updateIntegralByUserId(@Param("userId") Long userId, @Param("integral") Integer integral);
+    int updatePointByUserId(@Param("userId") Long userId, @Param("point") Integer point);
 }

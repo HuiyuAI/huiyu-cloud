@@ -49,7 +49,7 @@ public class PointBusinessImpl implements PointBusiness {
         }
 
         // 修改用户积分
-        boolean isUpdateIntegralOK = userService.updateIntegralByUserId(userId, integral);
+        boolean isUpdateIntegralOK = userService.updatePointByUserId(userId, integral);
         if (!isUpdateIntegralOK) {
             log.error("更新用户积分失败，userId：{}，integral：{}, source：{}, operation：{}", userId, integral, source, operation);
             throw new RuntimeException("异常错误");

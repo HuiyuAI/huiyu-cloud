@@ -13,5 +13,5 @@ public class Cmd {
     /**
      * 积分
      */
-    private Integer integral;
+    private Integer point;
 }

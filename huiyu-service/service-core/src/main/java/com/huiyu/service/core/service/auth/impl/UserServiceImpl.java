@@ -107,12 +107,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public int getIntegralByUserId(Long userId) {
-        return userMapper.getIntegralByUserId(userId);
+    public int getPointByUserId(Long userId) {
+        return userMapper.getPointByUserId(userId);
     }
 
     @Override
-    public boolean updateIntegralByUserId(Long userId, Integer integral) {
-        return userMapper.updateIntegralByUserId(userId, integral) > 0;
+    public boolean updatePointByUserId(Long userId, Integer point) {
+        return userMapper.updatePointByUserId(userId, point) > 0;
     }
 }

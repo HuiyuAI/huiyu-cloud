@@ -7,7 +7,7 @@ import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.constant.InviteStatusEnum;
 import com.huiyu.service.core.entity.Invite;
 import com.huiyu.service.core.service.InviteService;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
+import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.service.business.InviteBusiness;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class InviteBusinessImpl implements InviteBusiness {
     private InviteService inviteService;
 
     @Resource
-    private IntegralRecordBusiness integralRecordBusiness;
+    private PointBusiness pointBusiness;
 
     @Resource
     private HotFileConfig hotFileConfig;
@@ -62,7 +62,7 @@ public class InviteBusinessImpl implements InviteBusiness {
         // 2. 更新所有邀请人的积分
         LocalDateTime now = LocalDateTime.now();
         invites.forEach(v -> {
-            integralRecordBusiness.updateIntegral(v.getInvitersId(), hotFileConfig.getInviteIntegral(), IntegralSourceRecordEnum.INVITE_USER, IntegralOperationRecordEnum.ADD, null);
+            pointBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInviteIntegral(), IntegralSourceRecordEnum.INVITE_USER, IntegralOperationRecordEnum.ADD, null);
             v.setUpdateTime(now);
             v.setStatus(InviteStatusEnum.SUCCESS);
         });

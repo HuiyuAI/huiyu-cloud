@@ -7,10 +7,9 @@ import com.huiyu.service.core.entity.IntegralRecord;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.IntegralRecordService;
 import com.huiyu.service.core.service.auth.UserService;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
+import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
+public class PointBusinessImpl implements PointBusiness {
 
     @Resource
     private UserService userService;
@@ -40,7 +39,7 @@ public class IntegralRecordBusinessImpl implements IntegralRecordBusiness {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean updateIntegral(Long userId, Integer integral, IntegralSourceRecordEnum source, IntegralOperationRecordEnum operation, Task task) {
+    public boolean updatePoint(Long userId, Integer integral, IntegralSourceRecordEnum source, IntegralOperationRecordEnum operation, Task task) {
         if (integral == null || integral <= 0) {
             throw new IllegalArgumentException("积分数值不合法");
         }

@@ -8,7 +8,7 @@ import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
+import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.service.submit.chooseStrategy.ExecChooseStrategy;
 import com.huiyu.service.core.utils.NewPair;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     private List<ExecChooseStrategy<T>> execChooseStrategyList;
 
     @Resource
-    private IntegralRecordBusiness integralRecordBusiness;
+    private PointBusiness pointBusiness;
 
     @Resource
     private HotFileConfig hotFileConfig;
@@ -78,6 +78,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     public abstract NewPair<Task, Dto> convertTask(T t);
 
     private boolean deductUserIntegral(Task task) {
-        return integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE, task);
+        return pointBusiness.updatePoint(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE, task);
     }
 }

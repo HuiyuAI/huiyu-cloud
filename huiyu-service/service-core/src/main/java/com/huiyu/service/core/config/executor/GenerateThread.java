@@ -1,6 +1,5 @@
 package com.huiyu.service.core.config.executor;
 
-import com.google.common.collect.Lists;
 import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.config.TaskContext;
 import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
@@ -11,9 +10,8 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
+import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.service.submit.ImageTaskInvoker;
-import com.huiyu.service.core.service.submit.ImageTaskService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -70,7 +68,7 @@ class GenerateThread implements Runnable {
     private void compensateHandle() {
         TaskService taskService = SpringContext.getBean(TaskService.class);
         PicService picService = SpringContext.getBean(PicService.class);
-        IntegralRecordBusiness integralRecordBusiness = SpringContext.getBean(IntegralRecordBusiness.class);
+        PointBusiness pointBusiness = SpringContext.getBean(PointBusiness.class);
         // 重试次数上限
         Task task = TaskContext.TASK_SUBMIT_CONTEXT.get();
         if (task == null) {
@@ -82,7 +80,7 @@ class GenerateThread implements Runnable {
             taskQueue.offer(Byte.valueOf("1"));
         } else {
             // 回退积分
-            integralRecordBusiness.updateIntegral(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.BACK, IntegralOperationRecordEnum.ADD, task);
+            pointBusiness.updatePoint(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.BACK, IntegralOperationRecordEnum.ADD, task);
 
             Task TaskDO = Task.builder()
                     .id(task.getId())

@@ -1,9 +1,6 @@
 package com.huiyu.service.core.sd.generate;
 
-import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
-import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.model.cmd.Cmd;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
 import com.huiyu.service.core.service.submit.AbstractSubmitRequestQueueService;
 import org.apache.commons.lang.StringUtils;
 

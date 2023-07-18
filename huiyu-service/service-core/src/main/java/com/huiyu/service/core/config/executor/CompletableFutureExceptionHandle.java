@@ -1,25 +1,9 @@
 package com.huiyu.service.core.config.executor;
 
-import com.google.common.collect.Lists;
-import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.config.TaskContext;
-import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
-import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
-import com.huiyu.service.core.constant.PicStatusEnum;
-import com.huiyu.service.core.constant.TaskStatusEnum;
-import com.huiyu.service.core.entity.Pic;
-import com.huiyu.service.core.entity.Task;
-import com.huiyu.service.core.service.PicService;
-import com.huiyu.service.core.service.TaskService;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
-import com.huiyu.service.core.service.submit.ImageTaskService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.function.Function;
-
-import static com.huiyu.service.core.config.TaskContext.TASK_INFO_CONTEXT;
 
 /**
  * @author wAnG

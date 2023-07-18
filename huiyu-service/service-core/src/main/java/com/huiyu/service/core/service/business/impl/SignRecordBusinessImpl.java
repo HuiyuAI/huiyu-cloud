@@ -6,7 +6,7 @@ import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
 import com.huiyu.service.core.constant.SignRecordStatusEnum;
 import com.huiyu.service.core.entity.SignRecord;
 import com.huiyu.service.core.service.SignRecordService;
-import com.huiyu.service.core.service.business.IntegralRecordBusiness;
+import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.service.business.SignRecordBusiness;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
     private SignRecordService signRecordService;
 
     @Resource
-    private IntegralRecordBusiness integralRecordBusiness;
+    private PointBusiness pointBusiness;
 
     @Resource
     private HotFileConfig hotFileConfig;
@@ -32,7 +32,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
             return false;
         }
         // 签到积分奖励
-        return integralRecordBusiness.updateIntegral(userId, hotFileConfig.getSignInIntegral(), IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD, null);
+        return pointBusiness.updatePoint(userId, hotFileConfig.getSignInIntegral(), IntegralSourceRecordEnum.SIGN_IN, IntegralOperationRecordEnum.ADD, null);
     }
 
     private boolean isSignIn(Long userId) {

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -51,6 +50,7 @@ public class PicBusinessImpl implements PicBusiness {
         if (model == null) {
             picVo.setModelName("模型已下架");
         } else {
+            picVo.setModelId(model.getId());
             picVo.setModelName(model.getName());
         }
 

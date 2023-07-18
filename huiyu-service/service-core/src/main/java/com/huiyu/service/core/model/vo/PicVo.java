@@ -31,6 +31,10 @@ public class PicVo {
      */
     private String path;
     /**
+     * 模型id
+     */
+    private Long modelId;
+    /**
      * 模型名称
      */
     private String modelName;

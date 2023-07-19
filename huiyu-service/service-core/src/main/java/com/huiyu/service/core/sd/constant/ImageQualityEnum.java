@@ -1,6 +1,6 @@
 package com.huiyu.service.core.sd.constant;
 
-import com.huiyu.service.core.constant.BaseEnum;
+import com.huiyu.service.core.enums.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

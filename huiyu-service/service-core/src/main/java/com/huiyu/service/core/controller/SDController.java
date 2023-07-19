@@ -12,10 +12,10 @@ import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.SDCmdCountPoint;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
-import com.huiyu.service.core.service.auth.UserService;
-import com.huiyu.service.core.utils.NewPair;
+import com.huiyu.service.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,9 +55,9 @@ public class SDController {
     @PostMapping("/txt2img")
     public R<String> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
         // 1. 参数校验(数值范围)
-        NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
-        if (!validate.getKey()) {
-            return R.error(validate.getValue());
+        Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
+        if (!validate.getFirst()) {
+            return R.error(validate.getSecond());
         }
 
         // 2. 校验用户积分
@@ -102,9 +102,9 @@ public class SDController {
     @PostMapping("/restoreFace")
     public R<String> restoreFace(@Valid @RequestBody RestoreFaceCmd cmd) {
         // 1. 参数校验
-        NewPair<Boolean, String> validate = SDCmdValidator.validate(cmd);
-        if (!validate.getKey()) {
-            return R.error(validate.getValue());
+        Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
+        if (!validate.getFirst()) {
+            return R.error(validate.getSecond());
         }
 
         // 2. 校验用户积分

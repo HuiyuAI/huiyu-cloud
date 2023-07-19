@@ -1,7 +1,7 @@
 package com.huiyu.service.core.config.executor;
 
 import com.huiyu.service.core.config.SpringContext;
-import com.huiyu.service.core.constant.TaskStatusEnum;
+import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.TaskService;
 import lombok.extern.slf4j.Slf4j;

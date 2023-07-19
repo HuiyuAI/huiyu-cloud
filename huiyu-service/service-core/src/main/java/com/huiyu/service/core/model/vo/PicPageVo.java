@@ -1,6 +1,6 @@
 package com.huiyu.service.core.model.vo;
 
-import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.enums.PicStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

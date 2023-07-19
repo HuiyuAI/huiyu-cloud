@@ -3,7 +3,7 @@ package com.huiyu.service.core.sd;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.constant.HuiyuConstant;
-import com.huiyu.service.core.constant.TaskTypeEnum;
+import com.huiyu.service.core.enums.TaskTypeEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;

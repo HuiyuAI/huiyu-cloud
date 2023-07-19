@@ -1,7 +1,7 @@
 package com.huiyu.service.core.service.business;
 
-import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
-import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
+import com.huiyu.service.core.enums.IntegralOperationRecordEnum;
+import com.huiyu.service.core.enums.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.Task;
 
 public interface PointBusiness {

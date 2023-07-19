@@ -1,6 +1,6 @@
 package com.huiyu.service.core.mapper;
 
-import com.huiyu.service.core.constant.TaskStatusEnum;
+import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.entity.Task;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

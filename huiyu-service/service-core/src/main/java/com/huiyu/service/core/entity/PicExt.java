@@ -1,8 +1,6 @@
 package com.huiyu.service.core.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.huiyu.service.core.constant.StateEnum;
+import com.huiyu.service.core.enums.StateEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

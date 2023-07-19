@@ -1,8 +1,8 @@
 package com.huiyu.service.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.huiyu.service.core.constant.TaskStatusEnum;
-import com.huiyu.service.core.constant.TaskTypeEnum;
+import com.huiyu.service.core.enums.TaskStatusEnum;
+import com.huiyu.service.core.enums.TaskTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

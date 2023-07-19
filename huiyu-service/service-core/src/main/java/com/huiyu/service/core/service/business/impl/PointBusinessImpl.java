@@ -1,12 +1,12 @@
 package com.huiyu.service.core.service.business.impl;
 
 import cn.hutool.core.util.IdUtil;
-import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
-import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
+import com.huiyu.service.core.enums.IntegralOperationRecordEnum;
+import com.huiyu.service.core.enums.IntegralSourceRecordEnum;
 import com.huiyu.service.core.entity.IntegralRecord;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.IntegralRecordService;
-import com.huiyu.service.core.service.auth.UserService;
+import com.huiyu.service.core.service.UserService;
 import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;

@@ -10,7 +10,7 @@ import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.ModelService;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.business.PicBusiness;
-import com.huiyu.service.core.constant.StateEnum;
+import com.huiyu.service.core.enums.StateEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicExt;
 import com.huiyu.service.core.service.PicExtService;

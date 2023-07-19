@@ -1,6 +1,6 @@
 package com.huiyu.service.core.handler;
 
-import com.huiyu.service.core.constant.BaseEnum;
+import com.huiyu.service.core.enums.BaseEnum;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

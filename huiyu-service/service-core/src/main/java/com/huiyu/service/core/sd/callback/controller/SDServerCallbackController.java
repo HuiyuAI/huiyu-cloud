@@ -5,7 +5,7 @@ import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.constant.HuiyuConstant;
-import com.huiyu.service.core.constant.PicStatusEnum;
+import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.sd.callback.cmd.UploadSuccessCallbackCmd;
 import com.huiyu.service.core.service.PicService;

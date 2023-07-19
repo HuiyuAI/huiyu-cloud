@@ -1,6 +1,6 @@
 package com.huiyu.service.core.entity;
 
-import com.huiyu.service.core.constant.SignRecordStatusEnum;
+import com.huiyu.service.core.enums.SignRecordStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

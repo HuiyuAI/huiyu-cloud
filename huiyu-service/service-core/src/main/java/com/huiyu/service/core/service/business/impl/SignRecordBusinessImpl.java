@@ -1,9 +1,9 @@
 package com.huiyu.service.core.service.business.impl;
 
-import com.huiyu.service.core.Hconfig.config.HotFileConfig;
-import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
-import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
-import com.huiyu.service.core.constant.SignRecordStatusEnum;
+import com.huiyu.service.core.hconfig.config.HotFileConfig;
+import com.huiyu.service.core.enums.IntegralOperationRecordEnum;
+import com.huiyu.service.core.enums.IntegralSourceRecordEnum;
+import com.huiyu.service.core.enums.SignRecordStatusEnum;
 import com.huiyu.service.core.entity.SignRecord;
 import com.huiyu.service.core.service.SignRecordService;
 import com.huiyu.service.core.service.business.PointBusiness;

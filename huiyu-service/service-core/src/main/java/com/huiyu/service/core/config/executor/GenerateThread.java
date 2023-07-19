@@ -2,16 +2,16 @@ package com.huiyu.service.core.config.executor;
 
 import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.config.TaskContext;
-import com.huiyu.service.core.constant.IntegralOperationRecordEnum;
-import com.huiyu.service.core.constant.IntegralSourceRecordEnum;
-import com.huiyu.service.core.constant.PicStatusEnum;
-import com.huiyu.service.core.constant.TaskStatusEnum;
+import com.huiyu.service.core.enums.IntegralOperationRecordEnum;
+import com.huiyu.service.core.enums.IntegralSourceRecordEnum;
+import com.huiyu.service.core.enums.PicStatusEnum;
+import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.TaskService;
 import com.huiyu.service.core.service.business.PointBusiness;
-import com.huiyu.service.core.service.submit.ImageTaskInvoker;
+import com.huiyu.service.core.sd.submit.ImageTaskInvoker;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;

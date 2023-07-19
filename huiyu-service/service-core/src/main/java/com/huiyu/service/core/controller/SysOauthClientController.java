@@ -3,7 +3,7 @@ package com.huiyu.service.core.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.model.query.SysOauthClientQuery;
-import com.huiyu.service.core.service.auth.SysOauthClientService;
+import com.huiyu.service.core.service.SysOauthClientService;
 import com.huiyu.service.api.entity.SysOauthClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

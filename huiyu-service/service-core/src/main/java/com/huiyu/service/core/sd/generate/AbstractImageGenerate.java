@@ -1,7 +1,7 @@
 package com.huiyu.service.core.sd.generate;
 
 import com.huiyu.service.core.model.cmd.Cmd;
-import com.huiyu.service.core.service.submit.AbstractSubmitRequestQueueService;
+import com.huiyu.service.core.sd.submit.AbstractSubmitRequestQueueService;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Resource;

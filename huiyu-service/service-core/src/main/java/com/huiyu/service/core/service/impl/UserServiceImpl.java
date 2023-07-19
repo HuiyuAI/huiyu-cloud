@@ -48,7 +48,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .orderByDesc(User::getId)
                 .page(page);
 
-        IPage<UserAdminVo> userAdminVoPage = UserConvert.INSTANCE.toVOPage(userPage);
+        IPage<UserAdminVo> userAdminVoPage = UserConvert.INSTANCE.toAdminVOPage(userPage);
         if (CollectionUtils.isEmpty(userPage.getRecords())) {
             return userAdminVoPage;
         }

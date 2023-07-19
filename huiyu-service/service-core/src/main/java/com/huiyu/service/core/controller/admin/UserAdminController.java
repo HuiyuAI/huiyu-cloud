@@ -1,7 +1,11 @@
 package com.huiyu.service.core.controller.admin;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.result.R;
 import com.huiyu.service.api.entity.User;
+import com.huiyu.service.core.model.query.UserQuery;
+import com.huiyu.service.core.model.vo.UserAdminVo;
 import com.huiyu.service.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/user")
 public class UserAdminController {
     private final UserService userService;
+
+    @GetMapping("/{pageNum}/{pageSize}")
+    public R<IPage<UserAdminVo>> adminPageQuery(UserQuery query, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
+        IPage<UserAdminVo> pageInfo = userService.adminPageQuery(new Page<>(pageNum, pageSize), query);
+        return R.ok(pageInfo);
+    }
 
     /**
      * 通过userId查询单条数据

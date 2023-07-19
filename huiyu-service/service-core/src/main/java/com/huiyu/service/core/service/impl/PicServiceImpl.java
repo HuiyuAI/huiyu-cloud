@@ -6,6 +6,7 @@ import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.model.dto.UserPicCountDto;
 import com.huiyu.service.core.service.PicExtService;
 import com.huiyu.service.core.service.PicService;
 import org.apache.commons.lang.StringUtils;
@@ -85,6 +86,11 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
             return id;
         }
         return getParentPicIdById(parentPicId);
+    }
+
+    @Override
+    public List<UserPicCountDto> countByUserIdList(List<Long> userIdList) {
+        return super.baseMapper.countByUserIdList(userIdList);
     }
 
     @Override

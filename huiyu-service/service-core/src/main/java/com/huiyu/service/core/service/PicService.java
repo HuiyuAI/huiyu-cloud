@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.model.dto.UserPicCountDto;
 
 import java.util.List;
 
@@ -56,6 +57,14 @@ public interface PicService extends IService<Pic> {
     List<Pic> getPicsByUserId(Long userId);
 
     Long getParentPicIdById(Long id);
+
+    /**
+     * 根据用户idList查询图片数量
+     *
+     * @param userIdList 用户idList
+     * @return 图片数量
+     */
+    List<UserPicCountDto> countByUserIdList(List<Long> userIdList);
 
     boolean insert(Pic pic);
 

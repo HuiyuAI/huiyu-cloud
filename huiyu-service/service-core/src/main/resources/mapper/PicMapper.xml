@@ -63,6 +63,23 @@
           and task_id = #{taskId}
     </select>
 
+
+    <resultMap id="userPicCountDto" type="com.huiyu.service.core.model.dto.UserPicCountDto">
+        <result column="user_id" property="userId"/>
+        <result column="pic_count" property="picCount"/>
+    </resultMap>
+
+    <select id="countByUserIdList" resultMap="userPicCountDto">
+        select user_id, count(user_id) as pic_count
+        from pic
+        where user_id in
+        <foreach collection="userIdList" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        and is_delete = 0
+        group by user_id
+    </select>
+
     <update id="updateByUuid">
         update pic
         <set>

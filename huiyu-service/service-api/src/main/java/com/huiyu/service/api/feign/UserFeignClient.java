@@ -1,7 +1,6 @@
 package com.huiyu.service.api.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,15 +49,7 @@ public interface UserFeignClient {
      * @param user 实体
      * @return 新增结果
      */
-    @PostMapping("/admin/user")
+    @PostMapping("/admin/user/addUser")
     R<User> add(@RequestBody User user);
 
-    /**
-     * 统计总行数
-     *
-     * @param user 筛选条件
-     * @return 查询结果
-     */
-    @GetMapping("/admin/user/count")
-    R<Long> count(@SpringQueryMap User user);
 }

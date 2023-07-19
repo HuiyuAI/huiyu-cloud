@@ -45,6 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         IPage<User> userPage = super.lambdaQuery()
                 .eq(query.getUserId() != null, User::getUserId, query.getUserId())
                 .eq(StringUtils.isNotEmpty(query.getRole()), User::getRole, query.getRole())
+                .orderByDesc(User::getId)
                 .page(page);
 
         IPage<UserAdminVo> userAdminVoPage = UserConvert.INSTANCE.toVOPage(userPage);
@@ -94,17 +95,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User queryByUsername(String username) {
         return userMapper.queryByUsername(username);
-    }
-
-    /**
-     * 统计总行数
-     *
-     * @param user 查询条件
-     * @return 总行数
-     */
-    @Override
-    public long count(User user) {
-        return super.lambdaQuery(user).count();
     }
 
     /**

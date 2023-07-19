@@ -70,23 +70,12 @@ public class UserAdminController {
     }
 
     /**
-     * 统计总行数
-     *
-     * @param user 筛选条件
-     * @return 查询结果
-     */
-    @GetMapping("/count")
-    public R<Long> count(User user) {
-        return R.ok(userService.count(user));
-    }
-
-    /**
      * 新增数据
      *
      * @param user 实体
      * @return 新增结果
      */
-    @PostMapping
+    @PostMapping("/addUser")
     public R<User> add(@RequestBody User user) {
         return R.ok(userService.insert(user));
     }
@@ -97,8 +86,8 @@ public class UserAdminController {
      * @param user 实体
      * @return 编辑结果
      */
-    @PutMapping
-    public <T> R<T> edit(@RequestBody User user) {
+    @PostMapping("/updateUser")
+    public <T> R<T> update(@RequestBody User user) {
         userService.update(user);
         return R.ok();
     }

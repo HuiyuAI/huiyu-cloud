@@ -47,14 +47,6 @@ public interface UserService extends IService<User> {
     User queryByUsername(String username);
 
     /**
-     * 统计总行数
-     *
-     * @param user 查询条件
-     * @return 总行数
-     */
-    long count(User user);
-
-    /**
      * 新增数据
      *
      * @param user 实例对象

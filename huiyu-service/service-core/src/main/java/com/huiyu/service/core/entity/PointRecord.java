@@ -1,7 +1,7 @@
 package com.huiyu.service.core.entity;
 
-import com.huiyu.service.core.enums.IntegralOperationRecordEnum;
-import com.huiyu.service.core.enums.IntegralSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationRecordEnum;
+import com.huiyu.service.core.enums.PointSourceRecordEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 积分表(IntegralRecord)实体类
+ * 积分表(PointRecord)实体类
  *
  * @author Naccl
  * @date 2023-06-09
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IntegralRecord implements Serializable {
+public class PointRecord implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
@@ -43,11 +43,11 @@ public class IntegralRecord implements Serializable {
     /**
      * 增加为1，减少为0
      */
-    private IntegralOperationRecordEnum operationType;
+    private PointOperationRecordEnum operationType;
     /**
      * 操作来源
      */
-    private IntegralSourceRecordEnum operationSource;
+    private PointSourceRecordEnum operationSource;
     /**
      * 创建时间
      */

@@ -78,8 +78,8 @@ public class User implements Serializable {
     /**
      * 积分
      */
-    @TableField("integral")
-    private Integer integral;
+    @TableField("point")
+    private Integer point;
     /**
      * 等级
      */

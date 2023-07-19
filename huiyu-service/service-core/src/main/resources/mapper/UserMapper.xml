@@ -13,7 +13,7 @@
         <result property="avatar" column="avatar"/>
         <result property="gender" column="gender"/>
         <result property="phone" column="phone"/>
-        <result property="integral" column="integral"/>
+        <result property="point" column="point"/>
         <result property="level" column="level"/>
         <result property="enabled" column="enabled"/>
         <result property="createTime" column="create_time"/>
@@ -47,7 +47,7 @@
 
     <!--查询积分-->
     <select id="getPointByUserId" resultType="java.lang.Integer">
-        select integral
+        select point
         from user
         where is_delete = 0
           and user_id = #{userId}
@@ -55,7 +55,7 @@
 
     <update id="updatePointByUserId">
         update user
-        set integral = integral + #{point}
+        set point = point + #{point}
         where is_delete = 0
           and user_id = #{userId}
     </update>

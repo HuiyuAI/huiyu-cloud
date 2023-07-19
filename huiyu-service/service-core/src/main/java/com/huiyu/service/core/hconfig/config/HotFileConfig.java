@@ -56,11 +56,11 @@ public class HotFileConfig implements HConfigOnChange<Map<String, String>> {
         return this.getInt("exec_strategy", 1);
     }
 
-    public Integer getSignInIntegral() {
-        return this.getInt("sign_in_integral", 1);
+    public Integer getSignInPoint() {
+        return this.getInt("sign_in_point", 1);
     }
 
-    public Integer getInviteIntegral() {
-        return this.getInt("inviteIntegral", 10);
+    public Integer getInvitePoint() {
+        return this.getInt("invite_point", 10);
     }
 }

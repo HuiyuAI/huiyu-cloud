@@ -62,14 +62,14 @@ public class ImageTaskService {
             taskList.add(task);
             return taskList;
         }
-        Integer point = task.getIntegral();
+        Integer point = task.getPoint();
         for (int i = 0; i < task.getNum(); i++) {
             Task copyTask = new Task();
             BeanUtil.copyProperties(task, copyTask);
 
             copyTask.setId(IdUtils.nextSnowflakeId());
             copyTask.setNum(1);
-            copyTask.setIntegral(point / task.getNum());
+            copyTask.setPoint(point / task.getNum());
 
             TaskTypeEnum type = task.getType();
             switch (type) {

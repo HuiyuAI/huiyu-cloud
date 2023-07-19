@@ -48,7 +48,7 @@ public class Task implements Serializable {
     /**
      * 消耗积分
      */
-    private Integer integral;
+    private Integer point;
     /**
      * 执行源
      */

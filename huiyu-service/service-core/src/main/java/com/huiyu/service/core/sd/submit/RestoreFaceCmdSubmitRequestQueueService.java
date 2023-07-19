@@ -33,7 +33,7 @@ public class RestoreFaceCmdSubmitRequestQueueService extends AbstractSubmitReque
         task.setType(TaskTypeEnum.RESTORE_FACE);
         task.setStatus(TaskStatusEnum.UN_EXECUTED);
         task.setRetryCount(0);
-        task.setIntegral(cmd.getPoint());
+        task.setPoint(cmd.getPoint());
         task.setCreateTime(now);
         task.setUpdateTime(now);
         task.setIsDelete(0);

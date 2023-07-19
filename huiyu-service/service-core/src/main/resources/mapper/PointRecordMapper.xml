@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.huiyu.service.core.mapper.IntegralRecordMapper">
+<mapper namespace="com.huiyu.service.core.mapper.PointRecordMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="baseResult" type="com.huiyu.service.core.entity.IntegralRecord">
+    <resultMap id="baseResult" type="com.huiyu.service.core.entity.PointRecord">
         <id column="id" property="id"/>
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
@@ -17,13 +17,13 @@
     </resultMap>
 
     <insert id="insertRecord">
-        insert into integral_record (id, request_uuid, user_id, task_id, num, operation_type, operation_source)
+        insert into point_record (id, request_uuid, user_id, task_id, num, operation_type, operation_source)
         values (#{id}, #{requestUuid}, #{userId}, #{taskId}, #{num}, #{operationType}, #{operationSource})
     </insert>
 
     <select id="getByUserId" resultMap="baseResult">
         select *
-        from integral_record
+        from point_record
         where
             is_delete = 0
             and user_id = #{userId};

@@ -3,8 +3,8 @@ package com.huiyu.service.core.sd.submit;
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
-import com.huiyu.service.core.enums.IntegralOperationRecordEnum;
-import com.huiyu.service.core.enums.IntegralSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationRecordEnum;
+import com.huiyu.service.core.enums.PointSourceRecordEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
@@ -59,7 +59,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         task.setExecSource(execSource);
         String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
         task.setRequestUuid(requestUuid);
-        if (!deductUserIntegral(task)) {
+        if (!deductUserPoint(task)) {
             return;
         }
         Dto dto = taskDtoPair.getSecond();
@@ -77,7 +77,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
 
     public abstract Pair<Task, Dto> convertTask(T t);
 
-    private boolean deductUserIntegral(Task task) {
-        return pointBusiness.updatePoint(task.getUserId(), task.getIntegral(), IntegralSourceRecordEnum.GENERATE_PIC, IntegralOperationRecordEnum.REDUCE, task);
+    private boolean deductUserPoint(Task task) {
+        return pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointSourceRecordEnum.GENERATE_PIC, PointOperationRecordEnum.REDUCE, task);
     }
 }

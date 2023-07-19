@@ -1,9 +1,9 @@
 package com.huiyu.service.core.sd.submit;
 
+import cn.hutool.core.lang.Pair;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.sd.dto.Dto;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 /**

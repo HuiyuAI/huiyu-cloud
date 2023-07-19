@@ -1,5 +1,6 @@
 package com.huiyu.service.core.controller;
 
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.IdUtil;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
@@ -15,7 +16,6 @@ import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
 import com.huiyu.service.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.util.Pair;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,8 +56,8 @@ public class SDController {
     public R<String> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
         // 1. 参数校验(数值范围)
         Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
-        if (!validate.getFirst()) {
-            return R.error(validate.getSecond());
+        if (!validate.getKey()) {
+            return R.error(validate.getValue());
         }
 
         // 2. 校验用户积分
@@ -103,8 +103,8 @@ public class SDController {
     public R<String> restoreFace(@Valid @RequestBody RestoreFaceCmd cmd) {
         // 1. 参数校验
         Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
-        if (!validate.getFirst()) {
-            return R.error(validate.getSecond());
+        if (!validate.getKey()) {
+            return R.error(validate.getValue());
         }
 
         // 2. 校验用户积分

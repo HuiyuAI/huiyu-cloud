@@ -1,5 +1,6 @@
 package com.huiyu.service.core.sd.submit;
 
+import cn.hutool.core.lang.Pair;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.enums.TaskTypeEnum;
 import com.huiyu.service.core.entity.Task;
@@ -8,7 +9,6 @@ import com.huiyu.service.core.sd.SDCmd2DtoConverter;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.sd.dto.RestoreFaceDto;
 import com.huiyu.service.core.utils.IdUtils;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

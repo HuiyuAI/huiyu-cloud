@@ -1,5 +1,6 @@
 package com.huiyu.service.core.sd.submit;
 
+import cn.hutool.core.lang.Pair;
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
@@ -13,7 +14,6 @@ import com.huiyu.service.core.sd.submit.chooseStrategy.ExecChooseStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.util.Pair;
 
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
@@ -55,14 +55,14 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
                 .map(strategy -> strategy.chooseExecSource(t))
                 .findFirst()
                 .orElse(null);
-        Task task = taskDtoPair.getFirst();
+        Task task = taskDtoPair.getKey();
         task.setExecSource(execSource);
         String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
         task.setRequestUuid(requestUuid);
         if (!deductUserPoint(task)) {
             return;
         }
-        Dto dto = taskDtoPair.getSecond();
+        Dto dto = taskDtoPair.getValue();
         CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
                 .exceptionally(ExceptionLogHandle);
     }

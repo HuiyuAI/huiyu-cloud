@@ -74,15 +74,6 @@
         </where>
     </select>
 
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from sys_oauth_client
-        <where>
-            <include refid="queryWhere"/>
-        </where>
-    </select>
-
     <!--新增所有列-->
     <insert id="insert">
         insert into sys_oauth_client(<include refid="allColumns"/>)

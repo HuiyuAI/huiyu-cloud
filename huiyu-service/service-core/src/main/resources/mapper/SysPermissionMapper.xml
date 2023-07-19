@@ -67,29 +67,6 @@
         where id = #{id}
     </select>
 
-    <!--统计总行数-->
-    <select id="count" resultType="java.lang.Long">
-        select count(1)
-        from sys_permission
-        <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="name != null and name != ''">
-                and name = #{name}
-            </if>
-            <if test="urlPerm != null and urlPerm != ''">
-                and url_perm = #{urlPerm}
-            </if>
-            <if test="role != null and role != ''">
-                and role = #{role}
-            </if>
-            <if test="orderId != null">
-                and order_id = #{orderId}
-            </if>
-        </where>
-    </select>
-
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
         insert into sys_permission(name, url_perm, role, order_id)

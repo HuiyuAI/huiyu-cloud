@@ -1,4 +1,4 @@
-package com.huiyu.service.core.controller;
+package com.huiyu.service.core.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,8 +24,8 @@ import com.huiyu.common.core.result.R;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/sysOauthClient")
-public class SysOauthClientController {
+@RequestMapping("/admin/sysOauthClient")
+public class SysOauthClientAdminController {
     private final SysOauthClientService sysOauthClientService;
 
     /**
@@ -51,17 +51,6 @@ public class SysOauthClientController {
     @GetMapping("/{clientId}")
     public R<SysOauthClient> queryByClientId(@PathVariable("clientId") String clientId) {
         return R.ok(sysOauthClientService.queryByClientId(clientId));
-    }
-
-    /**
-     * 统计总行数
-     *
-     * @param sysOauthClient 筛选条件
-     * @return 总行数
-     */
-    @GetMapping("/count")
-    public R<Long> count(SysOauthClient sysOauthClient) {
-        return R.ok(sysOauthClientService.count(sysOauthClient));
     }
 
     /**

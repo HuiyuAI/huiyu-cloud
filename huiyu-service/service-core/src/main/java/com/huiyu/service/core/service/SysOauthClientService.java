@@ -30,14 +30,6 @@ public interface SysOauthClientService extends IService<SysOauthClient> {
     SysOauthClient queryByClientId(String clientId);
 
     /**
-     * 统计总行数
-     *
-     * @param sysOauthClient 筛选条件
-     * @return 总行数
-     */
-    long count(SysOauthClient sysOauthClient);
-
-    /**
      * 新增数据
      *
      * @param sysOauthClient 实例对象

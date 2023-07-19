@@ -63,18 +63,6 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         return sysPermissionMapper.queryById(id);
     }
 
-
-    /**
-     * 统计总行数
-     *
-     * @param sysPermission 筛选条件
-     * @return 总行数
-     */
-    @Override
-    public long count(SysPermission sysPermission) {
-        return sysPermissionMapper.count(sysPermission);
-    }
-
     /**
      * 新增数据
      *

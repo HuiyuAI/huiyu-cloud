@@ -45,14 +45,6 @@ public interface SysPermissionMapper extends BaseMapper<SysPermission> {
     SysPermission queryById(Long id);
 
     /**
-     * 统计总行数
-     *
-     * @param sysPermission 查询条件
-     * @return 总行数
-     */
-    long count(SysPermission sysPermission);
-
-    /**
      * 新增数据
      *
      * @param sysPermission 实例对象

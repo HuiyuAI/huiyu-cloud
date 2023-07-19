@@ -20,6 +20,6 @@ public interface SysOauthClientFeignClient {
      * @param clientId 主键
      * @return 单条数据
      */
-    @GetMapping("/sysOauthClient/{clientId}")
+    @GetMapping("/admin/sysOauthClient/{clientId}")
     R<SysOauthClient> queryByClientId(@PathVariable("clientId") String clientId);
 }

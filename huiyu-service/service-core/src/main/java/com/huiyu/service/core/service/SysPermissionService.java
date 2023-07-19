@@ -30,14 +30,6 @@ public interface SysPermissionService extends IService<SysPermission> {
     SysPermission queryById(Long id);
 
     /**
-     * 统计总行数
-     *
-     * @param sysPermission 筛选条件
-     * @return 总行数
-     */
-    long count(SysPermission sysPermission);
-
-    /**
      * 新增数据
      *
      * @param sysPermission 实例对象

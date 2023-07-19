@@ -48,17 +48,6 @@ public class SysOauthClientServiceImpl extends ServiceImpl<SysOauthClientMapper,
     }
 
     /**
-     * 统计总行数
-     *
-     * @param sysOauthClient 筛选条件
-     * @return 总行数
-     */
-    @Override
-    public long count(SysOauthClient sysOauthClient) {
-        return sysOauthClientMapper.count(sysOauthClient);
-    }
-
-    /**
      * 新增数据
      *
      * @param sysOauthClient 实例对象

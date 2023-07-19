@@ -1,4 +1,4 @@
-package com.huiyu.service.core.controller;
+package com.huiyu.service.core.controller.admin;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,8 +24,8 @@ import com.huiyu.common.core.result.R;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/sysPermission")
-public class SysPermissionController {
+@RequestMapping("/admin/sysPermission")
+public class SysPermissionAdminController {
     private final SysPermissionService sysPermissionService;
 
     /**
@@ -51,17 +51,6 @@ public class SysPermissionController {
     @GetMapping("/{id}")
     public R<SysPermission> queryById(@PathVariable("id") Long id) {
         return R.ok(sysPermissionService.queryById(id));
-    }
-
-    /**
-     * 统计总行数
-     *
-     * @param sysPermission 筛选条件
-     * @return 总行数
-     */
-    @GetMapping("/count")
-    public R<Long> count(SysPermission sysPermission) {
-        return R.ok(sysPermissionService.count(sysPermission));
     }
 
     /**

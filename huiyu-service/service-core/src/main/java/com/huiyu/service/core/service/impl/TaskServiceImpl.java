@@ -24,11 +24,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     public IPage<Task> adminPageQuery(IPage<Task> page, TaskQuery query) {
         return super.lambdaQuery()
                 .eq(query.getId() != null, Task::getId, query.getId())
-                .eq(query.getRequestUuid() != null, Task::getRequestUuid, query.getRequestUuid())
+                .eq(StringUtils.isNotEmpty(query.getRequestUuid()), Task::getRequestUuid, query.getRequestUuid())
                 .eq(query.getUserId() != null, Task::getUserId, query.getUserId())
                 .eq(query.getType() != null, Task::getType, query.getType())
                 .eq(query.getStatus() != null, Task::getStatus, query.getStatus())
-                .eq(StringUtils.isNotEmpty(query.getExecSource()), Task::getExecSource, query.getExecSource())
                 .ge(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, Task::getCreateTime, query.getCreateTimeStart())
                 .le(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, Task::getCreateTime, query.getCreateTimeEnd())
                 .orderByDesc(Task::getId)

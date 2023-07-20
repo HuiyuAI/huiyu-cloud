@@ -40,10 +40,6 @@ public class TaskQuery {
      */
     private TaskStatusEnum status;
     /**
-     * 执行源
-     */
-    private String execSource;
-    /**
      * 创建时间开始
      */
     private LocalDateTime createTimeStart;

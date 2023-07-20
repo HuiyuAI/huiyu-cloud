@@ -12,6 +12,10 @@ public interface BaseEnum<T> {
         return this.getDictKey();
     }
 
+    String name();
+
+    String getDesc();
+
     static <T> BaseEnum<T> valueOfEnum(Class<BaseEnum<T>> enumClass, String value) {
         if (Objects.isNull(value)) {
             return null;

@@ -2,6 +2,8 @@ package com.huiyu.service.core.controller.admin;
 
 import com.huiyu.common.core.result.R;
 import com.huiyu.service.core.enums.BaseEnum;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.enums.TaskTypeEnum;
 import com.huiyu.service.core.model.vo.EnumVo;
@@ -33,6 +35,16 @@ public class EnumAdminController {
     @GetMapping("/getTaskStatusEnum")
     public R<List<EnumVo>> getTaskStatusEnum() {
         return R.ok(enum2EnumVoList(TaskStatusEnum.class));
+    }
+
+    @GetMapping("/getPointOperationTypeEnum")
+    public R<List<EnumVo>> getPointOperationTypeEnum() {
+        return R.ok(enum2EnumVoList(PointOperationTypeEnum.class));
+    }
+
+    @GetMapping("/getPointOperationSourceEnum")
+    public R<List<EnumVo>> getPointOperationSourceEnum() {
+        return R.ok(enum2EnumVoList(PointOperationSourceEnum.class));
     }
 
     private List<EnumVo> enum2EnumVoList(Class<? extends BaseEnum> enumClass) {

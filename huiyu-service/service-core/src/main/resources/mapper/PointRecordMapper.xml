@@ -16,17 +16,11 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
-    <insert id="insertRecord">
-        insert into point_record (id, request_uuid, user_id, task_id, num, operation_type, operation_source)
-        values (#{id}, #{requestUuid}, #{userId}, #{taskId}, #{num}, #{operationType}, #{operationSource})
-    </insert>
-
     <select id="getByUserId" resultMap="baseResult">
         select *
         from point_record
-        where
-            is_delete = 0
-            and user_id = #{userId};
+        where is_delete = 0
+          and user_id = #{userId}
     </select>
 
 </mapper>

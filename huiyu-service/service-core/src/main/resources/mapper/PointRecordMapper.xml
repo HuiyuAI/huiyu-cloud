@@ -7,7 +7,6 @@
         <id column="id" property="id"/>
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
-        <result column="task_id" property="taskId"/>
         <result column="num" property="num"/>
         <result column="operation_type" property="operationType" jdbcType="INTEGER"/>
         <result column="operation_source" property="operationSource"/>

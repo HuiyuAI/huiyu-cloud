@@ -41,11 +41,6 @@ public class PointRecord implements Serializable {
     @TableField("user_id")
     private Long userId;
     /**
-     * 任务ID
-     */
-    @TableField("task_id")
-    private Long taskId;
-    /**
      * 积分
      */
     @TableField("num")

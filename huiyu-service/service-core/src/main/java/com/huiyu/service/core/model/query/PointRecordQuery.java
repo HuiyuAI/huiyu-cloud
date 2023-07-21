@@ -28,10 +28,6 @@ public class PointRecordQuery {
      */
     private Long userId;
     /**
-     * 任务ID
-     */
-    private Long taskId;
-    /**
      * 增加为1，减少为0
      */
     private PointOperationTypeEnum operationType;

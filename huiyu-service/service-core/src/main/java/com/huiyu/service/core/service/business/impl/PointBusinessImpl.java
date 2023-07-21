@@ -56,20 +56,13 @@ public class PointBusinessImpl implements PointBusiness {
         }
 
         // 关联请求uuid
-        // 关联taskid
-        Long taskId = 0L;
-        String requestUuid = IdUtil.fastUUID();
-        if (task != null) {
-            taskId = task.getId();
-            requestUuid = task.getRequestUuid();
-        }
+        String requestUuid = task == null ? "" : task.getRequestUuid();
 
         // 记录积分表
         LocalDateTime now = LocalDateTime.now();
         PointRecord pointRecord = PointRecord.builder()
                 .id(IdUtils.nextSnowflakeId())
                 .userId(userId)
-                .taskId(taskId)
                 .requestUuid(requestUuid)
                 .num(Math.abs(point))
                 .operationType(operation)

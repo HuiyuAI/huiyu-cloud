@@ -14,8 +14,4 @@
         <result column="create_time" property="createTime"/>
     </resultMap>
 
-    <insert id="insert">
-        insert into request_log (id, user_id, ip, method, uri, param, elapsed_time, create_time)
-        values (#{id}, #{userId}, #{ip}, #{method}, #{uri}, #{param}, #{elapsedTime}, #{createTime})
-    </insert>
 </mapper>

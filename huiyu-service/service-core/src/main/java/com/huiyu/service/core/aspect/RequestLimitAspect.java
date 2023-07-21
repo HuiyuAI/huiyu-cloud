@@ -4,8 +4,8 @@ import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
-import com.huiyu.service.core.entity.RequestLimit;
-import com.huiyu.service.core.service.RequestLimitService;
+import com.huiyu.service.core.entity.RequestLimitLog;
+import com.huiyu.service.core.service.RequestLimitLogService;
 import com.huiyu.service.core.utils.IdUtils;
 import com.huiyu.service.core.utils.IpAddressUtils;
 import com.huiyu.service.core.utils.RequestUtils;
@@ -37,7 +37,7 @@ public class RequestLimitAspect {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
-    private RequestLimitService requestLimitService;
+    private RequestLimitLogService requestLimitLogService;
 
     @Around("@annotation(requestLimiter)")
     public Object limitRequestFrequency(ProceedingJoinPoint joinPoint, RequestLimiter requestLimiter) throws Throwable {
@@ -61,7 +61,7 @@ public class RequestLimitAspect {
                 Map<String, Object> requestParams = RequestUtils.getRequestParams(joinPoint);
                 String param = StringUtils.substring(JacksonUtils.toJsonStr(requestParams), 0, 2000);
 
-                RequestLimit requestLimit = RequestLimit.builder()
+                RequestLimitLog requestLimitLog = RequestLimitLog.builder()
                         .id(IdUtils.nextSnowflakeId())
                         .userId(JwtUtils.getUserId())
                         .ip(ip)
@@ -70,7 +70,7 @@ public class RequestLimitAspect {
                         .param(param)
                         .createTime(LocalDateTime.now())
                         .build();
-                requestLimitService.insert(requestLimit);
+                requestLimitLogService.insert(requestLimitLog);
 
                 return R.error(requestLimiter.msg());
             } else {

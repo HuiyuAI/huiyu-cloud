@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * (RequestLimit)实体类
+ * (RequestLimitLog)实体类
  *
  * @author Naccl
  * @date 2023-07-05
@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("request_limit")
-public class RequestLimit implements Serializable {
+@TableName("request_limit_log")
+public class RequestLimitLog implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @TableId("id")

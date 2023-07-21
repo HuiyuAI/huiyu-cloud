@@ -1,17 +1,17 @@
 package com.huiyu.service.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.huiyu.service.core.entity.RequestLimit;
+import com.huiyu.service.core.entity.RequestLimitLog;
 import org.springframework.scheduling.annotation.Async;
 
 /**
- * (RequestLimit)服务接口
+ * (RequestLimitLog)服务接口
  *
  * @author Naccl
  * @date 2023-07-05
  */
-public interface RequestLimitService extends IService<RequestLimit> {
+public interface RequestLimitLogService extends IService<RequestLimitLog> {
 
     @Async
-    void insert(RequestLimit requestLimit);
+    void insert(RequestLimitLog requestLimitLog);
 }

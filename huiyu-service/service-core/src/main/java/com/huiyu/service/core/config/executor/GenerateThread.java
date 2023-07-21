@@ -2,8 +2,8 @@ package com.huiyu.service.core.config.executor;
 
 import com.huiyu.service.core.config.SpringContext;
 import com.huiyu.service.core.config.TaskContext;
-import com.huiyu.service.core.enums.PointOperationRecordEnum;
-import com.huiyu.service.core.enums.PointSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
@@ -80,7 +80,7 @@ class GenerateThread implements Runnable {
             taskQueue.offer(Byte.valueOf("1"));
         } else {
             // 回退积分
-            pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointSourceRecordEnum.BACK, PointOperationRecordEnum.ADD, task);
+            pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.BACK, PointOperationTypeEnum.ADD, task);
 
             Task TaskDO = Task.builder()
                     .id(task.getId())

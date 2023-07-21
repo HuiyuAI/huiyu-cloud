@@ -1,7 +1,7 @@
 package com.huiyu.service.core.service.business;
 
-import com.huiyu.service.core.enums.PointOperationRecordEnum;
-import com.huiyu.service.core.enums.PointSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.entity.Task;
 
 public interface PointBusiness {
@@ -16,5 +16,5 @@ public interface PointBusiness {
      * @param task      任务
      * @return
      */
-    boolean updatePoint(Long userId, Integer point, PointSourceRecordEnum source, PointOperationRecordEnum operation, Task task);
+    boolean updatePoint(Long userId, Integer point, PointOperationSourceEnum source, PointOperationTypeEnum operation, Task task);
 }

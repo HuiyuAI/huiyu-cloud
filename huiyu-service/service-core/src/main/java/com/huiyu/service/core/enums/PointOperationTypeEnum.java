@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public enum PointOperationRecordEnum implements BaseEnum<Integer> {
+public enum PointOperationTypeEnum implements BaseEnum<Integer> {
 
     REDUCE(0, "减少"),
     ADD(1, "增加");

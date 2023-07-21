@@ -2,8 +2,8 @@ package com.huiyu.service.core.service.business.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.huiyu.service.core.entity.PointRecord;
-import com.huiyu.service.core.enums.PointOperationRecordEnum;
-import com.huiyu.service.core.enums.PointSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.service.PointRecordService;
 import com.huiyu.service.core.service.UserService;
@@ -39,12 +39,12 @@ public class PointBusinessImpl implements PointBusiness {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean updatePoint(Long userId, Integer point, PointSourceRecordEnum source, PointOperationRecordEnum operation, Task task) {
+    public boolean updatePoint(Long userId, Integer point, PointOperationSourceEnum source, PointOperationTypeEnum operation, Task task) {
         if (point == null || point <= 0) {
             throw new IllegalArgumentException("积分数值不合法");
         }
 
-        if (operation == PointOperationRecordEnum.REDUCE) {
+        if (operation == PointOperationTypeEnum.REDUCE) {
             point = -point;
         }
 

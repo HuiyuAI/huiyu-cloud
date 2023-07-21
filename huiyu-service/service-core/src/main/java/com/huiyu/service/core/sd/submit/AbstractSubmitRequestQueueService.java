@@ -4,8 +4,8 @@ import cn.hutool.core.lang.Pair;
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
-import com.huiyu.service.core.enums.PointOperationRecordEnum;
-import com.huiyu.service.core.enums.PointSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
@@ -78,6 +78,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     public abstract Pair<Task, Dto> convertTask(T t);
 
     private boolean deductUserPoint(Task task) {
-        return pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointSourceRecordEnum.GENERATE_PIC, PointOperationRecordEnum.REDUCE, task);
+        return pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.GENERATE_PIC, PointOperationTypeEnum.REDUCE, task);
     }
 }

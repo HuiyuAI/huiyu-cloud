@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public enum PointSourceRecordEnum implements BaseEnum<String> {
+public enum PointOperationSourceEnum implements BaseEnum<String> {
     REGISTER("register", "注册"),
     GENERATE_PIC("generate_pic", "生成图片"),
     SIGN_IN("sign_in", "签到"),

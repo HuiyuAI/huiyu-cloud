@@ -1,7 +1,7 @@
 package com.huiyu.service.core.model.query;
 
-import com.huiyu.service.core.enums.PointOperationRecordEnum;
-import com.huiyu.service.core.enums.PointSourceRecordEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,11 +34,11 @@ public class PointRecordQuery {
     /**
      * 增加为1，减少为0
      */
-    private PointOperationRecordEnum operationType;
+    private PointOperationTypeEnum operationType;
     /**
      * 操作来源
      */
-    private PointSourceRecordEnum operationSource;
+    private PointOperationSourceEnum operationSource;
     /**
      * 创建时间开始
      */

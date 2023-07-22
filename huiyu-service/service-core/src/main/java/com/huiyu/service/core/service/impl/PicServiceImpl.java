@@ -7,9 +7,10 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.mapper.PicMapper;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.UserPicCountDto;
+import com.huiyu.service.core.model.query.PicQuery;
 import com.huiyu.service.core.service.PicExtService;
 import com.huiyu.service.core.service.PicService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,25 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
 
     @Resource
     private PicExtService picExtService;
+
+    @Override
+    public IPage<Pic> adminPageQuery(IPage<Pic> page, PicQuery query) {
+        return super.lambdaQuery()
+                .eq(query.getId() != null, Pic::getId, query.getId())
+                .eq(StringUtils.isNotEmpty(query.getUuid()), Pic::getUuid, query.getUuid())
+                .eq(StringUtils.isNotEmpty(query.getRequestUuid()), Pic::getRequestUuid, query.getRequestUuid())
+                .eq(query.getUserId() != null, Pic::getUserId, query.getUserId())
+                .eq(query.getTaskId() != null, Pic::getTaskId, query.getTaskId())
+                .eq(query.getModelId() != null, Pic::getModelId, query.getModelId())
+                .eq(query.getStatus() != null, Pic::getStatus, query.getStatus())
+                .eq(query.getType() != null, Pic::getType, query.getType())
+                .eq(query.getQuality() != null, Pic::getQuality, query.getQuality())
+                .eq(query.getRatio() != null, Pic::getRatio, query.getRatio())
+                .ge(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, Pic::getCreateTime, query.getCreateTimeStart())
+                .le(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, Pic::getCreateTime, query.getCreateTimeEnd())
+                .orderByDesc(Pic::getId)
+                .page(page);
+    }
 
     @Override
     public IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto) {

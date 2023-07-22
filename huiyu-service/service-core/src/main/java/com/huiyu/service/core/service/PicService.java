@@ -6,10 +6,20 @@ import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.UserPicCountDto;
+import com.huiyu.service.core.model.query.PicQuery;
 
 import java.util.List;
 
 public interface PicService extends IService<Pic> {
+    /**
+     * 后台管理分页查询
+     *
+     * @param page  分页对象
+     * @param query 筛选条件
+     * @return 查询结果
+     */
+    IPage<Pic> adminPageQuery(IPage<Pic> page, PicQuery query);
+
     /**
      * 分页查询
      *

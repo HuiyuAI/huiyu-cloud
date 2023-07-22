@@ -178,7 +178,7 @@ public class Pic implements Serializable {
     @TableField("upscaling_resize")
     private Integer upscalingResize;
     /**
-     * controlnet参数
+     * 扩展脚本参数
      */
     @TableField("alwayson_scripts")
     private String alwaysonScripts;

@@ -45,6 +45,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         IPage<User> userPage = super.lambdaQuery()
                 .eq(query.getUserId() != null, User::getUserId, query.getUserId())
                 .eq(StringUtils.isNotEmpty(query.getRole()), User::getRole, query.getRole())
+                .ge(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, User::getCreateTime, query.getCreateTimeStart())
+                .le(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, User::getCreateTime, query.getCreateTimeEnd())
                 .orderByDesc(User::getId)
                 .page(page);
 

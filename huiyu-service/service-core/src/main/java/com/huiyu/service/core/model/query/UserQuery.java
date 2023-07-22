@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * 用户表(User)查询对象实体类
  *
@@ -25,4 +27,12 @@ public class UserQuery {
      * 角色
      */
     private String role;
+    /**
+     * 创建时间开始
+     */
+    private LocalDateTime createTimeStart;
+    /**
+     * 创建时间结束
+     */
+    private LocalDateTime createTimeEnd;
 }

@@ -131,7 +131,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StrUtil.isNotBlank(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return super.updateById(user);
+        return super.lambdaUpdate()
+                .eq(User::getUserId, user.getUserId())
+                .update(user);
     }
 
     @Override

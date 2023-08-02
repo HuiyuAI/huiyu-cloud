@@ -10,12 +10,15 @@ import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.model.vo.SpellbookVo;
 import com.huiyu.service.core.sd.SDCmdCountPoint;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
+import com.huiyu.service.core.service.SpellbookService;
 import com.huiyu.service.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +45,9 @@ public class SDController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private SpellbookService spellbookService;
 
     /**
      * 文生图
@@ -135,4 +141,11 @@ public class SDController {
         return R.ok(requestUuid);
     }
 
+    @RequestLogger
+    @RequestLimiter(seconds = 10, maxCount = 6)
+    @GetMapping("/spellbook")
+    public R<List<SpellbookVo>> spellbook() {
+        List<SpellbookVo> spellbookVoList = spellbookService.listVo();
+        return R.ok(spellbookVoList);
+    }
 }

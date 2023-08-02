@@ -2,7 +2,6 @@ package com.huiyu.service.core.sd.submit;
 
 import com.google.common.base.Stopwatch;
 import com.huiyu.service.core.config.Monitor;
-import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
@@ -98,9 +97,6 @@ public class ImageTaskInvoker {
                 .updateTime(LocalDateTime.now())
                 .build();
         picService.updateByUuid(pic);
-
-        String imgUrl = HuiyuConstant.cdnUrlGen + resImageUuid + HuiyuConstant.imageSuffix;
-        log.info("测试图片生成 url: {}", imgUrl);
     }
 
     public Task findNextTask(String source) {

@@ -49,18 +49,13 @@ public class SDServerCallbackController {
         String imgUrl = HuiyuConstant.cdnUrlGen + resImageUuid + HuiyuConstant.imageSuffix;
         log.info("图片上传成功 url: {}", imgUrl);
 
-        // 1. 更新图片状态
+        // 更新图片状态
         Pic pic = Pic.builder()
                 .uuid(resImageUuid)
                 .status(PicStatusEnum.GENERATED)
                 .updateTime(LocalDateTime.now())
                 .build();
         picService.updateByUuid(pic);
-
-
-        // TODO 2. 更新用户界面
-
-
         return R.ok();
     }
 }

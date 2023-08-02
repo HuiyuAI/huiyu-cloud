@@ -1,0 +1,111 @@
+package com.huiyu.service.core.utils;
+
+import com.huiyu.service.core.config.TencentCloudConfig;
+import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
+import com.tencentcloudapi.common.Credential;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import com.tencentcloudapi.common.profile.ClientProfile;
+import com.tencentcloudapi.common.profile.HttpProfile;
+import com.tencentcloudapi.tmt.v20180321.TmtClient;
+import com.tencentcloudapi.tmt.v20180321.models.TextTranslateRequest;
+import com.tencentcloudapi.tmt.v20180321.models.TextTranslateResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
+
+/**
+ * 腾讯云服务工具类
+ *
+ * @author Naccl
+ * @date 2023-08-01
+ */
+@Slf4j
+@Component
+public class TencentCloudTranslateUtils {
+    private static List<TmtClient> clientList;
+
+    private static List<Long> projectIdList;
+
+    private static AtomicLong count = new AtomicLong(0L);
+
+    private static ThreadPoolExecutorDecorator translateExecutor;
+
+    public TencentCloudTranslateUtils(TencentCloudConfig tencentCloudConfig, @Qualifier("translateExecutor") ThreadPoolExecutorDecorator translateExecutor) {
+        TencentCloudTranslateUtils.clientList = new ArrayList<>();
+        List<String> secretIdList = tencentCloudConfig.getSecretId();
+        List<String> secretKeyList = tencentCloudConfig.getSecretKey();
+        TencentCloudTranslateUtils.projectIdList = tencentCloudConfig.getProjectId();
+        TencentCloudTranslateUtils.translateExecutor = translateExecutor;
+
+        for (int i = 0; i < secretIdList.size(); i++) {
+            Credential cred = new Credential(secretIdList.get(i), secretKeyList.get(i));
+            HttpProfile httpProfile = new HttpProfile();
+            httpProfile.setEndpoint("tmt.tencentcloudapi.com");
+            ClientProfile clientProfile = new ClientProfile();
+            clientProfile.setHttpProfile(httpProfile);
+            TencentCloudTranslateUtils.clientList.add(new TmtClient(cred, "ap-shanghai", clientProfile));
+        }
+    }
+
+    /**
+     * 负载均衡多个腾讯云翻译账户
+     *
+     * @param sourceTextList 待翻译文本List
+     * @return 翻译后的文本
+     */
+    public static List<String> en2ZhTranslateList(List<String> sourceTextList) {
+        for (String sourceText : sourceTextList) {
+            CompletableFuture<String> completableFuture1 =CompletableFuture
+                    .supplyAsync(() -> {
+                        int i = (int) (count.incrementAndGet() % clientList.size());
+                        return en2ZhTranslate(sourceText, clientList.get(i), projectIdList.get(i));
+                    }, translateExecutor.getThreadPoolExecutor());
+        }
+    }
+
+    /**
+     * 负载均衡多个腾讯云翻译账户
+     *
+     * @param sourceText 待翻译文本
+     * @return 翻译后的文本
+     */
+    public static String en2ZhTranslate(String sourceText) {
+        int i = (int) (count.incrementAndGet() % clientList.size());
+        return en2ZhTranslate(sourceText, clientList.get(i), projectIdList.get(i));
+    }
+
+    /**
+     * 调用腾讯云翻译接口
+     *
+     * @param sourceText 待翻译文本
+     * @param client     腾讯云翻译客户端
+     * @param projectId  腾讯云翻译项目id
+     * @return 翻译后的文本
+     */
+    public static String en2ZhTranslate(String sourceText, TmtClient client, Long projectId) {
+        try {
+            TextTranslateRequest req = new TextTranslateRequest();
+            req.setProjectId(projectId);
+            req.setSource("en");
+            req.setTarget("zh");
+            req.setSourceText(sourceText);
+
+            TextTranslateResponse resp = client.TextTranslate(req);
+            HashMap<String, String> respMap = new HashMap<>(8);
+            resp.toMap(respMap, "");
+
+            log.info("腾讯云翻译接口调用成功, SourceText: {}, TargetText: {}, RequestId: {}, SecretId: {}", sourceText, respMap.get("TargetText"), respMap.get("RequestId"), client.getCredential().getSecretId());
+            return respMap.get("TargetText");
+        } catch (TencentCloudSDKException e) {
+            log.error("腾讯云翻译接口调用失败", e);
+            return "";
+        }
+    }
+
+}

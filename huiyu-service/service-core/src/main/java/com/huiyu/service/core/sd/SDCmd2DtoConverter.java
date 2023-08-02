@@ -32,13 +32,17 @@ public class SDCmd2DtoConverter {
         String defaultPrompt = model.getDefaultPrompt();
         String defaultNegativePrompt = model.getDefaultNegativePrompt();
 
-        // TODO 调用API翻译中文描述词（或根据词库映射）
         String prompt = cmd.getPrompt();
         String negativePrompt = cmd.getNegativePrompt();
 
         // 过滤prompt中含有<>的内容，防止使用未定义的LoRA
         prompt = prompt.replaceAll("<.*?>", "");
         negativePrompt = negativePrompt.replaceAll("<.*?>", "");
+
+        // TODO 调用API翻译中文描述词（或根据词库映射）
+//        TencentCloudTranslateUtils.en2ZhTranslate(prompt);
+//        TencentCloudTranslateUtils.en2ZhTranslate(negativePrompt);
+
 
         Integer quality = cmd.getQuality();
         ImageQualityEnum imageQualityEnum = ImageQualityEnum.getEnumByCode(quality);

@@ -36,6 +36,7 @@
         <lombok.version>1.18.16</lombok.version>
         <hutool-all.version>5.7.16</hutool-all.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
+        <tencentcloud-sdk.version>3.1.817</tencentcloud-sdk.version>
     </properties>
 
     <dependencyManagement>
@@ -123,6 +124,13 @@
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
             </dependency>
+            <!-- tencentcloud-sdk -->
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java-tmt</artifactId>
+                <version>${tencentcloud-sdk.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.huiyu</groupId>

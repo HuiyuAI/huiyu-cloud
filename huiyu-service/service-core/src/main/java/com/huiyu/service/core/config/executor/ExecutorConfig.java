@@ -4,6 +4,7 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 import org.slf4j.MDC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -23,7 +24,6 @@ public class ExecutorConfig {
 
     @Bean(name = "submitRequestExecutor")
     public ThreadPoolExecutorDecorator submitRequestExecutor() {
-
         MonitorThreadPoolTaskExecutor executor = new MonitorThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
@@ -31,17 +31,7 @@ public class ExecutorConfig {
         executor.setThreadNamePrefix("SUBMIT");
         executor.setMonitorName("submitRequestExecutor_test1");
         executor.setRejectedExecutionHandler(new TaskExecutionRejectedHandler());
-        executor.setTaskDecorator(runnable -> {
-            String traceId = MDC.get(TRACE_ID);
-            return () -> {
-                MDC.put(TRACE_ID, traceId);
-                try {
-                    runnable.run();
-                } finally {
-                    MDC.clear();
-                }
-            };
-        });
+        executor.setTaskDecorator(taskDecorator());
         executor.initialize();
         return ThreadPoolExecutorDecorator.builder()
                 .threadPoolExecutor(executor)
@@ -56,7 +46,33 @@ public class ExecutorConfig {
         executor.setMaxPoolSize(50);
         executor.setQueueCapacity(2000);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-        executor.setTaskDecorator(runnable -> {
+        executor.setTaskDecorator(taskDecorator());
+        executor.initialize();
+        Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
+        return ThreadPoolExecutorDecorator.builder()
+                .threadPoolExecutor(ttlExecutor)
+                .sourceName("split")
+                .build();
+    }
+
+    @Bean(name = "translateExecutor")
+    public ThreadPoolExecutorDecorator translateExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(2000);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setTaskDecorator(taskDecorator());
+        executor.initialize();
+        Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
+        return ThreadPoolExecutorDecorator.builder()
+                .threadPoolExecutor(ttlExecutor)
+                .sourceName("translate")
+                .build();
+    }
+
+    private TaskDecorator taskDecorator() {
+        return runnable -> {
             String traceId = MDC.get(TRACE_ID);
             return () -> {
                 MDC.put(TRACE_ID, traceId);
@@ -66,12 +82,6 @@ public class ExecutorConfig {
                     MDC.clear();
                 }
             };
-        });
-        executor.initialize();
-        Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
-        return ThreadPoolExecutorDecorator.builder()
-                .threadPoolExecutor(ttlExecutor)
-                .sourceName("split")
-                .build();
+        };
     }
 }

@@ -91,6 +91,11 @@
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-miniapp</artifactId>
         </dependency>
+        <!-- tencentcloud-sdk -->
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java-tmt</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>

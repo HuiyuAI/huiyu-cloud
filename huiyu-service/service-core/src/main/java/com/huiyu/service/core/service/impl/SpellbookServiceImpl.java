@@ -26,6 +26,7 @@ public class SpellbookServiceImpl extends ServiceImpl<SpellbookMapper, Spellbook
     public List<SpellbookVo> listVo() {
         // TODO 缓存
         List<Spellbook> spellbookList = super.lambdaQuery()
+                .eq(Spellbook::getVisible, true)
                 .orderByAsc(Spellbook::getPriority, Spellbook::getId)
                 .list();
         Map<String, List<Spellbook>> groupByTitle = spellbookList.stream().collect(Collectors.groupingBy(Spellbook::getTitle, LinkedHashMap::new, Collectors.toList()));

@@ -50,6 +50,11 @@ public class Spellbook implements Serializable {
     @TableField("subtitle")
     private String subtitle;
     /**
+     * 可见性
+     */
+    @TableField("visible")
+    private Boolean visible;
+    /**
      * 排序
      */
     @TableField("priority")

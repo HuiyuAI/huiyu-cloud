@@ -9,6 +9,7 @@
         <result column="prompt" property="prompt"/>
         <result column="title" property="title"/>
         <result column="subtitle" property="subtitle"/>
+        <result column="visible" property="visible"/>
         <result column="priority" property="priority"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>

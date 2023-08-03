@@ -17,6 +17,8 @@
         <result column="type" property="type"/>
         <result column="prompt" property="prompt"/>
         <result column="negative_prompt" property="negativePrompt"/>
+        <result column="translated_prompt" property="translatedPrompt"/>
+        <result column="translated_negative_prompt" property="translatedNegativePrompt"/>
         <result column="quality" property="quality"/>
         <result column="ratio" property="ratio"/>
         <result column="width" property="width"/>

@@ -93,6 +93,16 @@ public class Pic implements Serializable {
     @TableField("negative_prompt")
     private String negativePrompt;
     /**
+     * 正向描述词英文翻译
+     */
+    @TableField("translated_prompt")
+    private String translatedPrompt;
+    /**
+     * 反向描述词英文翻译
+     */
+    @TableField("translated_negative_prompt")
+    private String translatedNegativePrompt;
+    /**
      * 质量
      */
     @TableField("quality")

@@ -97,14 +97,6 @@ public class SDCmd2DtoConverter {
         String defaultPrompt = model.getDefaultPrompt();
         String defaultNegativePrompt = model.getDefaultNegativePrompt();
 
-        // TODO 调用API翻译中文描述词（或根据词库映射）
-        String prompt = parentPic.getPrompt();
-        String negativePrompt = parentPic.getNegativePrompt();
-
-        // 过滤prompt中含有<>的内容，防止使用未定义的LoRA
-        prompt = prompt.replaceAll("<.*?>", "");
-        negativePrompt = negativePrompt.replaceAll("<.*?>", "");
-
         ImageQualityEnum imageQualityEnum = parentPic.getQuality();
         String hrUpscaler = model.getHrUpscaler();
 
@@ -118,8 +110,8 @@ public class SDCmd2DtoConverter {
         return RestoreFaceDto.builder()
                 .sdModelCheckpoint(modelCode)
                 .sdVae(vae)
-                .prompt(prompt)
-                .negativePrompt(negativePrompt)
+                .prompt(parentPic.getTranslatedPrompt())
+                .negativePrompt(parentPic.getTranslatedNegativePrompt())
                 .defaultPrompt(defaultPrompt)
                 .defaultNegativePrompt(defaultNegativePrompt)
                 .lora(lora)

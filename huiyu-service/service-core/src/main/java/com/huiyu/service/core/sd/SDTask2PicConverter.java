@@ -77,6 +77,9 @@ public class SDTask2PicConverter {
                 // Pic保存原始描述词
                 .prompt(txt2ImgCmd.getPrompt())
                 .negativePrompt(txt2ImgCmd.getNegativePrompt())
+                // 翻译后的描述词
+                .translatedPrompt(dto.getPrompt())
+                .translatedNegativePrompt(dto.getNegativePrompt())
                 .quality(imageQualityEnum)
                 .ratio(imageSizeEnum.getRatio())
                 .width(width)
@@ -171,6 +174,8 @@ public class SDTask2PicConverter {
                 .type(task.getType())
                 .prompt(parentPic.getPrompt())
                 .negativePrompt(parentPic.getNegativePrompt())
+                .translatedPrompt(parentPic.getTranslatedPrompt())
+                .translatedNegativePrompt(parentPic.getTranslatedNegativePrompt())
                 .quality(parentPic.getQuality())
                 .ratio(parentPic.getRatio())
                 .width(width)

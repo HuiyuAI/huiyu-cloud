@@ -5,6 +5,7 @@ import com.huiyu.service.core.entity.Spellbook;
 import com.huiyu.service.core.mapper.SpellbookMapper;
 import com.huiyu.service.core.model.vo.SpellbookVo;
 import com.huiyu.service.core.service.SpellbookService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SpellbookServiceImpl extends ServiceImpl<SpellbookMapper, Spellbook> implements SpellbookService {
+
+    private Map<String, String> spellbookPromptMap;
 
     @Override
     public List<SpellbookVo> listVo() {
@@ -49,5 +52,19 @@ public class SpellbookServiceImpl extends ServiceImpl<SpellbookMapper, Spellbook
         });
 
         return spellbookVoList;
+    }
+
+    @Override
+    public String getPromptByName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return null;
+        }
+        if (spellbookPromptMap == null) {
+            spellbookPromptMap = super.lambdaQuery()
+                    .select(Spellbook::getName, Spellbook::getPrompt)
+                    .list()
+                    .stream().collect(Collectors.toMap(Spellbook::getName, Spellbook::getPrompt, (k1, k2) -> k1));
+        }
+        return spellbookPromptMap.get(name);
     }
 }

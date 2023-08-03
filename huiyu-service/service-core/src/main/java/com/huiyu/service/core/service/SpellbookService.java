@@ -14,5 +14,18 @@ import java.util.List;
  */
 public interface SpellbookService extends IService<Spellbook> {
 
+    /**
+     * 获取所有可见的SpellbookVo
+     *
+     * @return SpellbookVo
+     */
     List<SpellbookVo> listVo();
+
+    /**
+     * 根据中文name匹配prompt
+     *
+     * @param name 中文name
+     * @return prompt
+     */
+    String getPromptByName(String name);
 }

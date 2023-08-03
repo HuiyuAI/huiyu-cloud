@@ -1,4 +1,4 @@
-package com.huiyu.service.core.utils;
+package com.huiyu.service.core.utils.translate;
 
 import com.huiyu.service.core.config.TencentCloudConfig;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
@@ -62,7 +62,7 @@ public class TencentCloudTranslateUtils {
      * @param sourceTextList 待翻译文本List
      * @return 翻译后的文本
      */
-    public static List<String> en2ZhTranslateList(List<String> sourceTextList) {
+    public static List<String> en2ZhTranslateBatch(List<String> sourceTextList) {
         List<CompletableFuture<String>> futureList = new ArrayList<>(sourceTextList.size());
         List<String> resultList = Collections.synchronizedList(Arrays.asList(new String[sourceTextList.size()]));
 
@@ -95,6 +95,7 @@ public class TencentCloudTranslateUtils {
      * @return 翻译后的文本
      */
     public static String en2ZhTranslate(String sourceText) {
+        sourceText = preProcessText(sourceText);
         int i = (int) (count.incrementAndGet() % clientList.size());
         return en2ZhTranslate(sourceText, clientList.get(i), projectIdList.get(i));
     }
@@ -107,7 +108,7 @@ public class TencentCloudTranslateUtils {
      * @param projectId  腾讯云翻译项目id
      * @return 翻译后的文本
      */
-    public static String en2ZhTranslate(String sourceText, TmtClient client, Long projectId) {
+    private static String en2ZhTranslate(String sourceText, TmtClient client, Long projectId) {
         try {
             TextTranslateRequest req = new TextTranslateRequest();
             req.setProjectId(projectId);
@@ -125,6 +126,10 @@ public class TencentCloudTranslateUtils {
             log.error("腾讯云翻译接口调用失败", e);
             return "";
         }
+    }
+
+    private static String preProcessText(String sourceText) {
+        return "";
     }
 
 }

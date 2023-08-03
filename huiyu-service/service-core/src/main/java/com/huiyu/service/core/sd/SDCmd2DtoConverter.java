@@ -13,7 +13,7 @@ import com.huiyu.service.core.sd.constant.ImageSizeEnum;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.RestoreFaceDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
-import com.huiyu.service.core.utils.TencentCloudTranslateUtils;
+import com.huiyu.service.core.utils.translate.TencentCloudTranslateUtils;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -44,7 +44,7 @@ public class SDCmd2DtoConverter {
 
         // TODO 根据词库映射
         List<String> promptList = Arrays.asList(prompt, negativePrompt);
-        List<String> translateResList = TencentCloudTranslateUtils.en2ZhTranslateList(promptList);
+        List<String> translateResList = TencentCloudTranslateUtils.en2ZhTranslateBatch(promptList);
         String translatedPrompt = translateResList.get(0).substring(0, Math.min(translateResList.get(0).length(), 2000));
         String translatedNegativePrompt = translateResList.get(1).substring(0, Math.min(translateResList.get(0).length(), 2000));
 

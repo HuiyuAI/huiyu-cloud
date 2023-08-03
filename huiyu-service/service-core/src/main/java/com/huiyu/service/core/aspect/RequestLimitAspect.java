@@ -2,6 +2,7 @@ package com.huiyu.service.core.aspect;
 
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.common.redis.constant.RedisKeyConstant;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.entity.RequestLimitLog;
@@ -47,7 +48,7 @@ public class RequestLimitAspect {
         String ip = IpAddressUtils.getIpAddress(request);
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
-        String redisKey = ip + ":" + method + ":" + requestURI;
+        String redisKey = RedisKeyConstant.REQUEST_LIMITER + ":" + ip + ":" + method + ":" + requestURI;
         Object redisResult = redisTemplate.opsForValue().get(redisKey);
         Integer count = JacksonUtils.toBean(redisResult, Integer.class);
         if (count == null) {

@@ -14,9 +14,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -60,13 +63,29 @@ public class TencentCloudTranslateUtils {
      * @return 翻译后的文本
      */
     public static List<String> en2ZhTranslateList(List<String> sourceTextList) {
-        for (String sourceText : sourceTextList) {
-            CompletableFuture<String> completableFuture1 =CompletableFuture
-                    .supplyAsync(() -> {
-                        int i = (int) (count.incrementAndGet() % clientList.size());
-                        return en2ZhTranslate(sourceText, clientList.get(i), projectIdList.get(i));
-                    }, translateExecutor.getThreadPoolExecutor());
+        List<CompletableFuture<String>> futureList = new ArrayList<>(sourceTextList.size());
+        List<String> resultList = Collections.synchronizedList(Arrays.asList(new String[sourceTextList.size()]));
+
+        for (int i = 0; i < sourceTextList.size(); i++) {
+            int finalIndex = i;
+            CompletableFuture<String> completableFuture = CompletableFuture
+                    .supplyAsync(() -> en2ZhTranslate(sourceTextList.get(finalIndex)), translateExecutor.getThreadPoolExecutor())
+                    .whenComplete((result, throwable) -> {
+                        if (result != null) {
+                            resultList.set(finalIndex, result);
+                        }
+                    });
+            futureList.add(completableFuture);
         }
+
+        try {
+            CompletableFuture[] futureArray = futureList.toArray(new CompletableFuture[0]);
+            CompletableFuture.allOf(futureArray).get(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            log.error("腾讯云翻译失败, CompletableFuture.allOf error", e);
+        }
+        List<String> resList = new ArrayList<>(resultList);
+        return resList;
     }
 
     /**
@@ -92,15 +111,15 @@ public class TencentCloudTranslateUtils {
         try {
             TextTranslateRequest req = new TextTranslateRequest();
             req.setProjectId(projectId);
-            req.setSource("en");
-            req.setTarget("zh");
+            req.setSource("zh");
+            req.setTarget("en");
             req.setSourceText(sourceText);
 
             TextTranslateResponse resp = client.TextTranslate(req);
             HashMap<String, String> respMap = new HashMap<>(8);
             resp.toMap(respMap, "");
 
-            log.info("腾讯云翻译接口调用成功, SourceText: {}, TargetText: {}, RequestId: {}, SecretId: {}", sourceText, respMap.get("TargetText"), respMap.get("RequestId"), client.getCredential().getSecretId());
+            log.info("腾讯云翻译接口调用成功, RequestId: {}, SecretId: {}, SourceText: {}, TargetText: {}, resp: {}", respMap.get("RequestId"), client.getCredential().getSecretId(), sourceText, respMap.get("TargetText"), TextTranslateResponse.toJsonString(resp));
             return respMap.get("TargetText");
         } catch (TencentCloudSDKException e) {
             log.error("腾讯云翻译接口调用失败", e);

@@ -46,7 +46,7 @@ public class SDCmd2DtoConverter {
         List<String> promptList = Arrays.asList(prompt, negativePrompt);
         List<String> translateResList = TencentCloudTranslateUtils.en2ZhTranslateBatch(promptList);
         String translatedPrompt = translateResList.get(0).substring(0, Math.min(translateResList.get(0).length(), 2000));
-        String translatedNegativePrompt = translateResList.get(1).substring(0, Math.min(translateResList.get(0).length(), 2000));
+        String translatedNegativePrompt = translateResList.get(1).substring(0, Math.min(translateResList.get(1).length(), 2000));
 
         Integer quality = cmd.getQuality();
         ImageQualityEnum imageQualityEnum = ImageQualityEnum.getEnumByCode(quality);

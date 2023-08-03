@@ -10,6 +10,7 @@ import com.tencentcloudapi.tmt.v20180321.TmtClient;
 import com.tencentcloudapi.tmt.v20180321.models.TextTranslateRequest;
 import com.tencentcloudapi.tmt.v20180321.models.TextTranslateResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -96,6 +97,9 @@ public class TencentCloudTranslateUtils {
      */
     public static String en2ZhTranslate(String sourceText) {
         sourceText = preProcessText(sourceText);
+        if (StringUtils.isEmpty(sourceText)) {
+            return "";
+        }
         int i = (int) (count.incrementAndGet() % clientList.size());
         return en2ZhTranslate(sourceText, clientList.get(i), projectIdList.get(i));
     }
@@ -129,7 +133,10 @@ public class TencentCloudTranslateUtils {
     }
 
     private static String preProcessText(String sourceText) {
-        return "";
+        if (StringUtils.isEmpty(sourceText)) {
+            return "";
+        }
+        return sourceText;
     }
 
 }

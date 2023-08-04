@@ -23,34 +23,36 @@ import java.util.stream.Collectors;
 @Service
 public class SpellbookServiceImpl extends ServiceImpl<SpellbookMapper, Spellbook> implements SpellbookService {
 
+    private List<SpellbookVo> spellbookVoList;
+
     private Map<String, String> spellbookPromptMap;
 
     @Override
     public List<SpellbookVo> listVo() {
-        // TODO 缓存
-        List<Spellbook> spellbookList = super.lambdaQuery()
-                .eq(Spellbook::getVisible, true)
-                .orderByAsc(Spellbook::getPriority, Spellbook::getId)
-                .list();
-        Map<String, List<Spellbook>> groupByTitle = spellbookList.stream().collect(Collectors.groupingBy(Spellbook::getTitle, LinkedHashMap::new, Collectors.toList()));
+        if (spellbookVoList == null) {
+            List<Spellbook> spellbookList = super.lambdaQuery()
+                    .eq(Spellbook::getVisible, true)
+                    .orderByAsc(Spellbook::getPriority, Spellbook::getId)
+                    .list();
+            Map<String, List<Spellbook>> groupByTitle = spellbookList.stream().collect(Collectors.groupingBy(Spellbook::getTitle, LinkedHashMap::new, Collectors.toList()));
 
-        List<SpellbookVo> spellbookVoList = new ArrayList<>(groupByTitle.size());
-        groupByTitle.forEach((k, v) -> {
-            List<SpellbookVo.SubTab> subTabs = new ArrayList<>(v.size());
-            v.forEach(spellbook -> {
-                SpellbookVo.SubTab subTab = SpellbookVo.SubTab.builder()
-                        .name(spellbook.getName())
-                        .prompt(spellbook.getPrompt())
+            spellbookVoList = new ArrayList<>(groupByTitle.size());
+            groupByTitle.forEach((k, v) -> {
+                List<SpellbookVo.SubTab> subTabs = new ArrayList<>(v.size());
+                v.forEach(spellbook -> {
+                    SpellbookVo.SubTab subTab = SpellbookVo.SubTab.builder()
+                            .name(spellbook.getName())
+                            .prompt(spellbook.getPrompt())
+                            .build();
+                    subTabs.add(subTab);
+                });
+                SpellbookVo spellbookVo = SpellbookVo.builder()
+                        .title(k)
+                        .subTabs(subTabs)
                         .build();
-                subTabs.add(subTab);
+                spellbookVoList.add(spellbookVo);
             });
-            SpellbookVo spellbookVo = SpellbookVo.builder()
-                    .title(k)
-                    .subTabs(subTabs)
-                    .build();
-            spellbookVoList.add(spellbookVo);
-        });
-
+        }
         return spellbookVoList;
     }
 

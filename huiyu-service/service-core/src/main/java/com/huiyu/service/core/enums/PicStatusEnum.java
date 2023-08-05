@@ -19,6 +19,8 @@ public enum PicStatusEnum implements BaseEnum<Integer> {
     GENERATED(1, "已生成"),
 
     DISCARD(2, "废弃"),
+
+    RISKY(3, "违规"),
     ;
 
     private Integer dictKey;

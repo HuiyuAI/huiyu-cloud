@@ -17,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public enum ImageQualityEnum implements BaseEnum<Integer> {
 
-    HD(1, "高清", BigDecimal.valueOf(2), false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
+    HD(1, "高清", BigDecimal.ONE, false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),
     UHD(2, "超清", BigDecimal.ONE, true, new BigDecimal("0.6"), BigDecimal.valueOf(2), false, 0),
     UHD4K(3, "超高清4K", BigDecimal.ONE, true, new BigDecimal("0.6"), BigDecimal.valueOf(2), true, 2),
     UNKNOWN(100, "未知", BigDecimal.ONE, false, BigDecimal.ZERO, BigDecimal.ZERO, false, 0),

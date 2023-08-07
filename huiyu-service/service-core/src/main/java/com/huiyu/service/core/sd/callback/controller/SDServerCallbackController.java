@@ -49,8 +49,7 @@ public class SDServerCallbackController {
             return R.create(ResultCode.FORBIDDEN);
         }
 
-        String resImageUuid = cmd.getResImageUuid();
-        String imgUrl = HuiyuConstant.cdnUrlGen + resImageUuid + HuiyuConstant.imageSuffix;
+        String imgUrl = HuiyuConstant.cdnUrlGen + cmd.getResImageUrlUuid() + HuiyuConstant.imageSuffix;
         log.info("图片上传成功 url: {}", imgUrl);
 
         PicStatusEnum picStatus = PicStatusEnum.GENERATED;
@@ -64,7 +63,8 @@ public class SDServerCallbackController {
 
         // 更新图片状态
         Pic pic = Pic.builder()
-                .uuid(resImageUuid)
+                .uuid(cmd.getResImageUuid())
+                .path(imgUrl)
                 .status(picStatus)
                 .updateTime(LocalDateTime.now())
                 .build();

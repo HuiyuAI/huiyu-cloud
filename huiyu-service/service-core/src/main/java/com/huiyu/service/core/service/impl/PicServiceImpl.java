@@ -120,7 +120,9 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
 
     @Override
     public boolean updateByUuid(Pic pic) {
-        return picMapper.updateByUuid(pic) > 0;
+        return super.lambdaUpdate()
+                .eq(Pic::getUuid, pic.getUuid())
+                .update(pic);
     }
 
     @Override

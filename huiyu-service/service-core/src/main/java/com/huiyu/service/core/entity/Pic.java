@@ -38,6 +38,11 @@ public class Pic implements Serializable {
     @TableField("uuid")
     private String uuid;
     /**
+     * 图片地址uuid
+     */
+    @TableField("url_uuid")
+    private String urlUuid;
+    /**
      * 请求uuid
      */
     @TableField("request_uuid")

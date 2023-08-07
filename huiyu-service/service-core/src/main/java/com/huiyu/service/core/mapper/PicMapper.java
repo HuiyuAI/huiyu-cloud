@@ -16,8 +16,6 @@ public interface PicMapper extends BaseMapper<Pic> {
 
     Long getParentPicIdById(Long id);
 
-    int updateByUuid(Pic pic);
-
     int deleteByUuid(String uuid);
 
     Pic getByTaskId(Long taskId);

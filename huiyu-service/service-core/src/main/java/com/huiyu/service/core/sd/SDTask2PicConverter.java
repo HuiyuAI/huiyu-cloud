@@ -2,7 +2,6 @@ package com.huiyu.service.core.sd;
 
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.RequestContext;
-import com.huiyu.service.core.constant.HuiyuConstant;
 import com.huiyu.service.core.enums.TaskTypeEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.Task;
@@ -69,10 +68,10 @@ public class SDTask2PicConverter {
         return Pic.builder()
                 .id(IdUtils.nextSnowflakeId())
                 .uuid(dto.getResImageUuid())
+                .urlUuid(dto.getResImageUrlUuid())
                 .userId(task.getUserId())
                 .taskId(task.getId())
                 .modelId(txt2ImgCmd.getModelId())
-                .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)
                 .type(task.getType())
                 // Pic保存原始描述词
                 .prompt(txt2ImgCmd.getPrompt())
@@ -166,11 +165,11 @@ public class SDTask2PicConverter {
         return Pic.builder()
                 .id(IdUtils.nextSnowflakeId())
                 .uuid(dto.getResImageUuid())
+                .urlUuid(dto.getResImageUrlUuid())
                 .userId(task.getUserId())
                 .taskId(task.getId())
                 .modelId(parentPic.getModelId())
                 .parentPicId(parentPic.getId())
-                .path(HuiyuConstant.cdnUrlGen + dto.getResImageUuid() + HuiyuConstant.imageSuffix)
                 .type(task.getType())
                 .prompt(parentPic.getPrompt())
                 .negativePrompt(parentPic.getNegativePrompt())

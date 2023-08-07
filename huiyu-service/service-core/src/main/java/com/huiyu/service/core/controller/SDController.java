@@ -1,5 +1,6 @@
 package com.huiyu.service.core.controller;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.IdUtil;
 import com.huiyu.common.core.result.R;
@@ -18,6 +19,7 @@ import com.huiyu.service.core.service.SpellbookService;
 import com.huiyu.service.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +51,9 @@ public class SDController {
     @Resource
     private SpellbookService spellbookService;
 
+    @Resource
+    private WxMaService wxMaService;
+
     /**
      * 文生图
      *
@@ -78,7 +83,15 @@ public class SDController {
 
 
         // 3. 描述词违禁词检测
-//        wxMaSecCheckService.checkMessage(cmd.getPrompt());
+        // 描述词审核
+        try {
+            String auditMsg = cmd.getPrompt() + "。" + cmd.getNegativePrompt();
+            boolean res = wxMaService.getSecCheckService().checkMessage(auditMsg);
+            log.info("调用微信文本审核接口, auditMsg: {}, res: {}", auditMsg, res);
+        } catch (WxErrorException e) {
+            log.error("调用微信文本审核接口, auditMsg: {}, 错误信息: {}", e.getMessage());
+            return R.error("描述词包含违规内容，多次违规可能导致封号处罚！");
+        }
 
 
         // 4. 检验用户图片库存是否满(库存是否需要根据用户级别增加)

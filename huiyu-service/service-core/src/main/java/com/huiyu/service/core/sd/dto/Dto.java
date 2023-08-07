@@ -16,4 +16,9 @@ public class Dto implements Serializable {
      */
     @JsonProperty("res_image_uuid")
     private String resImageUuid;
+    /**
+     * 结果图地址uuid
+     */
+    @JsonProperty("res_image_url_uuid")
+    private String resImageUrlUuid;
 }

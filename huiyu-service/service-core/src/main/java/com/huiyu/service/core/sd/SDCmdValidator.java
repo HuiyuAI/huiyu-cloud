@@ -1,6 +1,5 @@
 package com.huiyu.service.core.sd;
 
-import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.hutool.core.lang.Pair;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.config.RequestContext;
@@ -13,7 +12,6 @@ import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.service.ModelService;
 import com.huiyu.service.core.service.PicService;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,8 +30,6 @@ public class SDCmdValidator {
 
     private static PicService picService;
 
-    private static WxMaService wxMaService;
-
     @Autowired
     public void setModelService(ModelService modelService) {
         SDCmdValidator.modelService = modelService;
@@ -42,11 +38,6 @@ public class SDCmdValidator {
     @Autowired
     public void setPicService(PicService picService) {
         SDCmdValidator.picService = picService;
-    }
-
-    @Autowired
-    public void setWxMaService(WxMaService wxMaService) {
-        SDCmdValidator.wxMaService = wxMaService;
     }
 
     public static Pair<Boolean, String> validate(Txt2ImgCmd cmd) {
@@ -77,16 +68,6 @@ public class SDCmdValidator {
 
         if (cmd.getSeed() == null) {
             cmd.setSeed(-1L);
-        }
-
-        // 描述词审核
-        try {
-            String auditMsg = cmd.getPrompt() + "。" + cmd.getNegativePrompt();
-            boolean res = wxMaService.getSecCheckService().checkMessage(auditMsg);
-            log.info("调用微信文本审核接口, auditMsg: {}, res: {}", auditMsg, res);
-        } catch (WxErrorException e) {
-            log.error("调用微信文本审核接口, auditMsg: {}, 错误信息: {}", e.getMessage());
-            return Pair.of(false, "描述词包含违规内容，多次违规可能导致封号处罚！");
         }
 
         RequestContext.MODEL_CONTEXT.set(model);

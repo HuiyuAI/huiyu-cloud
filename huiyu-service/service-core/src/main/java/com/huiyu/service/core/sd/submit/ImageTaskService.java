@@ -58,6 +58,7 @@ public class ImageTaskService {
         List<Task> taskList = Lists.newArrayList();
         if (task.getNum() == 1) {
             dto.setResImageUuid(IdUtil.fastUUID());
+            dto.setResImageUrlUuid(IdUtil.fastUUID());
             task.setBody(JacksonUtils.toJsonStr(dto));
             taskList.add(task);
             return taskList;
@@ -86,6 +87,7 @@ public class ImageTaskService {
                     break;
             }
             dto.setResImageUuid(IdUtil.fastUUID());
+            dto.setResImageUrlUuid(IdUtil.fastUUID());
             copyTask.setBody(JacksonUtils.toJsonStr(dto));
 
             taskList.add(copyTask);

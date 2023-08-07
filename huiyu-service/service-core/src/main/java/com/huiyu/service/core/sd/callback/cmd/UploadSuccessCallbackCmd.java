@@ -26,6 +26,12 @@ public class UploadSuccessCallbackCmd {
     @JsonProperty("res_image_uuid")
     private String resImageUuid;
     /**
+     * 图片地址uuid
+     */
+    @NotBlank(message = "verification failed")
+    @JsonProperty("res_image_url_uuid")
+    private String resImageUrlUuid;
+    /**
      * 通信验证token
      */
     @NotBlank(message = "verification failed")

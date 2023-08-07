@@ -6,6 +6,7 @@
     <resultMap id="picMap" type="com.huiyu.service.core.entity.Pic">
         <id column="id" property="id"/>
         <result column="uuid" property="uuid"/>
+        <result column="url_uuid" property="urlUuid"/>
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
         <result column="task_id" property="taskId"/>
@@ -81,31 +82,6 @@
         and is_delete = 0
         group by user_id
     </select>
-
-    <update id="updateByUuid">
-        update pic
-        <set>
-            <if test="status != null">
-                status = #{status},
-            </if>
-            <if test="seed != null">
-                seed = #{seed},
-            </if>
-            <if test="subseed != null">
-                subseed = #{subseed},
-            </if>
-            <if test="alwaysonScripts != null and alwaysonScripts != ''">
-                alwayson_scripts = #{alwaysonScripts},
-            </if>
-            <if test="infotexts != null and infotexts != ''">
-                infotexts = #{infotexts},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime},
-            </if>
-        </set>
-        where uuid = #{uuid}
-    </update>
 
     <update id="deleteByUuid">
         update pic

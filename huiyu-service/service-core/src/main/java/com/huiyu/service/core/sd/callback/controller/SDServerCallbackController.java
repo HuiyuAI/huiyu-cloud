@@ -54,7 +54,9 @@ public class SDServerCallbackController {
 
         PicStatusEnum picStatus = PicStatusEnum.GENERATED;
         try {
-            boolean res = wxMaService.getSecCheckService().checkImage(imgUrl);
+            // 减小图片尺寸
+            String checkUrl = imgUrl + "!/fw/720";
+            boolean res = wxMaService.getSecCheckService().checkImage(checkUrl);
             log.info("图片上传成功, 调用微信图片审核接口, imgUrl: {}, res: {}", res);
         } catch (WxErrorException e) {
             log.error("图片上传成功, 调用微信图片审核接口, imgUrl: {}, 错误信息: {}", e.getMessage());

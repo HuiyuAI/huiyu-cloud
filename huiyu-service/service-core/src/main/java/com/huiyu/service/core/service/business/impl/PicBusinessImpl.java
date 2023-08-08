@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.convert.PicConvert;
 import com.huiyu.service.core.entity.Model;
+import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
@@ -37,6 +38,11 @@ public class PicBusinessImpl implements PicBusiness {
         Assert.notNull(dto.getUserId(), "异常错误");
         IPage<Pic> picPage = picService.queryPage(page, dto);
         Page<PicPageVo> picVoPage = PicConvert.INSTANCE.toVOPage(picPage);
+
+        // 违规的图片不返回图片url
+        picVoPage.getRecords().stream()
+                .filter(picPageVo -> picPageVo.getStatus() == PicStatusEnum.RISKY)
+                .forEach(picPageVo -> picPageVo.setPath(null));
         return picVoPage;
     }
 
@@ -45,6 +51,11 @@ public class PicBusinessImpl implements PicBusiness {
         Pic pic = picService.getByUuidAndUserId(uuid, userId);
         Assert.notNull(pic, "图片不存在");
         PicVo picVo = PicConvert.INSTANCE.toVO(pic);
+
+        // 违规的图片不返回图片url
+        if (pic.getStatus() == PicStatusEnum.RISKY) {
+            picVo.setPath(null);
+        }
 
         Model model = modelService.getById(pic.getModelId(), true);
         if (model == null) {

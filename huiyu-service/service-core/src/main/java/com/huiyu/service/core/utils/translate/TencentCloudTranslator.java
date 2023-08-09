@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Slf4j
 @Component
-public class TencentCloudTranslateUtils {
+public class TencentCloudTranslator {
     private static List<TmtClient> clientList;
 
     private static List<Long> projectIdList;
@@ -40,12 +40,12 @@ public class TencentCloudTranslateUtils {
 
     private static ThreadPoolExecutorDecorator translateExecutor;
 
-    public TencentCloudTranslateUtils(TencentCloudConfig tencentCloudConfig, @Qualifier("translateExecutor") ThreadPoolExecutorDecorator translateExecutor) {
-        TencentCloudTranslateUtils.clientList = new ArrayList<>();
+    public TencentCloudTranslator(TencentCloudConfig tencentCloudConfig, @Qualifier("translateExecutor") ThreadPoolExecutorDecorator translateExecutor) {
+        TencentCloudTranslator.clientList = new ArrayList<>();
         List<String> secretIdList = tencentCloudConfig.getSecretId();
         List<String> secretKeyList = tencentCloudConfig.getSecretKey();
-        TencentCloudTranslateUtils.projectIdList = tencentCloudConfig.getProjectId();
-        TencentCloudTranslateUtils.translateExecutor = translateExecutor;
+        TencentCloudTranslator.projectIdList = tencentCloudConfig.getProjectId();
+        TencentCloudTranslator.translateExecutor = translateExecutor;
 
         for (int i = 0; i < secretIdList.size(); i++) {
             Credential cred = new Credential(secretIdList.get(i), secretKeyList.get(i));
@@ -53,7 +53,7 @@ public class TencentCloudTranslateUtils {
             httpProfile.setEndpoint("tmt.tencentcloudapi.com");
             ClientProfile clientProfile = new ClientProfile();
             clientProfile.setHttpProfile(httpProfile);
-            TencentCloudTranslateUtils.clientList.add(new TmtClient(cred, "ap-shanghai", clientProfile));
+            TencentCloudTranslator.clientList.add(new TmtClient(cred, "ap-shanghai", clientProfile));
         }
     }
 
@@ -96,7 +96,7 @@ public class TencentCloudTranslateUtils {
      * @return 翻译后的文本
      */
     public static String en2ZhTranslate(String sourceText) {
-        sourceText = preProcessText(sourceText);
+        sourceText = CustomTranslator.preProcessText(sourceText);
         if (StringUtils.isEmpty(sourceText)) {
             return "";
         }
@@ -132,11 +132,5 @@ public class TencentCloudTranslateUtils {
         }
     }
 
-    private static String preProcessText(String sourceText) {
-        if (StringUtils.isEmpty(sourceText)) {
-            return "";
-        }
-        return sourceText;
-    }
 
 }

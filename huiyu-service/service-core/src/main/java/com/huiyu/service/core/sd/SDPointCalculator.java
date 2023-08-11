@@ -10,7 +10,7 @@ import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
  * @date: 2023/6/19 13:11
  * @Description: 计算积分
  **/
-public class SDCmdCountPoint {
+public class SDPointCalculator {
     public static int calcPointConsume(Cmd cmd) {
         if (cmd instanceof Txt2ImgCmd) {
             return calcTxt2ImgPointConsume((Txt2ImgCmd) cmd);

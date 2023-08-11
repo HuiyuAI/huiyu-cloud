@@ -12,7 +12,7 @@ import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.model.vo.SpellbookVo;
-import com.huiyu.service.core.sd.SDCmdCountPoint;
+import com.huiyu.service.core.sd.SDPointCalculator;
 import com.huiyu.service.core.sd.SDCmdValidator;
 import com.huiyu.service.core.sd.generate.AbstractImageGenerate;
 import com.huiyu.service.core.service.SpellbookService;
@@ -73,7 +73,7 @@ public class SDController {
 
         // 2. 校验用户积分
         Long userId = JwtUtils.getUserId();
-        int calcPoint = SDCmdCountPoint.calcPointConsume(cmd);
+        int calcPoint = SDPointCalculator.calcPointConsume(cmd);
         int point = userService.getPointByUserId(userId);
         if (point < calcPoint) {
             return R.error("积分不足");
@@ -128,7 +128,7 @@ public class SDController {
 
         // 2. 校验用户积分
         Long userId = JwtUtils.getUserId();
-        int calcPoint = SDCmdCountPoint.calcPointConsume(cmd);
+        int calcPoint = SDPointCalculator.calcPointConsume(cmd);
         int point = userService.getPointByUserId(userId);
         if (point < calcPoint) {
             return R.error("积分不足");

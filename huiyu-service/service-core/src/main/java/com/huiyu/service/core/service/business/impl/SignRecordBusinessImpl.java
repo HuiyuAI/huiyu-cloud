@@ -6,8 +6,8 @@ import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.SignRecordStatusEnum;
 import com.huiyu.service.core.entity.SignRecord;
 import com.huiyu.service.core.service.SignRecordService;
-import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.service.business.SignRecordBusiness;
+import com.huiyu.service.core.service.business.UserBusiness;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,7 +20,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
     private SignRecordService signRecordService;
 
     @Resource
-    private PointBusiness pointBusiness;
+    private UserBusiness userBusiness;
 
     @Resource
     private HotFileConfig hotFileConfig;
@@ -32,7 +32,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
             return false;
         }
         // 签到积分奖励
-        return pointBusiness.updatePoint(userId, hotFileConfig.getSignInPoint(), PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null);
+        return userBusiness.updatePoint(userId, hotFileConfig.getSignInPoint(), PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null);
     }
 
     private boolean isSignIn(Long userId) {

@@ -5,12 +5,8 @@ import com.huiyu.service.core.entity.PointRecord;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Mapper
 @Repository
 public interface PointRecordMapper extends BaseMapper<PointRecord> {
-
-    List<PointRecord> getByUserId(Long userId);
 
 }

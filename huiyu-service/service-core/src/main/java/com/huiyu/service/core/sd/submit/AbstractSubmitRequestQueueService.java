@@ -9,8 +9,8 @@ import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
-import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.sd.submit.chooseStrategy.ExecChooseStrategy;
+import com.huiyu.service.core.service.business.UserBusiness;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,7 +42,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     private List<ExecChooseStrategy<T>> execChooseStrategyList;
 
     @Resource
-    private PointBusiness pointBusiness;
+    private UserBusiness userBusiness;
 
     @Resource
     private HotFileConfig hotFileConfig;
@@ -78,6 +78,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     public abstract Pair<Task, Dto> convertTask(T t);
 
     private boolean deductUserPoint(Task task) {
-        return pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.GENERATE_PIC, PointOperationTypeEnum.REDUCE, task.getRequestUuid());
+        return userBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.GENERATE_PIC, PointOperationTypeEnum.REDUCE, task.getRequestUuid());
     }
 }

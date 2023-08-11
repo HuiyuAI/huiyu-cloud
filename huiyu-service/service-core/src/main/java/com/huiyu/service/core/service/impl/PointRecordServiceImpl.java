@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.PointRecord;
 import com.huiyu.service.core.mapper.PointRecordMapper;
+import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.query.PointRecordQuery;
 import com.huiyu.service.core.service.PointRecordService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PointRecordServiceImpl extends ServiceImpl<PointRecordMapper, PointRecord> implements PointRecordService {
@@ -29,13 +28,17 @@ public class PointRecordServiceImpl extends ServiceImpl<PointRecordMapper, Point
     }
 
     @Override
-    public boolean insertRecord(PointRecord pointRecord) {
-        return super.save(pointRecord);
+    public IPage<PointRecord> pagePointRecord(IPage<PointRecord> page, PointRecordPageDto dto) {
+        return super.lambdaQuery()
+                .select(PointRecord::getNum, PointRecord::getOperationType, PointRecord::getOperationSource, PointRecord::getCreateTime)
+                .eq(PointRecord::getUserId, dto.getUserId())
+                .orderByDesc(PointRecord::getCreateTime)
+                .page(page);
     }
 
     @Override
-    public List<PointRecord> getRecordByUserId(Long userId) {
-        return super.baseMapper.getByUserId(userId);
+    public boolean insertRecord(PointRecord pointRecord) {
+        return super.save(pointRecord);
     }
 
 }

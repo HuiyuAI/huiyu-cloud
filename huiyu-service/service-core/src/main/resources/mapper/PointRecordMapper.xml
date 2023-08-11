@@ -15,11 +15,4 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
-    <select id="getByUserId" resultMap="baseResult">
-        select *
-        from point_record
-        where is_delete = 0
-          and user_id = #{userId}
-    </select>
-
 </mapper>

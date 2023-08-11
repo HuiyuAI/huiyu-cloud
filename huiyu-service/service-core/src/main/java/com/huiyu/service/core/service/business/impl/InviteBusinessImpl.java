@@ -1,14 +1,13 @@
 package com.huiyu.service.core.service.business.impl;
 
-
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.InviteStatusEnum;
 import com.huiyu.service.core.entity.Invite;
 import com.huiyu.service.core.service.InviteService;
-import com.huiyu.service.core.service.business.PointBusiness;
 import com.huiyu.service.core.service.business.InviteBusiness;
+import com.huiyu.service.core.service.business.UserBusiness;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class InviteBusinessImpl implements InviteBusiness {
     private InviteService inviteService;
 
     @Resource
-    private PointBusiness pointBusiness;
+    private UserBusiness userBusiness;
 
     @Resource
     private HotFileConfig hotFileConfig;
@@ -62,7 +61,7 @@ public class InviteBusinessImpl implements InviteBusiness {
         // 2. 更新所有邀请人的积分
         LocalDateTime now = LocalDateTime.now();
         invites.forEach(v -> {
-            pointBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInvitePoint(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null);
+            userBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInvitePoint(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null);
             v.setUpdateTime(now);
             v.setStatus(InviteStatusEnum.SUCCESS);
         });

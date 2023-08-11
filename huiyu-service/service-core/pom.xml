@@ -96,6 +96,12 @@
             <groupId>com.tencentcloudapi</groupId>
             <artifactId>tencentcloud-sdk-java-tmt</artifactId>
         </dependency>
+        <!-- mirai -->
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-core-jvm</artifactId>
+            <version>${mirai.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>

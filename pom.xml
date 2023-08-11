@@ -37,6 +37,7 @@
         <hutool-all.version>5.7.16</hutool-all.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <tencentcloud-sdk.version>3.1.817</tencentcloud-sdk.version>
+        <mirai.version>2.15.0</mirai.version>
     </properties>
 
     <dependencyManagement>
@@ -129,6 +130,12 @@
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java-tmt</artifactId>
                 <version>${tencentcloud-sdk.version}</version>
+            </dependency>
+            <!-- mirai -->
+            <dependency>
+                <groupId>net.mamoe</groupId>
+                <artifactId>mirai-core-jvm</artifactId>
+                <version>${mirai.version}</version>
             </dependency>
 
 

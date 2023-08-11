@@ -45,6 +45,9 @@ public class UserController {
         return R.ok(userVo);
     }
 
+    /**
+     * 分页查询当前登录用户积分记录
+     */
     @RequestLogger
     @RequestLimiter(seconds = 60, maxCount = 60)
     @GetMapping("/pagePointRecord")

@@ -9,10 +9,11 @@ import lombok.ToString;
 @AllArgsConstructor
 public enum PointOperationSourceEnum implements BaseEnum<String> {
     REGISTER("register", "注册"),
-    GENERATE_PIC("generate_pic", "生成图片"),
-    SIGN_IN("sign_in", "签到"),
+    GENERATE_PIC("generatePic", "生成图片"),
+    SIGN_IN("signIn", "签到"),
     BACK("back", "回退"),
-    INVITE_USER("invite_user", "邀请用户"),
+    INVITE_USER("inviteUser", "邀请用户"),
+    ADMIN_UPDATE("adminUpdate", "管理员修改"),
     ;
 
     private String dictKey;

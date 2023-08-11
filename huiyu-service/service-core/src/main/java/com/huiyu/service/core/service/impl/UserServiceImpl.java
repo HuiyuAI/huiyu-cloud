@@ -3,9 +3,11 @@ package com.huiyu.service.core.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.convert.UserConvert;
 import com.huiyu.service.core.entity.UserIdSender;
+import com.huiyu.service.core.exception.BizException;
 import com.huiyu.service.core.mapper.UserIdSenderMapper;
 import com.huiyu.service.core.mapper.auth.UserMapper;
 import com.huiyu.service.core.model.dto.UserPicCountDto;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -131,9 +134,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StrUtil.isNotBlank(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return super.lambdaUpdate()
+
+        // 上次更新时间
+        LocalDateTime lastUpdateTime = user.getUpdateTime();
+
+        user.setUpdateTime(LocalDateTime.now());
+        boolean isUpdateUserOK = super.lambdaUpdate()
                 .eq(User::getUserId, user.getUserId())
+                // 判断更新时间是否相同，防止并发更新
+                .eq(User::getUpdateTime, lastUpdateTime)
                 .update(user);
+        if (!isUpdateUserOK) {
+            log.error("编辑用户信息失败，user: {}", JacksonUtils.toJsonStr(user));
+            throw new BizException("编辑用户信息失败！用户信息已被其它操作修改，请刷新后重试！");
+        }
+        return true;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.model.query.UserQuery;
 import com.huiyu.service.core.model.vo.UserAdminVo;
 import com.huiyu.service.core.service.UserService;
+import com.huiyu.service.core.service.business.UserBusiness;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/user")
 public class UserAdminController {
     private final UserService userService;
+
+    private final UserBusiness userBusiness;
 
     @GetMapping("/{pageNum}/{pageSize}")
     public R<IPage<UserAdminVo>> adminPageQuery(UserQuery query, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
@@ -87,7 +90,7 @@ public class UserAdminController {
      */
     @PostMapping("/updateUser")
     public <T> R<T> update(@RequestBody User user) {
-        userService.update(user);
+        userBusiness.updateUser(user);
         return R.ok();
     }
 

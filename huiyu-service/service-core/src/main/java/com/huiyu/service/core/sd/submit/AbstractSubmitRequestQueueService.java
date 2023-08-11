@@ -78,6 +78,6 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     public abstract Pair<Task, Dto> convertTask(T t);
 
     private boolean deductUserPoint(Task task) {
-        return pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.GENERATE_PIC, PointOperationTypeEnum.REDUCE, task);
+        return pointBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.GENERATE_PIC, PointOperationTypeEnum.REDUCE, task.getRequestUuid());
     }
 }

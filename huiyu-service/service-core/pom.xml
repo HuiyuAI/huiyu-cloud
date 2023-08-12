@@ -100,7 +100,10 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-jvm</artifactId>
-            <version>${mirai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.mamoe</groupId>
+            <artifactId>mirai-logging-slf4j-logback</artifactId>
         </dependency>
 
         <dependency>

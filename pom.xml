@@ -138,6 +138,11 @@
                 <version>${mirai.version}</version>
             </dependency>
             <dependency>
+                <groupId>net.mamoe</groupId>
+                <artifactId>mirai-logging-slf4j-logback</artifactId>
+                <version>${mirai.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jetbrains.kotlinx</groupId>
                 <artifactId>kotlinx-coroutines-core-jvm</artifactId>
                 <version>1.6.4</version>

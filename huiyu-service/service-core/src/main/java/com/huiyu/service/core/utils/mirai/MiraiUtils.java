@@ -3,6 +3,7 @@ package com.huiyu.service.core.utils.mirai;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.exception.BizException;
 import com.huiyu.service.core.model.vo.MiraiStatusVo;
+import com.huiyu.service.core.service.PicService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
@@ -12,12 +13,17 @@ import net.mamoe.mirai.auth.QRCodeLoginListener;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.message.data.QuoteReply;
+import net.mamoe.mirai.message.data.SingleMessage;
 import net.mamoe.mirai.utils.BotConfiguration;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +41,10 @@ import java.util.Base64;
  * @date 2023-08-11
  */
 @Slf4j
+@Component
 public class MiraiUtils {
+
+    private static PicService picService;
 
     private static volatile Bot bot;
 
@@ -50,6 +59,10 @@ public class MiraiUtils {
 
     @Getter
     private static volatile Long groupId;
+
+    public MiraiUtils(PicService picService) {
+        MiraiUtils.picService = picService;
+    }
 
     public static synchronized void login(long qq, long groupId) {
         if (MiraiUtils.qq != null) {
@@ -170,22 +183,65 @@ public class MiraiUtils {
     private static void registerGroupMsgListener(long groupId) {
         bot.getEventChannel().subscribeAlways(GroupMessageEvent.class, (event) -> {
             if (event.getGroup().getId() == groupId) {
-                event.getSubject().sendMessage(new MessageChainBuilder()
-                        .append(new QuoteReply(event.getMessage()))
-                        .append("Hi, you just said: '")
-                        .append(event.getMessage())
-                        .append("'")
-                        .build()
-                );
+                MessageChain messageChain = event.getMessage();
+                log.info("[机器人收到消息]:{}", messageChain.contentToString());
+                // 判断是不是at机器人
+                At at = (At) messageChain.stream().filter(m -> m instanceof At).findAny().orElse(null);
+                boolean pending = at != null && at.getTarget() == bot.getId();
+                if (!pending) {
+                    return;
+                }
+
+                // 找到引用的消息
+                QuoteReply quote = messageChain.get(QuoteReply.Key);
+                if (quote == null) {
+                    return;
+                }
+                // 获取引用的原始消息
+                MessageChain quoteChain = quote.getSource().getOriginalMessage();
+
+                // 获取原始消息中的图片ID
+                SingleMessage singleMessage = quoteChain.stream().findFirst().orElse(null);
+                if (singleMessage == null) {
+                    return;
+                }
+                String msgContent = singleMessage.contentToString();
+                String picIdStr = StringUtils.substringBetween(msgContent, "图片ID: ", "\n");
+                if (StringUtils.isEmpty(picIdStr)) {
+                    return;
+                }
+                Long picId = Long.valueOf(picIdStr);
+
+                Pic pic = picService.getById(picId);
+                if (pic == null) {
+                    return;
+                }
+
+                PlainText plainText = (PlainText) messageChain.stream().filter(m -> m instanceof PlainText).findFirst().orElse(null);
+                if (plainText == null) {
+                    return;
+                }
+
+                if ("pass".equals(plainText.contentToString().trim())) {
+                    event.getSubject().sendMessage(new MessageChainBuilder()
+                            .append(new QuoteReply(event.getMessage()))
+                            .append(String.format("图片ID: %s已通过审核", picId))
+                            .build()
+                    );
+                }
+                if ("ban".equals(plainText.contentToString().trim())) {
+                    event.getSubject().sendMessage(new MessageChainBuilder()
+                            .append(new QuoteReply(event.getMessage()))
+                            .append(String.format("图片ID: %s已拒绝发布", picId))
+                            .build()
+                    );
+                }
             }
         });
     }
 
     private static boolean checkLogin() {
-        if (bot == null || group == null) {
-            return false;
-        }
-        return true;
+        return bot != null && group != null;
     }
 
     private static Image getImageByUrl(String imgUrl) {

@@ -44,14 +44,6 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
-    <select id="getByUserId" resultMap="picMap">
-        select *
-        from pic
-        where is_delete = 0
-          and status = 1
-          and user_id = #{userId}
-    </select>
-
     <select id="getParentPicIdById" resultType="java.lang.Long">
         select parent_pic_id
         from pic

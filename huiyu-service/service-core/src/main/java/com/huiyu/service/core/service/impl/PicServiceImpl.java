@@ -57,6 +57,11 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     }
 
     @Override
+    public Pic getById(Long id) {
+        return super.getById(id);
+    }
+
+    @Override
     public Pic getByUuidOnly(String uuid) {
         return super.lambdaQuery()
                 .eq(Pic::getUuid, uuid)
@@ -93,11 +98,6 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
             return false;
         }
         return picExtService.deleteByPicId(id);
-    }
-
-    @Override
-    public List<Pic> getPicsByUserId(Long userId) {
-        return picMapper.getByUserId(userId);
     }
 
     @Override

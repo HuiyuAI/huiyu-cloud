@@ -31,6 +31,14 @@ public interface PicService extends IService<Pic> {
     IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto);
 
     /**
+     * 根据主键id查询图片详情
+     *
+     * @param id 主键id
+     * @return 图片详情
+     */
+    Pic getById(Long id);
+
+    /**
      * 根据uuid查询图片详情
      *
      * @param uuid 图片uuid
@@ -64,8 +72,6 @@ public interface PicService extends IService<Pic> {
      * @return 图片详情
      */
     Pic getByTaskId(Long taskId);
-
-    List<Pic> getPicsByUserId(Long userId);
 
     Long getParentPicIdById(Long id);
 

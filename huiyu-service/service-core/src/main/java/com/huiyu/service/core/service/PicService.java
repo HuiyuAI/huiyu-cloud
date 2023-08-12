@@ -7,6 +7,7 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.UserPicCountDto;
 import com.huiyu.service.core.model.query.PicQuery;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
@@ -79,6 +80,14 @@ public interface PicService extends IService<Pic> {
     boolean insert(Pic pic);
 
     boolean updateByUuid(Pic pic);
+
+    /**
+     * 生成图片后发送消息
+     *
+     * @param uuid 图片uuid
+     */
+    @Async
+    void sendMsgByPicGenerated(String uuid);
 
     boolean deleteByUuid(String uuid);
 

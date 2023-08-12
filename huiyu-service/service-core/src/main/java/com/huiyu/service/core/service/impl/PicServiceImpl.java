@@ -10,6 +10,7 @@ import com.huiyu.service.core.model.dto.UserPicCountDto;
 import com.huiyu.service.core.model.query.PicQuery;
 import com.huiyu.service.core.service.PicExtService;
 import com.huiyu.service.core.service.PicService;
+import com.huiyu.service.core.utils.mirai.MiraiUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,6 +124,15 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
         return super.lambdaUpdate()
                 .eq(Pic::getUuid, pic.getUuid())
                 .update(pic);
+    }
+
+    @Override
+    public void sendMsgByPicGenerated(String uuid) {
+        Pic pic = getByUuidOnly(uuid);
+        if (pic == null) {
+            return;
+        }
+        MiraiUtils.sendMsgByPicGenerated(pic);
     }
 
     @Override

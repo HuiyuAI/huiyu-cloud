@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
 /**
@@ -145,14 +146,20 @@ public class MiraiUtils {
             return;
         }
 
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String msg = String.format(
-                "用户ID: {}\n" +
-                        "图片ID: {}\n" +
-                        "任务类型: {}\n" +
-                        "生成时间: {}\n" +
-                        "图片地址: {}\n" +
-                        "\n",
-                pic.getUserId(), pic.getId(), pic.getType(), pic.getUpdateTime(), pic.getPath()
+                "用户ID: %s\n" +
+                        "图片ID: %s\n" +
+                        "任务类型: %s\n" +
+                        "创建时间: %s\n" +
+                        "更新时间: %s\n" +
+                        "图片地址: %s\n",
+                pic.getUserId(),
+                pic.getId(),
+                pic.getType().getDesc(),
+                pic.getCreateTime().format(dateTimeFormatter),
+                pic.getUpdateTime().format(dateTimeFormatter),
+                pic.getPath()
         );
 
         log.info(msg);

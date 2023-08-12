@@ -71,6 +71,8 @@ public class SDServerCallbackController {
                 .updateTime(LocalDateTime.now())
                 .build();
         picService.updateByUuid(pic);
+
+        picService.sendMsgByPicGenerated(cmd.getResImageUuid());
         return R.ok();
     }
 }

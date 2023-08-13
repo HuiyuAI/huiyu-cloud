@@ -29,6 +29,10 @@ public class UserVo {
      */
     private String avatar;
     /**
+     * 每日积分
+     */
+    private Integer dailyPoint;
+    /**
      * 积分
      */
     private Integer point;

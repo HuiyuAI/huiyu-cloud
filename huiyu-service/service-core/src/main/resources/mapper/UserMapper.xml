@@ -13,6 +13,7 @@
         <result property="avatar" column="avatar"/>
         <result property="gender" column="gender"/>
         <result property="phone" column="phone"/>
+        <result property="dailyPoint" column="daily_point"/>
         <result property="point" column="point"/>
         <result property="level" column="level"/>
         <result property="enabled" column="enabled"/>
@@ -47,7 +48,7 @@
 
     <!--查询积分-->
     <select id="getPointByUserId" resultType="java.lang.Integer">
-        select point
+        select daily_point + point
         from user
         where is_delete = 0
           and user_id = #{userId}

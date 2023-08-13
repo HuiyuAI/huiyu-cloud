@@ -11,7 +11,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
     REGISTER("register", "注册"),
     GENERATE_PIC("generatePic", "生成图片"),
     SIGN_IN("signIn", "签到"),
-    BACK("back", "回退"),
+    BACK("back", "任务失败返还"),
     INVITE_USER("inviteUser", "邀请用户"),
     ADMIN_UPDATE("adminUpdate", "管理员修改"),
     ;

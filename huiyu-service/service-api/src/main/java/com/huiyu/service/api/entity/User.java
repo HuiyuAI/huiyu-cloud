@@ -76,6 +76,11 @@ public class User implements Serializable {
     @TableField("phone")
     private String phone;
     /**
+     * 每日积分
+     */
+    @TableField("daily_point")
+    private Integer dailyPoint;
+    /**
      * 积分
      */
     @TableField("point")

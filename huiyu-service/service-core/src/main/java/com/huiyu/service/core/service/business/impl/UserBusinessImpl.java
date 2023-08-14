@@ -79,7 +79,7 @@ public class UserBusinessImpl implements UserBusiness {
         if (pointDiff == null || pointDiff <= 0) {
             throw new IllegalArgumentException("积分数值不合法");
         }
-        if (pointType == null && (source != PointOperationSourceEnum.GENERATE_PIC || source != PointOperationSourceEnum.FAIL_RETURN)) {
+        if (pointType == null && (source != PointOperationSourceEnum.GENERATE_PIC && source != PointOperationSourceEnum.FAIL_RETURN)) {
             // 操作来源不是[生成图片]或[失败返回]时，积分类型不能为空
             throw new IllegalArgumentException("积分类型不合法");
         }
@@ -176,11 +176,11 @@ public class UserBusinessImpl implements UserBusiness {
             }
         }
 
-        log.info("更新用户积分");
+        log.info("更新用户积分, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
         // 修改用户积分
         boolean isUpdatePointOK = userService.updatePointByUserId(userId, targetDailyPointDiff, targetPointDiff);
         if (!isUpdatePointOK) {
-            log.error("更新用户积分失败");
+            log.error("更新用户积分失败, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
             throw new BizException("异常错误");
         }
 
@@ -204,7 +204,7 @@ public class UserBusinessImpl implements UserBusiness {
                 .build();
         boolean isInsertPointRecordOK = pointRecordService.insertRecord(pointRecord);
         if (!isInsertPointRecordOK) {
-            log.error("记录积分流水表失败");
+            log.error("记录积分流水表失败, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
             throw new BizException("异常错误");
         }
 

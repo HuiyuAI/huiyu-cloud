@@ -56,12 +56,14 @@
 
     <update id="updatePointByUserId">
         update user
-        <if test="dailyPoint != null">
-            set daily_point = daily_point + #{dailyPoint}
-        </if>
-        <if test="point != null">
-            set point = point + #{point}
-        </if>
+        <set>
+            <if test="dailyPoint != null">
+                daily_point = daily_point + #{dailyPoint},
+            </if>
+            <if test="point != null">
+                point = point + #{point},
+            </if>
+        </set>
         where is_delete = 0
         and user_id = #{userId}
     </update>

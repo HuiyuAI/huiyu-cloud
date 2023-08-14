@@ -44,7 +44,7 @@ public class PointRecord implements Serializable {
     /**
      * 增减的每日积分
      */
-    @TableField("dailyPoint")
+    @TableField("daily_point")
     private Integer dailyPoint;
     /**
      * 增减的永久积分

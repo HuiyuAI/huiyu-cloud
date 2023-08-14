@@ -62,7 +62,7 @@ public class InviteBusinessImpl implements InviteBusiness {
         // 2. 更新所有邀请人的积分
         LocalDateTime now = LocalDateTime.now();
         invites.forEach(v -> {
-            userBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInvitePoint(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT, null);
+            userBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInvitePoint(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
             v.setUpdateTime(now);
             v.setStatus(InviteStatusEnum.SUCCESS);
         });

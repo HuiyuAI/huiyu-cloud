@@ -27,16 +27,14 @@ public interface UserBusiness {
      * 用户积分修改
      *
      * @param userId      用户id
-     * @param dailyPoint  要修改的每日积分值
-     * @param point       要修改的永久积分值
+     * @param pointDiff   要修改的积分值
      * @param source      积分来源
      * @param operation   积分修改方式
      * @param requestUuid 请求uuid
-     * @param pointType   积分类型(null则自动判断)
-     * @param task        任务(扣减积分时自动设置积分类型)
+     * @param pointType   积分类型(null则根据PointOperationSourceEnum判断是GENERATE_PIC / BACK)
      * @return true/false
      */
-    boolean updatePoint(Long userId, Integer dailyPoint, Integer point, PointOperationSourceEnum source, PointOperationTypeEnum operation, String requestUuid, PointTypeEnum pointType, Task task);
+    boolean updatePoint(Long userId, Integer pointDiff, PointOperationSourceEnum source, PointOperationTypeEnum operation, String requestUuid, PointTypeEnum pointType);
 
     /**
      * 用户积分记录分页查询

@@ -10,6 +10,8 @@ import com.huiyu.service.core.service.PointRecordService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PointRecordServiceImpl extends ServiceImpl<PointRecordMapper, PointRecord> implements PointRecordService {
 
@@ -31,15 +33,28 @@ public class PointRecordServiceImpl extends ServiceImpl<PointRecordMapper, Point
     @Override
     public IPage<PointRecord> pagePointRecord(IPage<PointRecord> page, PointRecordPageDto dto) {
         return super.lambdaQuery()
-                .select(PointRecord::getNum, PointRecord::getOperationType, PointRecord::getOperationSource, PointRecord::getCreateTime)
+                .select(PointRecord::getDailyPoint, PointRecord::getPoint, PointRecord::getOperationType, PointRecord::getOperationSource, PointRecord::getCreateTime)
                 .eq(PointRecord::getUserId, dto.getUserId())
                 .orderByDesc(PointRecord::getCreateTime)
                 .page(page);
     }
 
     @Override
+    public PointRecord getByRequestUuid(String requestUuid) {
+        return super.lambdaQuery()
+                .eq(PointRecord::getRequestUuid, requestUuid)
+                .one();
+    }
+
+    @Override
     public boolean insertRecord(PointRecord pointRecord) {
         return super.save(pointRecord);
+    }
+
+    @Override
+    public boolean updatePointRecord(PointRecord pointRecord) {
+        pointRecord.setUpdateTime(LocalDateTime.now());
+        return super.updateById(pointRecord);
     }
 
 }

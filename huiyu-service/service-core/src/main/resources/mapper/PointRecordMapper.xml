@@ -7,10 +7,13 @@
         <id column="id" property="id"/>
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
-        <result column="num" property="num"/>
+        <result column="daily_point" property="dailyPoint"/>
+        <result column="point" property="point"/>
         <result column="operation_type" property="operationType"/>
         <result column="operation_source" property="operationSource"/>
         <result column="point_type" property="pointType"/>
+        <result column="return_daily_point" property="returnDailyPoint"/>
+        <result column="return_point" property="returnPoint"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>

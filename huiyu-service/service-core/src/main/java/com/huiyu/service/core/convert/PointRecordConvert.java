@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.entity.PointRecord;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -16,6 +17,15 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface PointRecordConvert {
     PointRecordConvert INSTANCE = Mappers.getMapper(PointRecordConvert.class);
+
+    /**
+     * entity转vo分页
+     *
+     * @param source entity
+     * @return vo分页
+     */
+    @Mapping(target = "num", expression = "java(source.getDailyPoint() + source.getPoint())")
+    PointRecordPageVo toVOPage(PointRecord source);
 
     /**
      * entity分页转vo分页

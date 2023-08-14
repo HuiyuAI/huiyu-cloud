@@ -27,11 +27,27 @@ public interface PointRecordService extends IService<PointRecord> {
     IPage<PointRecord> pagePointRecord(IPage<PointRecord> page, PointRecordPageDto dto);
 
     /**
+     * 根据请求uuid查询积分流水
+     *
+     * @param requestUuid 请求uuid
+     * @return 积分流水
+     */
+    PointRecord getByRequestUuid(String requestUuid);
+
+    /**
      * 新增积分记录
      *
      * @param pointRecord 积分记录
      * @return 新增结果
      */
     boolean insertRecord(PointRecord pointRecord);
+
+    /**
+     * 更新积分记录
+     *
+     * @param pointRecord 积分记录
+     * @return true/false
+     */
+    boolean updatePointRecord(PointRecord pointRecord);
 
 }

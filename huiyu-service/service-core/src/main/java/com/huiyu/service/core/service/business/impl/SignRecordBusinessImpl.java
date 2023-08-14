@@ -33,7 +33,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
             return false;
         }
         // 签到积分奖励
-        return userBusiness.updatePoint(userId, hotFileConfig.getSignInPoint(), PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT, null);
+        return userBusiness.updatePoint(userId, hotFileConfig.getSignInPoint(), PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
     }
 
     private boolean isSignIn(Long userId) {

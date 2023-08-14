@@ -42,10 +42,15 @@ public class PointRecord implements Serializable {
     @TableField("user_id")
     private Long userId;
     /**
-     * 积分
+     * 增减的每日积分
      */
-    @TableField("num")
-    private Integer num;
+    @TableField("dailyPoint")
+    private Integer dailyPoint;
+    /**
+     * 增减的永久积分
+     */
+    @TableField("point")
+    private Integer point;
     /**
      * 增加为1，减少为0
      */
@@ -61,6 +66,16 @@ public class PointRecord implements Serializable {
      */
     @TableField("point_type")
     private PointTypeEnum pointType;
+    /**
+     * 返还的每日积分
+     */
+    @TableField("return_daily_point")
+    private Integer returnDailyPoint;
+    /**
+     * 返还的永久积分
+     */
+    @TableField("return_point")
+    private Integer returnPoint;
     /**
      * 创建时间
      */

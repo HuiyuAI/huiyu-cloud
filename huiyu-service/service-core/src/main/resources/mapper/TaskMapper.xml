@@ -12,7 +12,6 @@
         <result column="point" property="point"/>
         <result column="status" property="status"/>
         <result column="exec_source" property="execSource"/>
-        <result column="point_type" property="pointType"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>

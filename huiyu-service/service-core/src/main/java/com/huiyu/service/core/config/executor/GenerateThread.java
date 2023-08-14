@@ -80,7 +80,7 @@ class GenerateThread implements Runnable {
             taskQueue.offer(Byte.valueOf("1"));
         } else {
             // 回退积分
-            userBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.BACK, PointOperationTypeEnum.ADD, task.getRequestUuid());
+            userBusiness.updatePoint(task.getUserId(), task.getPoint(), PointOperationSourceEnum.BACK, PointOperationTypeEnum.ADD, task.getRequestUuid(), null, null);
 
             Task TaskDO = Task.builder()
                     .id(task.getId())

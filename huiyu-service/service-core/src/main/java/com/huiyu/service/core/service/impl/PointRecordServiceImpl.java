@@ -21,6 +21,7 @@ public class PointRecordServiceImpl extends ServiceImpl<PointRecordMapper, Point
                 .eq(query.getUserId() != null, PointRecord::getUserId, query.getUserId())
                 .eq(query.getOperationType() != null, PointRecord::getOperationType, query.getOperationType())
                 .eq(query.getOperationSource() != null, PointRecord::getOperationSource, query.getOperationSource())
+                .eq(query.getPointType() != null, PointRecord::getPointType, query.getPointType())
                 .ge(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, PointRecord::getCreateTime, query.getCreateTimeStart())
                 .le(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, PointRecord::getCreateTime, query.getCreateTimeEnd())
                 .orderByDesc(PointRecord::getId)

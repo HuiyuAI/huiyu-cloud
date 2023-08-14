@@ -56,8 +56,13 @@
 
     <update id="updatePointByUserId">
         update user
-        set point = point + #{point}
+        <if test="dailyPoint != null">
+            set daily_point = daily_point + #{dailyPoint}
+        </if>
+        <if test="point != null">
+            set point = point + #{point}
+        </if>
         where is_delete = 0
-          and user_id = #{userId}
+        and user_id = #{userId}
     </update>
 </mapper>

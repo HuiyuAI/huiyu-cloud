@@ -157,7 +157,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean updatePointByUserId(Long userId, Integer point) {
-        return userMapper.updatePointByUserId(userId, point) > 0;
+    public boolean updatePointByUserId(Long userId, Integer dailyPoint, Integer point) {
+        return userMapper.updatePointByUserId(userId, dailyPoint, point) > 0;
     }
 }

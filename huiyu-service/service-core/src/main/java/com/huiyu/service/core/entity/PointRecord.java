@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
+import com.huiyu.service.core.enums.PointTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,6 +56,11 @@ public class PointRecord implements Serializable {
      */
     @TableField("operation_source")
     private PointOperationSourceEnum operationSource;
+    /**
+     * 积分类型
+     */
+    @TableField("point_type")
+    private PointTypeEnum pointType;
     /**
      * 创建时间
      */

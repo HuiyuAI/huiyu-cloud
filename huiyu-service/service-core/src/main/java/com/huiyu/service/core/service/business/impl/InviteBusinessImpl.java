@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.business.impl;
 
+import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
@@ -61,7 +62,7 @@ public class InviteBusinessImpl implements InviteBusiness {
         // 2. 更新所有邀请人的积分
         LocalDateTime now = LocalDateTime.now();
         invites.forEach(v -> {
-            userBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInvitePoint(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null);
+            userBusiness.updatePoint(v.getInvitersId(), hotFileConfig.getInvitePoint(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT, null);
             v.setUpdateTime(now);
             v.setStatus(InviteStatusEnum.SUCCESS);
         });

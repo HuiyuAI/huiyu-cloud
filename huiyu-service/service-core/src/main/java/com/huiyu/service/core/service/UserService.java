@@ -73,9 +73,10 @@ public interface UserService extends IService<User> {
     /**
      * 根据userId增加积分
      *
-     * @param userId 用户id
-     * @param point  增加的积分
+     * @param userId     用户id
+     * @param dailyPoint 增加的每日积分(负数则减少)
+     * @param point      增加的永久积分(负数则减少)
      * @return 是否成功
      */
-    boolean updatePointByUserId(Long userId, Integer point);
+    boolean updatePointByUserId(Long userId, Integer dailyPoint, Integer point);
 }

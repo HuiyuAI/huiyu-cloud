@@ -8,8 +8,9 @@
         <result column="request_uuid" property="requestUuid"/>
         <result column="user_id" property="userId"/>
         <result column="num" property="num"/>
-        <result column="operation_type" property="operationType" jdbcType="INTEGER"/>
+        <result column="operation_type" property="operationType"/>
         <result column="operation_source" property="operationSource"/>
+        <result column="point_type" property="pointType"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>

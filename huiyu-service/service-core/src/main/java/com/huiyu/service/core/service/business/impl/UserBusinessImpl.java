@@ -6,8 +6,10 @@ import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.convert.PointRecordConvert;
 import com.huiyu.service.core.entity.PointRecord;
+import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.exception.BizException;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
@@ -58,6 +60,7 @@ public class UserBusinessImpl implements UserBusiness {
                 .num(Math.abs(diffPoint))
                 .operationType(operationType)
                 .operationSource(PointOperationSourceEnum.ADMIN_UPDATE)
+                .pointType(PointTypeEnum.POINT)
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)
@@ -71,31 +74,54 @@ public class UserBusinessImpl implements UserBusiness {
         return userService.update(user);
     }
 
-    /**
-     * 更新积分
-     *
-     * @param userId      更新的用户id
-     * @param point       需要操作的积分数值
-     * @param source      操作来源
-     * @param operation   积分增减
-     * @param requestUuid 请求uuid
-     * @return 是否更新成功
-     */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean updatePoint(Long userId, Integer point, PointOperationSourceEnum source, PointOperationTypeEnum operation, String requestUuid) {
-        if (point == null || point <= 0) {
+    public boolean updatePoint(Long userId, Integer dailyPoint, Integer point, PointOperationSourceEnum source, PointOperationTypeEnum operation, String requestUuid, PointTypeEnum pointType, Task task) {
+        if ((dailyPoint == null && point == null) || (dailyPoint <= 0 && point <= 0)) {
             throw new IllegalArgumentException("积分数值不合法");
         }
+        if (pointType == null && operation != PointOperationTypeEnum.REDUCE) {
+            // 操作类型不是减少积分时，积分类型不能为空
+            throw new IllegalArgumentException("积分类型不合法");
+        }
+
+        User user = userService.queryByUserId(userId);
+
+        Integer dailyPoint = user.getDailyPoint();
+        Integer point1 = user.getPoint();
 
         if (operation == PointOperationTypeEnum.REDUCE) {
+            // 判断用户积分是否足够
+            if (dailyPoint + point1 < point) {
+                throw new BizException("积分不足");
+            }
+
             point = -point;
         }
 
+        if (pointType == null) {
+            // 到这里时，操作类型只能是减少积分，且总积分肯定足够
+            // 先判断每日积分是否为0
+            if (dailyPoint > 0) {
+                // 每日积分不为0，判断每日积分是否足够
+                if (dailyPoint + point >= 0) {
+                    // 每日积分足够，直接扣除每日积分
+                    pointType = PointTypeEnum.DAILY_POINT;
+                } else {
+                    // 每日积分不够，扣除每日积分后，再扣除永久积分
+                    pointType = PointTypeEnum.MIX_POINT;
+                }
+            } else {
+                // 每日积分为0，直接扣除永久积分
+                pointType = PointTypeEnum.POINT;
+            }
+        }
+
+        log.info("更新用户积分，userId: {}, point: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, task: {}", userId, point, source, operation, requestUuid, pointType, JacksonUtils.toJsonStr(task));
         // 修改用户积分
-        boolean isUpdatePointOK = userService.updatePointByUserId(userId, point);
+        boolean isUpdatePointOK = userService.updatePointByUserId(userId, point, pointType == PointTypeEnum.DAILY_POINT);
         if (!isUpdatePointOK) {
-            log.error("更新用户积分失败，userId：{}，point：{}, source：{}, operation：{}", userId, point, source, operation);
+            log.error("更新用户积分失败，userId: {}, point: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, task: {}", userId, point, source, operation, requestUuid, pointType, JacksonUtils.toJsonStr(task));
             throw new BizException("异常错误");
         }
 
@@ -111,13 +137,14 @@ public class UserBusinessImpl implements UserBusiness {
                 .num(Math.abs(point))
                 .operationType(operation)
                 .operationSource(source)
+                .pointType(pointType)
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)
                 .build();
         boolean isInsertPointRecordOK = pointRecordService.insertRecord(pointRecord);
         if (!isInsertPointRecordOK) {
-            log.error("记录积分流水表失败，userId：{}，point：{}, source：{}, operation：{}", userId, point, source, operation);
+            log.error("记录积分流水表失败，userId: {}, point: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, task: {}", userId, point, source, operation, requestUuid, pointType, JacksonUtils.toJsonStr(task));
             throw new BizException("异常错误");
         }
 

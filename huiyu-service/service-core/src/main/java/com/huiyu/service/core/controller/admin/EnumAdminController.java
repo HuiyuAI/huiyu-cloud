@@ -5,6 +5,7 @@ import com.huiyu.service.core.enums.BaseEnum;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.enums.TaskTypeEnum;
 import com.huiyu.service.core.model.vo.EnumVo;
@@ -57,6 +58,11 @@ public class EnumAdminController {
     @GetMapping("/getImageQualityEnum")
     public R<List<EnumVo>> getImageQualityEnum() {
         return R.ok(enum2EnumVoList(ImageQualityEnum.class));
+    }
+
+    @GetMapping("/getPointTypeEnum")
+    public R<List<EnumVo>> getPointTypeEnum() {
+        return R.ok(enum2EnumVoList(PointTypeEnum.class));
     }
 
     private List<EnumVo> enum2EnumVoList(Class<? extends BaseEnum> enumClass) {

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.enums.TaskTypeEnum;
 import lombok.AllArgsConstructor;
@@ -62,6 +63,11 @@ public class Task implements Serializable {
      */
     @TableField("exec_source")
     private String execSource;
+    /**
+     * 积分类型
+     */
+    @TableField("point_type")
+    private PointTypeEnum pointType;
     /**
      * 创建时间
      */

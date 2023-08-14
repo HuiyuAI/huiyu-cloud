@@ -109,6 +109,7 @@ public class ImageTaskInvoker {
         Task taskDo = Task.builder()
                 .id(task.getId())
                 .status(TaskStatusEnum.IN_QUEUE)
+                .updateTime(LocalDateTime.now())
                 .build();
         taskService.updateById(taskDo);
         return task;

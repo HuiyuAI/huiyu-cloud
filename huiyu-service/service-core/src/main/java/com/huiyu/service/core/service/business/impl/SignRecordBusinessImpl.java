@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.business.impl;
 
+import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
@@ -32,7 +33,7 @@ public class SignRecordBusinessImpl implements SignRecordBusiness {
             return false;
         }
         // 签到积分奖励
-        return userBusiness.updatePoint(userId, hotFileConfig.getSignInPoint(), PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null);
+        return userBusiness.updatePoint(userId, hotFileConfig.getSignInPoint(), PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT, null);
     }
 
     private boolean isSignIn(Long userId) {

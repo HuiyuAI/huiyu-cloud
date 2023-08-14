@@ -41,12 +41,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     public boolean insertTask(Task task) {
-        return taskMapper.insertTask(task) > 0;
+        return super.save(task);
     }
 
     @Override
     public boolean updateById(Task task) {
-        return taskMapper.updateById(task) > 0;
+        return super.updateById(task);
     }
 
     public boolean batchUpdateBySource(String replaceExecSource, String targetExecSource, long limit) {
@@ -55,6 +55,6 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
 
     @Override
     public Task getById(Long taskId) {
-        return taskMapper.getById(taskId);
+        return super.getById(taskId);
     }
 }

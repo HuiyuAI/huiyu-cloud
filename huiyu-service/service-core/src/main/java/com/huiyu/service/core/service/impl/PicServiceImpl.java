@@ -49,7 +49,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     @Override
     public IPage<Pic> queryPage(IPage<Pic> page, PicPageDto dto) {
         return super.lambdaQuery()
-                .select(Pic::getUuid, Pic::getPath, Pic::getStatus, Pic::getWidth, Pic::getHeight)
+                .select(Pic::getUuid, Pic::getPath, Pic::getStatus, Pic::getQuality, Pic::getWidth, Pic::getHeight)
                 .eq(Pic::getUserId, dto.getUserId())
                 .le(Pic::getCreateTime, dto.getQueryDeadline())
                 .orderByDesc(Pic::getCreateTime)

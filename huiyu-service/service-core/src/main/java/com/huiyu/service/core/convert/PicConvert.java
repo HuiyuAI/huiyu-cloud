@@ -6,6 +6,7 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -35,6 +36,16 @@ public interface PicConvert {
      * @return vo集合
      */
     List<PicVo> toVOList(List<Pic> sourceList);
+
+    /**
+     * entity转pageVO分页
+     * 将Pic中ImageQualityEnum为UHD4K的图片，在PicPageVo中的is4k字段标记为true
+     *
+     * @param source entity
+     * @return pageVO分页
+     */
+    @Mapping(target = "is4k", expression = "java(com.huiyu.service.core.sd.constant.ImageQualityEnum.is4k(source.getQuality()))")
+    PicPageVo toPageVO(Pic source);
 
     /**
      * entity分页转vo分页

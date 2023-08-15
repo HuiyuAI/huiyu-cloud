@@ -35,4 +35,8 @@ public class PicPageVo {
      * 高
      */
     private Integer height;
+    /**
+     * 是否4k
+     */
+    private Boolean is4k;
 }

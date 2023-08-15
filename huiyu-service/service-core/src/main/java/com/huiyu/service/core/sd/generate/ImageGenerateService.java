@@ -1,7 +1,7 @@
 package com.huiyu.service.core.sd.generate;
 
+import com.huiyu.service.core.entity.SdResponseContext;
 import com.huiyu.service.core.model.cmd.Cmd;
-import org.springframework.stereotype.Component;
 
 /**
  * @author wAnG
@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
  */
 public interface ImageGenerateService<T extends Cmd> {
 
-    void generate(T t);
+    void generate(T t, SdResponseContext sdResponseContext);
 
 }

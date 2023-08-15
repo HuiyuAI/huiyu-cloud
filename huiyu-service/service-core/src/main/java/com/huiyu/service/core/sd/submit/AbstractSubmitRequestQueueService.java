@@ -1,12 +1,13 @@
 package com.huiyu.service.core.sd.submit;
 
 import cn.hutool.core.lang.Pair;
-import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
-import com.huiyu.service.core.enums.PointOperationTypeEnum;
-import com.huiyu.service.core.enums.PointOperationSourceEnum;
+import com.huiyu.service.core.entity.SdResponseContext;
 import com.huiyu.service.core.entity.Task;
+import com.huiyu.service.core.enums.PointOperationSourceEnum;
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
+import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.dto.Dto;
 import com.huiyu.service.core.sd.submit.chooseStrategy.ExecChooseStrategy;
@@ -47,7 +48,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     @Resource
     private HotFileConfig hotFileConfig;
 
-    public void submitToSplit(T t) {
+    public CompletableFuture<Void> submitToSplit(T t, SdResponseContext responseContext) {
         Pair<Task, Dto> taskDtoPair = convertTask(t);
         Integer execStrategy = hotFileConfig.getExecStrategy();
         String execSource = execChooseStrategyList.stream()
@@ -60,10 +61,10 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
         String requestUuid = RequestContext.REQUEST_UUID_CONTEXT.get();
         task.setRequestUuid(requestUuid);
         if (!deductUserPoint(task)) {
-            return;
+            return null;
         }
         Dto dto = taskDtoPair.getValue();
-        CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto), splitTaskExecutor.getThreadPoolExecutor())
+        return CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto, responseContext), splitTaskExecutor.getThreadPoolExecutor())
                 .exceptionally(ExceptionLogHandle);
     }
 

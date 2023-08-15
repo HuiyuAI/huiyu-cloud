@@ -9,6 +9,7 @@ import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.config.RequestContext;
+import com.huiyu.service.core.entity.SdResponseContext;
 import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.model.vo.SpellbookVo;
@@ -101,10 +102,12 @@ public class SDController {
         RequestContext.REQUEST_UUID_CONTEXT.set(requestUuid);
         RequestContext.CMD_CONTEXT.set(cmd);
 
+        SdResponseContext sdResponseContext = new SdResponseContext();
+
         // 5. 提交任务队列
         imageGenerates.stream()
                 .filter(imageGenerate -> imageGenerate.isSupport(cmd))
-                .forEach(imageGenerate -> imageGenerate.generate(cmd));
+                .forEach(imageGenerate -> imageGenerate.generate(cmd, sdResponseContext));
 
         // 6. 处理用户界面
 
@@ -144,10 +147,12 @@ public class SDController {
         RequestContext.REQUEST_UUID_CONTEXT.set(requestUuid);
         RequestContext.CMD_CONTEXT.set(cmd);
 
+        SdResponseContext sdResponseContext = new SdResponseContext();
+
         // 4. 提交任务队列
         imageGenerates.stream()
                 .filter(imageGenerate -> imageGenerate.isSupport(cmd))
-                .forEach(imageGenerate -> imageGenerate.generate(cmd));
+                .forEach(imageGenerate -> imageGenerate.generate(cmd, sdResponseContext));
 
         // 5. 处理用户界面
 

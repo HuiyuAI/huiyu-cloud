@@ -1,5 +1,6 @@
 package com.huiyu.service.core.sd.generate;
 
+import com.huiyu.service.core.entity.SdResponseContext;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.submit.AbstractSubmitRequestQueueService;
 import org.apache.commons.lang.StringUtils;
@@ -8,6 +9,9 @@ import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author wAnG
@@ -19,25 +23,46 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     private List<AbstractSubmitRequestQueueService<T>> submitRequestQueueServiceList;
 
     @Override
-    public void generate(T t) {
+    public void generate(T t, SdResponseContext responseContext) {
         preExec(t);
 
-        submitTask(t);
+        List<CompletableFuture<Void>> futureList = submitTask(t, responseContext);
 
-        afterExec();
+        afterExec(futureList, responseContext);
     }
 
-    private void submitTask(T t) {
-        submitRequestQueueServiceList.stream()
+    private List<CompletableFuture<Void>> submitTask(T t, SdResponseContext responseContext) {
+        return submitRequestQueueServiceList.stream()
                 .filter(service -> service.isSupport(t))
-                .forEach(service -> service.submitToSplit(t));
+                .map(service -> service.submitToSplit(t, responseContext))
+                .collect(Collectors.toList());
     }
 
     public void preExec(T t) {
 
     }
 
-    public void afterExec() {
+    public void afterExec(List<CompletableFuture<Void>> futureList, SdResponseContext responseContext) {
+        unfinished(responseContext);
+
+        futureList.forEach(future -> {
+            try {
+                // todo 粗超时时间，超时时间应该递减
+                future.get(500, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        futureCompleted(responseContext);
+    }
+
+    public void unfinished(SdResponseContext responseContext) {
+
+    }
+
+    public void futureCompleted(SdResponseContext responseContext) {
+
     }
 
     public boolean isSupport(T t) {

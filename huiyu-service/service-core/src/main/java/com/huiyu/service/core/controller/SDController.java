@@ -65,7 +65,7 @@ public class SDController {
     @RequestLogger
     @RequestLimiter(seconds = 10, maxCount = 6)
     @PostMapping("/txt2img")
-    public R<String> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
+    public R<SDResponseVo> txt2img(@Valid @RequestBody Txt2ImgCmd cmd) {
         // 1. 参数校验(数值范围)
         Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
         if (!validate.getKey()) {
@@ -111,7 +111,7 @@ public class SDController {
 
         // 6. 处理用户界面
 
-        return R.ok(sdResponseVo.getUuid());
+        return R.ok(sdResponseVo);
     }
 
 
@@ -122,7 +122,7 @@ public class SDController {
     @RequestLogger
     @RequestLimiter(seconds = 10, maxCount = 6)
     @PostMapping("/restoreFace")
-    public R<String> restoreFace(@Valid @RequestBody RestoreFaceCmd cmd) {
+    public R<SDResponseVo> restoreFace(@Valid @RequestBody RestoreFaceCmd cmd) {
         // 1. 参数校验
         Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
         if (!validate.getKey()) {
@@ -156,7 +156,7 @@ public class SDController {
 
         // 5. 处理用户界面
 
-        return R.ok(requestUuid);
+        return R.ok(sdResponseVo);
     }
 
     @RequestLogger

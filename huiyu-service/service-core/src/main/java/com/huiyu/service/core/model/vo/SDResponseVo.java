@@ -1,5 +1,6 @@
 package com.huiyu.service.core.model.vo;
 
+import com.huiyu.service.core.enums.PicStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,14 @@ public class SDResponseVo {
      * 图片uuid
      */
     private String uuid;
+    /**
+     * 状态
+     */
+    private PicStatusEnum status;
+    /**
+     * 图片地址
+     */
+    private String path;
     /**
      * 宽
      */

@@ -143,6 +143,8 @@ public class ImageTaskService {
         picService.insert(pic);
 
         sdResponseVo.setUuid(pic.getUuid());
+        sdResponseVo.setStatus(pic.getStatus());
+        sdResponseVo.setPath(pic.getPath());
         sdResponseVo.setWidth(pic.getWidth());
         sdResponseVo.setHeight(pic.getHeight());
     }

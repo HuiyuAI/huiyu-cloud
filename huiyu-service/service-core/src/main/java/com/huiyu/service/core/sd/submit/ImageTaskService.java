@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
-import com.huiyu.service.core.entity.SdResponseContext;
+import com.huiyu.service.core.model.vo.SDResponseVo;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.enums.TaskTypeEnum;
 import com.huiyu.service.core.entity.Pic;
@@ -44,10 +44,10 @@ public class ImageTaskService {
     private PicService picService;
 
 
-    public void trySplitTask(Task task, Dto dto, SdResponseContext responseContext) {
+    public void trySplitTask(Task task, Dto dto, SDResponseVo sdResponseVo) {
         List<Task> tasks = splitTask(task, dto);
 
-        execGenerate(tasks, task.getExecSource(), responseContext);
+        execGenerate(tasks, task.getExecSource(), sdResponseVo);
 
         RequestContext.REQUEST_UUID_CONTEXT.remove();
         RequestContext.CMD_CONTEXT.remove();
@@ -96,7 +96,7 @@ public class ImageTaskService {
         return taskList;
     }
 
-    public void execGenerate(List<Task> tasks, String taskExecSource, SdResponseContext responseContext) {
+    public void execGenerate(List<Task> tasks, String taskExecSource, SDResponseVo sdResponseVo) {
         Optional<ThreadPoolExecutorDecorator> executorOptional = submitRequestExecutorList.stream()
                 .filter(decorator -> StringUtils.equals(taskExecSource, decorator.getSourceName()))
                 .findAny();
@@ -110,18 +110,18 @@ public class ImageTaskService {
         synchronized (executorOptional.get()) {
             executorOptional.ifPresent(executor -> {
                 tasks.forEach(taskItem -> {
-                    preInvoker(taskItem, responseContext);
+                    preInvoker(taskItem, sdResponseVo);
                     executor.commit();
                 });
             });
         }
     }
 
-    private void preInvoker(Task task, SdResponseContext responseContext) {
+    private void preInvoker(Task task, SDResponseVo sdResponseVo) {
 
         insertTask(task);
 
-        insertPic(task, responseContext);
+        insertPic(task, sdResponseVo);
 
     }
 
@@ -132,7 +132,7 @@ public class ImageTaskService {
         taskService.insertTask(task);
     }
 
-    private void insertPic(Task task, SdResponseContext responseContext) {
+    private void insertPic(Task task, SDResponseVo sdResponseVo) {
         Pic pic = SDTask2PicConverter.convert(task);
         if (picService.getByUuidOnly(pic.getUuid()) != null) {
             return;
@@ -141,7 +141,10 @@ public class ImageTaskService {
         pic.setRequestUuid(requestUuid);
         pic.setStatus(PicStatusEnum.GENERATING);
         picService.insert(pic);
-        responseContext.setUuid(pic.getUuid());
+
+        sdResponseVo.setUuid(pic.getUuid());
+        sdResponseVo.setWidth(pic.getWidth());
+        sdResponseVo.setHeight(pic.getHeight());
     }
 
     public List<ThreadPoolExecutorDecorator> getSubmitRequestExecutorList() {

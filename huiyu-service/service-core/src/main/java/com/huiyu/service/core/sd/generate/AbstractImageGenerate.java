@@ -1,6 +1,6 @@
 package com.huiyu.service.core.sd.generate;
 
-import com.huiyu.service.core.entity.SdResponseContext;
+import com.huiyu.service.core.model.vo.SDResponseVo;
 import com.huiyu.service.core.model.cmd.Cmd;
 import com.huiyu.service.core.sd.submit.AbstractSubmitRequestQueueService;
 import org.apache.commons.lang.StringUtils;
@@ -23,18 +23,18 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
     private List<AbstractSubmitRequestQueueService<T>> submitRequestQueueServiceList;
 
     @Override
-    public void generate(T t, SdResponseContext responseContext) {
+    public void generate(T t, SDResponseVo sdResponseVo) {
         preExec(t);
 
-        List<CompletableFuture<Void>> futureList = submitTask(t, responseContext);
+        List<CompletableFuture<Void>> futureList = submitTask(t, sdResponseVo);
 
-        afterExec(futureList, responseContext);
+        afterExec(futureList, sdResponseVo);
     }
 
-    private List<CompletableFuture<Void>> submitTask(T t, SdResponseContext responseContext) {
+    private List<CompletableFuture<Void>> submitTask(T t, SDResponseVo sdResponseVo) {
         return submitRequestQueueServiceList.stream()
                 .filter(service -> service.isSupport(t))
-                .map(service -> service.submitToSplit(t, responseContext))
+                .map(service -> service.submitToSplit(t, sdResponseVo))
                 .collect(Collectors.toList());
     }
 
@@ -42,8 +42,8 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
 
     }
 
-    public void afterExec(List<CompletableFuture<Void>> futureList, SdResponseContext responseContext) {
-        unfinished(responseContext);
+    public void afterExec(List<CompletableFuture<Void>> futureList, SDResponseVo sdResponseVo) {
+        unfinished(sdResponseVo);
 
         futureList.forEach(future -> {
             try {
@@ -54,14 +54,14 @@ public abstract class AbstractImageGenerate<T extends Cmd> implements ImageGener
             }
         });
 
-        futureCompleted(responseContext);
+        futureCompleted(sdResponseVo);
     }
 
-    public void unfinished(SdResponseContext responseContext) {
+    public void unfinished(SDResponseVo sdResponseVo) {
 
     }
 
-    public void futureCompleted(SdResponseContext responseContext) {
+    public void futureCompleted(SDResponseVo sdResponseVo) {
 
     }
 

@@ -3,7 +3,7 @@ package com.huiyu.service.core.sd.submit;
 import cn.hutool.core.lang.Pair;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
-import com.huiyu.service.core.entity.SdResponseContext;
+import com.huiyu.service.core.model.vo.SDResponseVo;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
@@ -48,7 +48,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
     @Resource
     private HotFileConfig hotFileConfig;
 
-    public CompletableFuture<Void> submitToSplit(T t, SdResponseContext responseContext) {
+    public CompletableFuture<Void> submitToSplit(T t, SDResponseVo sdResponseVo) {
         Pair<Task, Dto> taskDtoPair = convertTask(t);
         Integer execStrategy = hotFileConfig.getExecStrategy();
         String execSource = execChooseStrategyList.stream()
@@ -64,7 +64,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
             return null;
         }
         Dto dto = taskDtoPair.getValue();
-        return CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto, responseContext), splitTaskExecutor.getThreadPoolExecutor())
+        return CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto, sdResponseVo), splitTaskExecutor.getThreadPoolExecutor())
                 .exceptionally(ExceptionLogHandle);
     }
 

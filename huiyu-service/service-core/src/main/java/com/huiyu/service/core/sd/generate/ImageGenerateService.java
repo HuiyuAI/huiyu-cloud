@@ -1,6 +1,6 @@
 package com.huiyu.service.core.sd.generate;
 
-import com.huiyu.service.core.entity.SdResponseContext;
+import com.huiyu.service.core.model.vo.SDResponseVo;
 import com.huiyu.service.core.model.cmd.Cmd;
 
 /**
@@ -9,6 +9,6 @@ import com.huiyu.service.core.model.cmd.Cmd;
  */
 public interface ImageGenerateService<T extends Cmd> {
 
-    void generate(T t, SdResponseContext sdResponseContext);
+    void generate(T t, SDResponseVo sdResponseVo);
 
 }

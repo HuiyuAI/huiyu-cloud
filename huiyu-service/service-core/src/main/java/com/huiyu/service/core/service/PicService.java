@@ -95,7 +95,12 @@ public interface PicService extends IService<Pic> {
     @Async
     void sendMsgByPicGenerated(String uuid);
 
-    boolean deleteByUuid(String uuid);
-
-    boolean delete(Long id);
+    /**
+     * 用户批量删除图片
+     *
+     * @param userId   用户id
+     * @param uuidList 图片uuid列表
+     * @return true/false
+     */
+    boolean userDeleteByUuidList(Long userId, List<String> uuidList);
 }

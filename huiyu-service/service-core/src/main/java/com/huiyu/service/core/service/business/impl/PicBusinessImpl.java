@@ -16,10 +16,13 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicExt;
 import com.huiyu.service.core.service.PicExtService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PicBusinessImpl implements PicBusiness {
@@ -102,5 +105,19 @@ public class PicBusinessImpl implements PicBusiness {
                     .build();
             return picExtService.insert(picExt);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean userDeleteByUuidList(Long userId, List<String> uuidList) {
+        if (CollectionUtils.isEmpty(uuidList)) {
+            return false;
+        }
+        boolean res = picService.userDeleteByUuidList(userId, uuidList);
+        if (!res) {
+            return false;
+        }
+        // TODO 已分享的图片要不要删除
+        return res;
     }
 }

@@ -61,10 +61,13 @@ public class PicController {
     /**
      * 批量删除
      */
+    @RequestLimiter(seconds = 20, maxCount = 10)
     @RequestLogger
-    @PostMapping("/removeByIds")
-    public R<?> remove(@RequestBody List<Long> ids) {
-        return R.ok();
+    @PostMapping("/deleteByUuidList")
+    public R<?> deleteByUuidList(@RequestBody List<String> uuidList) {
+        Long userId = JwtUtils.getUserId();
+        boolean res = picBusiness.userDeleteByUuidList(userId, uuidList);
+        return R.status(res);
     }
 
 }

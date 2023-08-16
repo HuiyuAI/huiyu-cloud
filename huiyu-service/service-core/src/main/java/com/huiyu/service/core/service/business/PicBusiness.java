@@ -7,6 +7,8 @@ import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
 
+import java.util.List;
+
 public interface PicBusiness {
     /**
      * 分页查询
@@ -34,4 +36,13 @@ public interface PicBusiness {
      * @return
      */
     boolean share(Pic pic, StateEnum state);
+
+    /**
+     * 用户批量删除图片
+     *
+     * @param userId   用户id
+     * @param uuidList 图片uuid列表
+     * @return true/false
+     */
+    boolean userDeleteByUuidList(Long userId, List<String> uuidList);
 }

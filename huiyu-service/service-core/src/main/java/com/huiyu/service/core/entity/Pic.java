@@ -203,6 +203,11 @@ public class Pic implements Serializable {
     @TableField("infotexts")
     private String infotexts;
     /**
+     * 用户是否删除1是0否
+     */
+    @TableField("is_user_delete")
+    private Integer isUserDelete;
+    /**
      * 创建时间
      */
     @TableField("create_time")

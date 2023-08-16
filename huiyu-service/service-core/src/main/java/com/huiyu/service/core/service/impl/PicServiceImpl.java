@@ -8,12 +8,10 @@ import com.huiyu.service.core.mapper.PicMapper;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.UserPicCountDto;
 import com.huiyu.service.core.model.query.PicQuery;
-import com.huiyu.service.core.service.PicExtService;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.utils.mirai.MiraiUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,9 +21,6 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
 
     @Resource
     private PicMapper picMapper;
-
-    @Resource
-    private PicExtService picExtService;
 
     @Override
     public IPage<Pic> adminPageQuery(IPage<Pic> page, PicQuery query) {
@@ -51,6 +46,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
         return super.lambdaQuery()
                 .select(Pic::getUuid, Pic::getPath, Pic::getStatus, Pic::getQuality, Pic::getWidth, Pic::getHeight)
                 .eq(Pic::getUserId, dto.getUserId())
+                .eq(Pic::getIsUserDelete, 0)
                 .le(Pic::getCreateTime, dto.getQueryDeadline())
                 .orderByDesc(Pic::getCreateTime)
                 .page(page);
@@ -73,6 +69,7 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
         return super.lambdaQuery()
                 .eq(Pic::getUuid, uuid)
                 .eq(Pic::getUserId, userId)
+                .eq(Pic::getIsUserDelete, 0)
                 .one();
     }
 
@@ -82,22 +79,13 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
                 .eq(Pic::getUuid, uuid)
                 .eq(Pic::getUserId, userId)
                 .eq(Pic::getStatus, status)
+                .eq(Pic::getIsUserDelete, 0)
                 .one();
     }
 
     @Override
     public Pic getByTaskId(Long taskId) {
         return picMapper.getByTaskId(taskId);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public boolean delete(Long id) {
-        int delete = picMapper.delete(id);
-        if (delete <= 0) {
-            return false;
-        }
-        return picExtService.deleteByPicId(id);
     }
 
     @Override
@@ -136,11 +124,11 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     }
 
     @Override
-    public boolean deleteByUuid(String uuid) {
-        if (StringUtils.isEmpty(uuid)) {
-            return false;
-        }
-        return picMapper.deleteByUuid(uuid) > 0;
+    public boolean userDeleteByUuidList(Long userId, List<String> uuidList) {
+        return super.lambdaUpdate()
+                .set(Pic::getIsUserDelete, 1)
+                .eq(Pic::getUserId, userId)
+                .in(Pic::getUuid, uuidList)
+                .update();
     }
-
 }

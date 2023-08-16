@@ -12,15 +12,9 @@ import java.util.List;
 @Mapper
 @Repository
 public interface PicMapper extends BaseMapper<Pic> {
-    List<Pic> getByUserId(@Param("userId") Long userId);
-
     Long getParentPicIdById(Long id);
 
-    int deleteByUuid(String uuid);
-
     Pic getByTaskId(Long taskId);
-
-    int delete(Long id);
 
     List<UserPicCountDto> countByUserIdList(@Param("userIdList") List<Long> userIdList);
 }

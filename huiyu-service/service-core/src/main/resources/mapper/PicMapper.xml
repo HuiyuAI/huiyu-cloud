@@ -39,6 +39,7 @@
         <result column="upscaling_resize" property="upscalingResize"/>
         <result column="alwayson_scripts" property="alwaysonScripts"/>
         <result column="infotexts" property="infotexts"/>
+        <result column="is_user_delete" property="isUserDelete"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>
@@ -75,15 +76,4 @@
         group by user_id
     </select>
 
-    <update id="deleteByUuid">
-        update pic
-        set is_delete = 1
-        where uuid = #{uuid}
-    </update>
-
-    <update id="delete">
-        update pic
-        set is_delete = 1
-        where id = #{id}
-    </update>
 </mapper>

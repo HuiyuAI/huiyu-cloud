@@ -39,6 +39,15 @@ public interface PicService extends IService<Pic> {
     Pic getById(Long id);
 
     /**
+     * 根据主键id查询图片详情
+     *
+     * @param id                  主键id
+     * @param isAlreadyUserDelete 是否查询用户删除的图片
+     * @return 图片详情
+     */
+    Pic getByIdAndUserDelete(Long id, boolean isAlreadyUserDelete);
+
+    /**
      * 根据uuid查询图片详情
      *
      * @param uuid 图片uuid

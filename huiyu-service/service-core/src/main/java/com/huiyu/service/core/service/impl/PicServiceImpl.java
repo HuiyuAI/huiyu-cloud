@@ -58,6 +58,14 @@ public class PicServiceImpl extends ServiceImpl<PicMapper, Pic> implements PicSe
     }
 
     @Override
+    public Pic getByIdAndUserDelete(Long id, boolean isAlreadyUserDelete) {
+        return super.lambdaQuery()
+                .eq(Pic::getId, id)
+                .eq(Pic::getIsUserDelete, isAlreadyUserDelete ? 1 : 0)
+                .one();
+    }
+
+    @Override
     public Pic getByUuidOnly(String uuid) {
         return super.lambdaQuery()
                 .eq(Pic::getUuid, uuid)

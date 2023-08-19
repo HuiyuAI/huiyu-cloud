@@ -1,9 +1,9 @@
 package com.huiyu.service.core.service.business;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.huiyu.service.core.enums.StateEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
 
@@ -31,11 +31,11 @@ public interface PicBusiness {
     /**
      * 图片分享
      *
-     * @param pic   图片
-     * @param state 分享状态
+     * @param userId      用户id
+     * @param picShareDto 投稿信息
      * @return
      */
-    boolean share(Pic pic, StateEnum state);
+    boolean share(Long userId, PicShareDto picShareDto);
 
     /**
      * 用户批量删除图片

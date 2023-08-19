@@ -7,6 +7,7 @@ import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.business.PicBusiness;
@@ -67,6 +68,18 @@ public class PicController {
     public R<?> deleteByUuidList(@RequestBody List<String> uuidList) {
         Long userId = JwtUtils.getUserId();
         boolean res = picBusiness.userDeleteByUuidList(userId, uuidList);
+        return R.status(res);
+    }
+
+    /**
+     * 投稿分享
+     */
+    @RequestLimiter(seconds = 3600, maxCount = 60, msg = "投稿次数过多，请稍后再试")
+    @RequestLogger
+    @PostMapping("/share")
+    public R<?> share(@Valid @RequestBody PicShareDto picShareDto) {
+        Long userId = JwtUtils.getUserId();
+        boolean res = picBusiness.share(userId, picShareDto);
         return R.status(res);
     }
 

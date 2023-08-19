@@ -59,6 +59,8 @@ public class SDServerCallbackController {
             boolean res = wxMaService.getSecCheckService().checkImage(checkUrl);
             log.info("图片上传成功, 调用微信图片审核接口, imgUrl: {}, res: {}", res);
         } catch (WxErrorException e) {
+            // TODO 违规图片发至群内审核
+            // TODO 如果不是违规原因, 可能是微信接口调用失败, 发至群内审核
             log.error("图片上传成功, 调用微信图片审核接口, imgUrl: {}, 错误信息: {}", e.getMessage());
             picStatus = PicStatusEnum.RISKY;
         }

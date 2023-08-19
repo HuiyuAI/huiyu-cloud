@@ -1,20 +1,24 @@
 package com.huiyu.service.core.service.business.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.convert.PicConvert;
 import com.huiyu.service.core.entity.Model;
+import com.huiyu.service.core.entity.PicShare;
+import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.model.dto.PicPageDto;
+import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicVo;
+import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.service.ModelService;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.business.PicBusiness;
-import com.huiyu.service.core.enums.StateEnum;
 import com.huiyu.service.core.entity.Pic;
-import com.huiyu.service.core.entity.PicExt;
-import com.huiyu.service.core.service.PicExtService;
+import com.huiyu.service.core.utils.IdUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -22,16 +26,17 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class PicBusinessImpl implements PicBusiness {
 
     @Resource
-    private PicExtService picExtService;
+    private PicService picService;
 
     @Resource
-    private PicService picService;
+    private PicShareService picShareService;
 
     @Resource
     private ModelService modelService;
@@ -72,39 +77,46 @@ public class PicBusinessImpl implements PicBusiness {
         return picVo;
     }
 
-    /**
-     * 分享投稿图片
-     *
-     * @param pic   图片信息
-     * @param state 需要的状态
-     * @return 是否操作成功
-     */
     @Override
-    public boolean share(Pic pic, StateEnum state) {
-        if (pic.getUserId() == null || pic.getId() == null) {
+    public boolean share(Long userId, PicShareDto picShareDto) {
+        Assert.notNull(userId, "异常错误");
+
+        List<PicShare> picShareList = picShareService.getByUserIdAndUuidList(userId, Collections.singletonList(picShareDto.getUuid()));
+        if (CollUtil.isNotEmpty(picShareList)) {
+            // 已经有投稿记录
             return false;
         }
-        LocalDateTime now = LocalDateTime.now();
-        // 判断是否存在
-        PicExt picExt = picExtService.getByPicId(pic.getId());
-        if (picExt != null) {
-            // 已分享
-            picExt.setEnable(state);
-            picExt.setUpdateTime(now);
-            return picExtService.update(picExt);
-        } else {
-            // 未分享
-            picExt = PicExt.builder()
-                    .picId(pic.getId())
-                    .views(0)
-                    .path(pic.getPath())
-                    .enable(state)
-                    .updateTime(now)
-                    .isDelete(0)
-                    .createTime(now)
-                    .build();
-            return picExtService.insert(picExt);
+
+        // 未分享，检查图片状态
+        Pic pic = picService.getByUuidAndUserIdAndStatus(picShareDto.getUuid(), userId, PicStatusEnum.GENERATED);
+        if (pic == null) {
+            return false;
         }
+
+        // 可分享，提交审核
+        LocalDateTime now = LocalDateTime.now();
+        PicShare picShare = PicShare.builder()
+                .id(IdUtils.nextSnowflakeId())
+                .picId(pic.getId())
+                .uuid(pic.getUuid())
+                .userId(userId)
+                .title(StringUtils.trimToEmpty(picShareDto.getTitle()))
+                .hits(0)
+                .likeCount(0)
+                .drawCount(0)
+                .status(PicShareStatusEnum.AUDITING)
+                .createTime(now)
+                .updateTime(now)
+                .isDelete(0)
+                .build();
+        boolean flag = picShareService.save(picShare);
+        if (!flag) {
+            return false;
+        }
+
+        // 通知审核群
+        picShareService.sendMsgByPicShare(pic, picShare, now);
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -117,7 +129,16 @@ public class PicBusinessImpl implements PicBusiness {
         if (!res) {
             return false;
         }
-        // TODO 已分享的图片要不要删除
-        return res;
+
+        // 如果图片正在投稿审核中，取消投稿
+        // 暂时先不取消投稿
+//        List<Long> picIdList = picShareService.getByUserIdAndUuidList(userId, uuidList).stream()
+//                .filter(picShare -> picShare.getStatus() == PicShareStatusEnum.AUDITING)
+//                .map(PicShare::getPicId)
+//                .collect(Collectors.toList());
+//        picShareService.audit(picIdList, PicShareStatusEnum.CANCEL);
+
+        // 已分享的图片不删除
+        return true;
     }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huiyu.service.core.mapper.PicShareMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="picShareResultMap" type="com.huiyu.service.core.entity.PicShare">
+        <result column="id" property="id"/>
+        <result column="pic_id" property="picId"/>
+        <result column="uuid" property="uuid"/>
+        <result column="user_id" property="userId"/>
+        <result column="title" property="title"/>
+        <result column="hits" property="hits"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="draw_count" property="drawCount"/>
+        <result column="status" property="status"/>
+        <result column="audit_time" property="auditTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_delete" property="isDelete"/>
+    </resultMap>
+
+</mapper>

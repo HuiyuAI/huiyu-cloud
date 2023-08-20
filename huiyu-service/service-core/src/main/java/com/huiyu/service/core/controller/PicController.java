@@ -10,6 +10,7 @@ import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
+import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.business.PicBusiness;
@@ -91,9 +92,20 @@ public class PicController {
     @RequestLimiter(seconds = 60, maxCount = 60)
     @RequestLogger
     @GetMapping("/picSharePage")
-    public R<IPage<PicShareVo>> picSharePage(@Valid PicSharePageDto dto) {
-        IPage<PicShareVo> picVoPage = picBusiness.picSharePage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
+    public R<IPage<PicSharePageVo>> picSharePage(@Valid PicSharePageDto dto) {
+        IPage<PicSharePageVo> picVoPage = picBusiness.picSharePage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
         return R.ok(picVoPage);
+    }
+
+    /**
+     * 图片分享详情
+     */
+    @RequestLimiter(seconds = 60, maxCount = 60)
+    @RequestLogger
+    @GetMapping("/getPicShareVo")
+    public R<PicShareVo> getPicShareVo(String uuid) {
+        PicShareVo picShareVo = picBusiness.getPicShareVoByUuid(uuid);
+        return R.ok(picShareVo);
     }
 
 }

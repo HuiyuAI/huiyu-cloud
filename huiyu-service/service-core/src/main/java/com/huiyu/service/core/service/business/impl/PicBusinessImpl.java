@@ -12,6 +12,7 @@ import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
+import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.PicShareService;
@@ -156,8 +157,14 @@ public class PicBusinessImpl implements PicBusiness {
     }
 
     @Override
-    public IPage<PicShareVo> picSharePage(IPage<PicShare> page, PicSharePageDto dto) {
-        IPage<PicShareVo> picSharePage = picShareService.queryPage(page, dto);
+    public IPage<PicSharePageVo> picSharePage(IPage<PicShare> page, PicSharePageDto dto) {
+        IPage<PicSharePageVo> picSharePage = picShareService.queryPage(page, dto);
         return picSharePage;
+    }
+
+    @Override
+    public PicShareVo getPicShareVoByUuid(String uuid) {
+        PicShareVo picShareVo = picShareService.getPicShareVoByUuid(uuid);
+        return picShareVo;
     }
 }

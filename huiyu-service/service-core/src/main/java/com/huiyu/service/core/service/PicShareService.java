@@ -6,6 +6,7 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import org.springframework.scheduling.annotation.Async;
 
@@ -26,7 +27,15 @@ public interface PicShareService extends IService<PicShare> {
      * @param dto  查询条件
      * @return 分页结果
      */
-    IPage<PicShareVo> queryPage(IPage<PicShare> page, PicSharePageDto dto);
+    IPage<PicSharePageVo> queryPage(IPage<PicShare> page, PicSharePageDto dto);
+
+    /**
+     * 根据图片uuid查询图片分享详情
+     *
+     * @param uuid 图片uuid
+     * @return 图片分享详情
+     */
+    PicShareVo getPicShareVoByUuid(String uuid);
 
     /**
      * 根据图片id查询图片分享详情

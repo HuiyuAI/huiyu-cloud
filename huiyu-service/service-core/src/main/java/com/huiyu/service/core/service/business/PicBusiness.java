@@ -7,6 +7,7 @@ import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
+import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
 
@@ -56,5 +57,13 @@ public interface PicBusiness {
      * @param dto  筛选条件
      * @return 查询结果
      */
-    IPage<PicShareVo> picSharePage(IPage<PicShare> page, PicSharePageDto dto);
+    IPage<PicSharePageVo> picSharePage(IPage<PicShare> page, PicSharePageDto dto);
+
+    /**
+     * 根据图片uuid查询图片分享详情
+     *
+     * @param uuid 图片uuid
+     * @return 图片分享详情
+     */
+    PicShareVo getPicShareVoByUuid(String uuid);
 }

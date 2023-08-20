@@ -1,9 +1,12 @@
 package com.huiyu.service.core.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
+import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.vo.PicShareVo;
 import org.springframework.scheduling.annotation.Async;
 
 import java.time.LocalDateTime;
@@ -16,6 +19,22 @@ import java.util.List;
  * @date 2023-08-19
  */
 public interface PicShareService extends IService<PicShare> {
+    /**
+     * 分页查询
+     *
+     * @param page 分页对象
+     * @param dto  查询条件
+     * @return 分页结果
+     */
+    IPage<PicShareVo> queryPage(IPage<PicShare> page, PicSharePageDto dto);
+
+    /**
+     * 根据图片id查询图片分享详情
+     *
+     * @param picId 图片id
+     * @return 图片分享详情
+     */
+    PicShare getByPicId(Long picId);
 
     /**
      * 根据用户id和图片uuid查询图片分享详情

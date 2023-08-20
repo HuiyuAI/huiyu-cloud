@@ -2,16 +2,19 @@ package com.huiyu.service.core.service.business;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.core.entity.Pic;
+import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
+import com.huiyu.service.core.model.dto.PicSharePageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
+import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
 
 import java.util.List;
 
 public interface PicBusiness {
     /**
-     * 分页查询
+     * 分页查询画夹
      *
      * @param page 分页对象
      * @param dto  筛选条件
@@ -45,4 +48,13 @@ public interface PicBusiness {
      * @return true/false
      */
     boolean userDeleteByUuidList(Long userId, List<String> uuidList);
+
+    /**
+     * 分页查询广场投稿
+     *
+     * @param page 分页对象
+     * @param dto  筛选条件
+     * @return 查询结果
+     */
+    IPage<PicShareVo> picSharePage(IPage<PicShare> page, PicSharePageDto dto);
 }

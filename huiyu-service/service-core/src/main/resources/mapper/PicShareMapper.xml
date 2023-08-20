@@ -19,4 +19,54 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
+    <resultMap id="picShareVoResultMap" type="com.huiyu.service.core.model.vo.PicShareVo">
+        <result column="uuid" property="uuid"/>
+        <result column="path" property="path"/>
+        <result column="model_id" property="modelId"/>
+        <result column="model_name" property="modelName"/>
+        <result column="quality" property="quality"/>
+        <result column="ratio" property="ratio"/>
+        <result column="width" property="width"/>
+        <result column="height" property="height"/>
+        <result column="steps" property="steps"/>
+        <result column="cfg" property="cfg"/>
+        <result column="user_nickname" property="userNickname"/>
+        <result column="user_avatar" property="userAvatar"/>
+        <result column="title" property="title"/>
+        <result column="hits" property="hits"/>
+        <result column="like_count" property="likeCount"/>
+        <result column="draw_count" property="drawCount"/>
+        <result column="audit_time" property="auditTime"/>
+    </resultMap>
+
+    <select id="queryPage" resultMap="picShareVoResultMap">
+        select b.uuid,
+               b.path,
+               b.model_id,
+               c.name     as model_name,
+               b.quality,
+               b.ratio,
+               b.width,
+               b.height,
+               b.steps,
+               b.cfg,
+               d.nickname as user_nickname,
+               d.avatar   as user_avatar,
+               a.title,
+               a.hits,
+               a.like_count,
+               a.draw_count,
+               a.audit_time
+        from pic_share as a
+                 left join pic as b on a.pic_id = b.id
+                 left join model as c on b.model_id = c.id
+                 left join user as d on a.user_id = d.user_id
+        where a.is_delete = 0
+          and b.is_delete = 0
+          and c.is_delete = 0
+          and d.is_delete = 0
+          and a.status = #{picShareStatus}
+          and a.audit_time &lt;= #{dto.queryDeadline}
+    </select>
+
 </mapper>

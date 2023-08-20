@@ -1,10 +1,13 @@
 package com.huiyu.service.core.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.mapper.PicShareMapper;
+import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.utils.mirai.MiraiUtils;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,18 @@ import java.util.List;
  */
 @Service
 public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> implements PicShareService {
+
+    @Override
+    public IPage<PicShareVo> queryPage(IPage<PicShare> page, PicSharePageDto dto) {
+        return super.baseMapper.queryPage(page, dto, PicShareStatusEnum.PUBLIC);
+    }
+
+    @Override
+    public PicShare getByPicId(Long picId) {
+        return super.lambdaQuery()
+                .eq(PicShare::getPicId, picId)
+                .one();
+    }
 
     @Override
     public List<PicShare> getByUserIdAndUuidList(Long userId, List<String> uuidList) {

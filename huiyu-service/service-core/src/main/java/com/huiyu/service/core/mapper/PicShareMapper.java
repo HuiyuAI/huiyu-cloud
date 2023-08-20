@@ -1,8 +1,13 @@
 package com.huiyu.service.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.core.entity.PicShare;
+import com.huiyu.service.core.enums.PicShareStatusEnum;
+import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.vo.PicShareVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 图片分享表(PicShare)Mapper接口
@@ -13,4 +18,13 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PicShareMapper extends BaseMapper<PicShare> {
 
+    /**
+     * 分页查询
+     *
+     * @param page           分页对象
+     * @param dto            查询条件
+     * @param picShareStatus 图片投稿状态
+     * @return 分页结果
+     */
+    IPage<PicShareVo> queryPage(@Param("page") IPage<PicShare> page, @Param("dto") PicSharePageDto dto, @Param("picShareStatus") PicShareStatusEnum picShareStatus);
 }

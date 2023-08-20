@@ -8,7 +8,9 @@ import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
+import com.huiyu.service.core.model.dto.PicSharePageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
+import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.business.PicBusiness;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,6 +83,17 @@ public class PicController {
         Long userId = JwtUtils.getUserId();
         boolean res = picBusiness.share(userId, picShareDto);
         return R.status(res);
+    }
+
+    /**
+     * 分页查询广场分享
+     */
+    @RequestLimiter(seconds = 60, maxCount = 60)
+    @RequestLogger
+    @GetMapping("/picSharePage")
+    public R<IPage<PicShareVo>> picSharePage(@Valid PicSharePageDto dto) {
+        IPage<PicShareVo> picVoPage = picBusiness.picSharePage(Page.of(dto.getPageNum(), dto.getPageSize()), dto);
+        return R.ok(picVoPage);
     }
 
 }

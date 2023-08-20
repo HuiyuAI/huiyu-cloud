@@ -10,7 +10,9 @@ import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
+import com.huiyu.service.core.model.dto.PicSharePageDto;
 import com.huiyu.service.core.model.vo.PicPageVo;
+import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
 import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.service.ModelService;
@@ -71,6 +73,17 @@ public class PicBusinessImpl implements PicBusiness {
         } else {
             picVo.setModelId(model.getId());
             picVo.setModelName(model.getName());
+        }
+
+        if (pic.getStatus() == PicStatusEnum.GENERATED) {
+            PicShare picShare = picShareService.getByPicId(pic.getId());
+            if (picShare == null) {
+                picVo.setShareStatus(PicShareStatusEnum.NONE);
+            } else {
+                picVo.setShareStatus(picShare.getStatus());
+            }
+        } else {
+            picVo.setShareStatus(PicShareStatusEnum.NONE);
         }
 
         picVo.setQuality(pic.getQuality().getDesc());
@@ -140,5 +153,11 @@ public class PicBusinessImpl implements PicBusiness {
 
         // 已分享的图片不删除
         return true;
+    }
+
+    @Override
+    public IPage<PicShareVo> picSharePage(IPage<PicShare> page, PicSharePageDto dto) {
+        IPage<PicShareVo> picSharePage = picShareService.queryPage(page, dto);
+        return picSharePage;
     }
 }

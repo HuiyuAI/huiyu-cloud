@@ -1,7 +1,5 @@
 package com.huiyu.service.core.model.vo;
 
-import com.huiyu.service.core.enums.PicShareStatusEnum;
-import com.huiyu.service.core.enums.PicStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,21 +10,17 @@ import java.time.LocalDateTime;
 
 /**
  * @author Naccl
- * @date 2023-06-25
+ * @date 2023-08-19
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PicVo {
+public class PicShareVo {
     /**
-     * uuid
+     * 图片uuid
      */
     private String uuid;
-    /**
-     * 状态
-     */
-    private PicStatusEnum status;
     /**
      * 图片地址
      */
@@ -48,14 +42,6 @@ public class PicVo {
      */
     private String ratio;
     /**
-     * 正向描述词
-     */
-    private String prompt;
-    /**
-     * 反向描述词
-     */
-    private String negativePrompt;
-    /**
      * 宽
      */
     private Integer width;
@@ -63,10 +49,6 @@ public class PicVo {
      * 高
      */
     private Integer height;
-    /**
-     * 种子
-     */
-    private Long seed;
     /**
      * 采样步数
      */
@@ -76,11 +58,31 @@ public class PicVo {
      */
     private BigDecimal cfg;
     /**
-     * 创建时间
+     * 投稿人昵称
      */
-    private LocalDateTime createTime;
+    private String userNickname;
     /**
-     * 图片投稿状态
+     * 投稿人头像
      */
-    private PicShareStatusEnum shareStatus;
+    private String userAvatar;
+    /**
+     * 作品标题
+     */
+    private String title;
+    /**
+     * 点击量
+     */
+    private Integer hits;
+    /**
+     * 点赞量
+     */
+    private Integer likeCount;
+    /**
+     * 画同款次数
+     */
+    private Integer drawCount;
+    /**
+     * 审核通过时间
+     */
+    private LocalDateTime auditTime;
 }

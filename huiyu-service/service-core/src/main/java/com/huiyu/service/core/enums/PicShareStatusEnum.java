@@ -5,10 +5,10 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
- * 图片状态枚举
+ * 图片投稿状态枚举
  *
  * @author Naccl
- * @date 2023-06-18
+ * @date 2023-08-19
  */
 @Getter
 @ToString

@@ -63,19 +63,38 @@
                b.is_user_delete             as pic_is_user_delete,
                b.create_time                as pic_create_time,
                b.update_time                as pic_update_time,
-               c.id                         as model_id,
-               c.name                       as model_name,
-               d.user_id                    as user_user_id,
-               d.nickname                   as user_nickname,
-               d.avatar                     as user_avatar
+        c.id as model_id,
+        c.name as model_name,
+        d.user_id as user_user_id,
+        d.nickname as user_nickname,
+        d.avatar as user_avatar
         from pic_share as a
-                 left join pic as b on a.pic_id = b.id
-                 left join model as c on b.model_id = c.id
-                 left join user as d on a.user_id = d.user_id
+        left join pic as b on a.pic_id = b.id
+        left join model as c on b.model_id = c.id
+        left join user as d on a.user_id = d.user_id
         where a.is_delete = 0
-          and b.is_delete = 0
-          and c.is_delete = 0
-          and d.is_delete = 0
+        and b.is_delete = 0
+        and c.is_delete = 0
+        and d.is_delete = 0
+        <if test="query.uuid != null and query.uuid != ''">
+            and a.uuid = #{query.uuid}
+        </if>
+        <if test="query.userId != null">
+            and a.user_id = #{query.userId}
+        </if>
+        <if test="query.modelId != null">
+            and b.model_id = #{query.modelId}
+        </if>
+        <if test="query.status != null">
+            and a.status = #{query.status}
+        </if>
+        <if test="query.createTimeStart != null and query.createTimeEnd != null">
+            and a.create_time >= #{query.createTimeStart}
+        </if>
+        <if test="query.createTimeStart != null and query.createTimeEnd != null">
+            and a.create_time &lt;= #{query.createTimeEnd}
+        </if>
+        order by a.id desc
     </select>
 
     <resultMap id="picSharePageVoResultMap" type="com.huiyu.service.core.model.vo.PicSharePageVo">

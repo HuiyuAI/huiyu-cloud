@@ -1,8 +1,6 @@
 package com.huiyu.service.core.model.query;
 
-import com.huiyu.service.core.enums.PicStatusEnum;
-import com.huiyu.service.core.enums.TaskTypeEnum;
-import com.huiyu.service.core.sd.constant.ImageQualityEnum;
+import com.huiyu.service.core.enums.PicShareStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,13 +17,28 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PicShareQuery {
-
     /**
-     * 创建时间开始
+     * 图片uuid
+     */
+    private String uuid;
+    /**
+     * 用户id
+     */
+    private Long userId;
+    /**
+     * 模型id
+     */
+    private Long modelId;
+    /**
+     * 审核状态
+     */
+    private PicShareStatusEnum status;
+    /**
+     * 投稿时间开始
      */
     private LocalDateTime createTimeStart;
     /**
-     * 创建时间结束
+     * 投稿时间结束
      */
     private LocalDateTime createTimeEnd;
 }

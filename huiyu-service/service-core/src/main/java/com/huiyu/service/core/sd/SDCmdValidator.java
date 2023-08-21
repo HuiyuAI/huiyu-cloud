@@ -54,10 +54,11 @@ public class SDCmdValidator {
             return Pair.of(false, "负向描述词过长");
         }
 
-        if (cmd.getSteps() == null) {
-            cmd.setSteps(20);
-        }
-
+//        if (cmd.getSteps() == null) {
+//            cmd.setSteps(20);
+//        }
+        // 固定20步
+        cmd.setSteps(20);
 
         if (cmd.getCfg() == null) {
             cmd.setCfg(BigDecimal.valueOf(9));

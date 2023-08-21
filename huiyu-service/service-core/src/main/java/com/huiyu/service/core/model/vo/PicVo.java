@@ -68,10 +68,6 @@ public class PicVo {
      */
     private Long seed;
     /**
-     * 采样步数
-     */
-    private Integer steps;
-    /**
      * 提示词引导系数
      */
     private BigDecimal cfg;

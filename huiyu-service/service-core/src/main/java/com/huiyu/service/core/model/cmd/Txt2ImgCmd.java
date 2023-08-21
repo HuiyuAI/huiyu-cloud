@@ -39,10 +39,10 @@ public class Txt2ImgCmd extends Cmd {
      */
     private String negativePrompt;
     /**
-     * 采样步数 10-30
+     * 采样步数 10-30 现在固定为20
      */
-    @Min(value = 10, message = "参数错误")
-    @Max(value = 30, message = "参数错误")
+//    @Min(value = 10, message = "参数错误")
+//    @Max(value = 30, message = "参数错误")
     private Integer steps;
     /**
      * 图片尺寸

@@ -80,7 +80,7 @@ public class UserBusinessImpl implements UserBusiness {
             throw new IllegalArgumentException("积分数值不合法");
         }
         if (pointType == null && (source != PointOperationSourceEnum.GENERATE_PIC && source != PointOperationSourceEnum.FAIL_RETURN)) {
-            // 操作来源不是[生成图片]或[失败返回]时，积分类型不能为空
+            // 操作来源不是[生成图片]或[失败返还]时，积分类型不能为空
             throw new IllegalArgumentException("积分类型不合法");
         }
 

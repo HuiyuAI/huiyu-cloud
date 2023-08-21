@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.query.PicShareQuery;
+import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,6 +20,14 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface PicShareMapper extends BaseMapper<PicShare> {
+    /**
+     * 后台管理分页查询
+     *
+     * @param page  分页对象
+     * @param query 筛选条件
+     * @return 查询结果
+     */
+    IPage<PicShareAdminVo> adminPageQuery(@Param("page") IPage<PicShare> page, @Param("query") PicShareQuery query);
 
     /**
      * 分页查询

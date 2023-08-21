@@ -7,6 +7,8 @@ import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.mapper.PicShareMapper;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.query.PicShareQuery;
+import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.service.PicShareService;
@@ -24,6 +26,11 @@ import java.util.List;
  */
 @Service
 public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> implements PicShareService {
+
+    @Override
+    public IPage<PicShareAdminVo> adminPageQuery(IPage<PicShare> page, PicShareQuery query) {
+        return super.baseMapper.adminPageQuery(page, query);
+    }
 
     @Override
     public IPage<PicSharePageVo> queryPage(IPage<PicShare> page, PicSharePageDto dto) {

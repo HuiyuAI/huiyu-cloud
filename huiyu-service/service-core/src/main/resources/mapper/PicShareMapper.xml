@@ -19,6 +19,65 @@
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
+    <resultMap id="picShareAdminVoResultMap" type="com.huiyu.service.core.model.vo.PicShareAdminVo">
+        <association property="picShare" resultMap="picShareResultMap"/>
+        <association property="pic" javaType="com.huiyu.service.core.entity.Pic">
+            <result column="pic_status" property="status"/>
+            <result column="pic_path" property="path"/>
+            <result column="pic_type" property="type"/>
+            <result column="pic_prompt" property="prompt"/>
+            <result column="pic_negative_prompt" property="negativePrompt"/>
+            <result column="pic_translated_prompt" property="translatedPrompt"/>
+            <result column="pic_translated_negative_prompt" property="translatedNegativePrompt"/>
+            <result column="pic_quality" property="quality"/>
+            <result column="pic_ratio" property="ratio"/>
+            <result column="pic_width" property="width"/>
+            <result column="pic_height" property="height"/>
+            <result column="pic_is_user_delete" property="isUserDelete"/>
+            <result column="pic_create_time" property="createTime"/>
+            <result column="pic_update_time" property="updateTime"/>
+        </association>
+        <association property="model" javaType="com.huiyu.service.core.entity.Model">
+            <result column="model_id" property="id"/>
+            <result column="model_name" property="name"/>
+        </association>
+        <association property="user" javaType="com.huiyu.service.api.entity.User">
+            <result column="user_nickname" property="nickname"/>
+            <result column="user_avatar" property="avatar"/>
+        </association>
+    </resultMap>
+
+    <select id="adminPageQuery" resultMap="picShareAdminVoResultMap">
+        select a.*,
+               b.status                     as pic_status,
+               b.path                       as pic_path,
+               b.type                       as pic_type,
+               b.prompt                     as pic_prompt,
+               b.negative_prompt            as pic_negative_prompt,
+               b.translated_prompt          as pic_translated_prompt,
+               b.translated_negative_prompt as pic_translated_negative_prompt,
+               b.quality                    as pic_quality,
+               b.ratio                      as pic_ratio,
+               b.width                      as pic_width,
+               b.height                     as pic_height,
+               b.is_user_delete             as pic_is_user_delete,
+               b.create_time                as pic_create_time,
+               b.update_time                as pic_update_time,
+               c.id                         as model_id,
+               c.name                       as model_name,
+               d.user_id                    as user_user_id,
+               d.nickname                   as user_nickname,
+               d.avatar                     as user_avatar
+        from pic_share as a
+                 left join pic as b on a.pic_id = b.id
+                 left join model as c on b.model_id = c.id
+                 left join user as d on a.user_id = d.user_id
+        where a.is_delete = 0
+          and b.is_delete = 0
+          and c.is_delete = 0
+          and d.is_delete = 0
+    </select>
+
     <resultMap id="picSharePageVoResultMap" type="com.huiyu.service.core.model.vo.PicSharePageVo">
         <result column="uuid" property="uuid"/>
         <result column="path" property="path"/>

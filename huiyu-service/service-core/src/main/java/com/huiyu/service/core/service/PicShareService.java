@@ -6,6 +6,8 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.query.PicShareQuery;
+import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +22,15 @@ import java.util.List;
  * @date 2023-08-19
  */
 public interface PicShareService extends IService<PicShare> {
+    /**
+     * 后台管理分页查询
+     *
+     * @param page  分页对象
+     * @param query 筛选条件
+     * @return 查询结果
+     */
+    IPage<PicShareAdminVo> adminPageQuery(IPage<PicShare> page, PicShareQuery query);
+
     /**
      * 分页查询
      *

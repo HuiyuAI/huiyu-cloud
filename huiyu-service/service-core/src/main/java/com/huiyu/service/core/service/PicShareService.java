@@ -99,4 +99,13 @@ public interface PicShareService extends IService<PicShare> {
      * @return true/false
      */
     boolean reAudit(List<Long> picIdList);
+
+    /**
+     * 根据图片uuid增加图片点击量
+     *
+     * @param uuid 图片uuid
+     * @return true/false
+     */
+    @Async
+    void addHitsByUuid(String uuid);
 }

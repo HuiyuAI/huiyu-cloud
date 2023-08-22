@@ -50,10 +50,6 @@ public class PicShareVo {
      */
     private Integer height;
     /**
-     * 采样步数
-     */
-    private Integer steps;
-    /**
      * 提示词引导系数
      */
     private BigDecimal cfg;
@@ -70,10 +66,6 @@ public class PicShareVo {
      */
     private String title;
     /**
-     * 点击量
-     */
-    private Integer hits;
-    /**
      * 点赞量
      */
     private Integer likeCount;
@@ -81,6 +73,10 @@ public class PicShareVo {
      * 画同款次数
      */
     private Integer drawCount;
+    /**
+     * 是否已点赞
+     */
+    private Boolean isLike;
     /**
      * 审核通过时间
      */

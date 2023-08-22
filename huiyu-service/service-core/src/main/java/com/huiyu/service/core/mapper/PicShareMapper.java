@@ -47,4 +47,12 @@ public interface PicShareMapper extends BaseMapper<PicShare> {
      * @return 图片分享详情
      */
     PicShareVo getByUuid(@Param("uuid") String uuid, @Param("picShareStatus") PicShareStatusEnum picShareStatus);
+
+    /**
+     * 根据图片uuid增加图片点击量
+     *
+     * @param uuid 图片uuid
+     * @return 更新行数
+     */
+    int addHitsByUuid(@Param("uuid") String uuid);
 }

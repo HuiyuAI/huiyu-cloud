@@ -84,4 +84,9 @@ public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> i
                 .set(PicShare::getStatus, PicShareStatusEnum.AUDITING)
                 .update();
     }
+
+    @Override
+    public void addHitsByUuid(String uuid) {
+        super.baseMapper.addHitsByUuid(uuid);
+    }
 }

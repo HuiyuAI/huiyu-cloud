@@ -15,6 +15,7 @@ import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
+import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.service.ModelService;
 import com.huiyu.service.core.service.PicService;
@@ -70,12 +71,14 @@ public class PicBusinessImpl implements PicBusiness {
 
         Model model = modelService.getById(pic.getModelId(), true);
         if (model == null) {
+            picVo.setModelId(null);
             picVo.setModelName("模型已下架");
         } else {
             picVo.setModelId(model.getId());
             picVo.setModelName(model.getName());
         }
 
+        // 设置投稿状态
         if (pic.getStatus() == PicStatusEnum.GENERATED) {
             PicShare picShare = picShareService.getByPicId(pic.getId());
             if (picShare == null) {
@@ -165,6 +168,18 @@ public class PicBusinessImpl implements PicBusiness {
     @Override
     public PicShareVo getPicShareVoByUuid(String uuid) {
         PicShareVo picShareVo = picShareService.getPicShareVoByUuid(uuid);
+
+        Model model = modelService.getById(picShareVo.getModelId(), true);
+        if (model == null) {
+            picShareVo.setModelId(null);
+            picShareVo.setModelName("模型已下架");
+        } else {
+            picShareVo.setModelName(model.getName());
+        }
+
+        picShareVo.setQuality(ImageQualityEnum.getEnumByCode(Integer.valueOf(picShareVo.getQuality())).getDesc());
+
+        picShareService.addHitsByUuid(uuid);
         return picShareVo;
     }
 }

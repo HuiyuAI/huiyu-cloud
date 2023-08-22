@@ -63,15 +63,15 @@
                b.is_user_delete             as pic_is_user_delete,
                b.create_time                as pic_create_time,
                b.update_time                as pic_update_time,
-        c.id as model_id,
-        c.name as model_name,
-        d.user_id as user_user_id,
-        d.nickname as user_nickname,
-        d.avatar as user_avatar
+               c.id                         as model_id,
+               c.name                       as model_name,
+               d.user_id                    as user_user_id,
+               d.nickname                   as user_nickname,
+               d.avatar                     as user_avatar
         from pic_share as a
-        left join pic as b on a.pic_id = b.id
-        left join model as c on b.model_id = c.id
-        left join user as d on a.user_id = d.user_id
+                 left join pic as b on a.pic_id = b.id
+                 left join model as c on b.model_id = c.id
+                 left join user as d on a.user_id = d.user_id
         where a.is_delete = 0
         and b.is_delete = 0
         and c.is_delete = 0
@@ -136,12 +136,10 @@
         <result column="ratio" property="ratio"/>
         <result column="width" property="width"/>
         <result column="height" property="height"/>
-        <result column="steps" property="steps"/>
         <result column="cfg" property="cfg"/>
         <result column="user_nickname" property="userNickname"/>
         <result column="user_avatar" property="userAvatar"/>
         <result column="title" property="title"/>
-        <result column="hits" property="hits"/>
         <result column="like_count" property="likeCount"/>
         <result column="draw_count" property="drawCount"/>
         <result column="audit_time" property="auditTime"/>
@@ -151,12 +149,10 @@
         select b.uuid,
                b.path,
                b.model_id,
-               c.name     as model_name,
                b.quality,
                b.ratio,
                b.width,
                b.height,
-               b.steps,
                b.cfg,
                d.nickname as user_nickname,
                d.avatar   as user_avatar,
@@ -167,14 +163,19 @@
                a.audit_time
         from pic_share as a
                  left join pic as b on a.pic_id = b.id
-                 left join model as c on b.model_id = c.id
                  left join user as d on a.user_id = d.user_id
         where a.is_delete = 0
           and b.is_delete = 0
-          and c.is_delete = 0
           and d.is_delete = 0
           and a.status = #{picShareStatus}
           and a.uuid = #{uuid}
     </select>
+
+    <update id="addHitsByUuid">
+        update pic_share
+        set hits = hits + 1
+        where is_delete = 0
+          and uuid = #{uuid}
+    </update>
 
 </mapper>

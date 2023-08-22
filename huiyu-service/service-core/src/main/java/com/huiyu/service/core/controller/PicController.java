@@ -102,8 +102,8 @@ public class PicController {
      */
     @RequestLimiter(seconds = 60, maxCount = 60)
     @RequestLogger
-    @GetMapping("/getPicShareVo")
-    public R<PicShareVo> getPicShareVo(String uuid) {
+    @GetMapping("/getPicShare")
+    public R<PicShareVo> getPicShare(String uuid) {
         PicShareVo picShareVo = picBusiness.getPicShareVoByUuid(uuid);
         return R.ok(picShareVo);
     }

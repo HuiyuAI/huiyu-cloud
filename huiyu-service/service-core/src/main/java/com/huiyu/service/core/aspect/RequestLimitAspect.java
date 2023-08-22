@@ -53,8 +53,7 @@ public class RequestLimitAspect {
         Integer count = JacksonUtils.toBean(redisResult, Integer.class);
         if (count == null) {
             // 在规定周期内第一次访问，存入redis
-            redisTemplate.opsForValue().increment(redisKey, 1);
-            redisTemplate.expire(redisKey, seconds, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(redisKey, 1, seconds, TimeUnit.SECONDS);
         } else {
             if (count >= maxCount) {
                 log.warn("用户IP: {}, 请求: {} 的次数超过了限制 {}", ip, requestURI, maxCount);
@@ -76,7 +75,12 @@ public class RequestLimitAspect {
                 return R.error(requestLimiter.msg());
             } else {
                 // 没超出访问限制次数
+                // fix 如果刚好此时key过期了，increment会设置一个永久的key，所以需要设置后判断一下过期时间，永不过期或不存在则重置key TODO 后面做成滑动窗口
                 redisTemplate.opsForValue().increment(redisKey, 1);
+                Long expireSeconds = redisTemplate.opsForValue().getOperations().getExpire(redisKey);
+                if (expireSeconds == -1 || expireSeconds == -2) {
+                    redisTemplate.opsForValue().set(redisKey, 1, seconds, TimeUnit.SECONDS);
+                }
             }
         }
         return joinPoint.proceed();

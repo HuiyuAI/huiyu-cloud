@@ -15,6 +15,7 @@ import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
+import com.huiyu.service.core.model.vo.RedrawVo;
 import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.service.ModelService;
@@ -181,5 +182,13 @@ public class PicBusinessImpl implements PicBusiness {
 
         picShareService.addHitsByUuid(uuid);
         return picShareVo;
+    }
+
+    @Override
+    public RedrawVo redraw(Long userId, String uuid) {
+        RedrawVo redrawVo = picShareService.redraw(uuid);
+
+        picShareService.addRedrawCountByUuid(uuid);
+        return redrawVo;
     }
 }

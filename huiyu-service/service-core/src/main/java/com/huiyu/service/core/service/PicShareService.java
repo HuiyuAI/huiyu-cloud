@@ -10,6 +10,7 @@ import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
+import com.huiyu.service.core.model.vo.RedrawVo;
 import org.springframework.scheduling.annotation.Async;
 
 import java.time.LocalDateTime;
@@ -47,6 +48,14 @@ public interface PicShareService extends IService<PicShare> {
      * @return 图片分享详情
      */
     PicShareVo getPicShareVoByUuid(String uuid);
+
+    /**
+     * 画同款-获取图片隐藏参数
+     *
+     * @param uuid 图片uuid
+     * @return 隐藏参数
+     */
+    RedrawVo redraw(String uuid);
 
     /**
      * 根据图片id查询图片分享详情
@@ -104,8 +113,15 @@ public interface PicShareService extends IService<PicShare> {
      * 根据图片uuid增加图片点击量
      *
      * @param uuid 图片uuid
-     * @return true/false
      */
     @Async
     void addHitsByUuid(String uuid);
+
+    /**
+     * 根据图片uuid增加图片画同款次数
+     *
+     * @param uuid 图片uuid
+     */
+    @Async
+    void addRedrawCountByUuid(String uuid);
 }

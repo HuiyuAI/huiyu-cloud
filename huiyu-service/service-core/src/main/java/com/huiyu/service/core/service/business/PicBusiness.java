@@ -10,6 +10,7 @@ import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
+import com.huiyu.service.core.model.vo.RedrawVo;
 
 import java.util.List;
 
@@ -66,4 +67,13 @@ public interface PicBusiness {
      * @return 图片分享详情
      */
     PicShareVo getPicShareVoByUuid(String uuid);
+
+    /**
+     * 画同款-获取图片隐藏参数
+     *
+     * @param userId 操作用户id
+     * @param uuid   图片uuid
+     * @return 隐藏参数
+     */
+    RedrawVo redraw(Long userId, String uuid);
 }

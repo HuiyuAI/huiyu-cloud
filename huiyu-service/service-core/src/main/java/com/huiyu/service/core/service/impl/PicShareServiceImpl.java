@@ -11,6 +11,7 @@ import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
+import com.huiyu.service.core.model.vo.RedrawVo;
 import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.utils.mirai.MiraiUtils;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,11 @@ public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> i
     @Override
     public PicShareVo getPicShareVoByUuid(String uuid) {
         return super.baseMapper.getByUuid(uuid, PicShareStatusEnum.PUBLIC);
+    }
+
+    @Override
+    public RedrawVo redraw(String uuid) {
+        return super.baseMapper.redraw(uuid, PicShareStatusEnum.PUBLIC);
     }
 
     @Override
@@ -88,5 +94,10 @@ public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> i
     @Override
     public void addHitsByUuid(String uuid) {
         super.baseMapper.addHitsByUuid(uuid);
+    }
+
+    @Override
+    public void addRedrawCountByUuid(String uuid) {
+        super.baseMapper.addRedrawCountByUuid(uuid);
     }
 }

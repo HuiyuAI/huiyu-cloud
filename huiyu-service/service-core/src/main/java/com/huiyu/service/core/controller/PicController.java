@@ -13,6 +13,7 @@ import com.huiyu.service.core.model.vo.PicPageVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.PicVo;
+import com.huiyu.service.core.model.vo.RedrawVo;
 import com.huiyu.service.core.service.business.PicBusiness;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -106,6 +107,18 @@ public class PicController {
     public R<PicShareVo> getPicShare(String uuid) {
         PicShareVo picShareVo = picBusiness.getPicShareVoByUuid(uuid);
         return R.ok(picShareVo);
+    }
+
+    /**
+     * 画同款
+     */
+    @RequestLimiter(seconds = 60, maxCount = 60)
+    @RequestLogger
+    @GetMapping("/redraw")
+    public R<RedrawVo> redraw(String uuid) {
+        Long userId = JwtUtils.getUserId();
+        RedrawVo redrawVo = picBusiness.redraw(userId, uuid);
+        return R.ok(redrawVo);
     }
 
 }

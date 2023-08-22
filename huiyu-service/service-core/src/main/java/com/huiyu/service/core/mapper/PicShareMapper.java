@@ -9,6 +9,7 @@ import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
 import com.huiyu.service.core.model.vo.PicShareVo;
+import com.huiyu.service.core.model.vo.RedrawVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -49,10 +50,26 @@ public interface PicShareMapper extends BaseMapper<PicShare> {
     PicShareVo getByUuid(@Param("uuid") String uuid, @Param("picShareStatus") PicShareStatusEnum picShareStatus);
 
     /**
+     * 画同款-获取图片隐藏参数
+     *
+     * @param uuid 图片uuid
+     * @return 隐藏参数
+     */
+    RedrawVo redraw(@Param("uuid") String uuid, @Param("picShareStatus") PicShareStatusEnum picShareStatus);
+
+    /**
      * 根据图片uuid增加图片点击量
      *
      * @param uuid 图片uuid
      * @return 更新行数
      */
     int addHitsByUuid(@Param("uuid") String uuid);
+
+    /**
+     * 根据图片uuid增加图片画同款次数
+     *
+     * @param uuid 图片uuid
+     * @return 更新行数
+     */
+    int addRedrawCountByUuid(@Param("uuid") String uuid);
 }

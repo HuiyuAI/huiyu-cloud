@@ -105,6 +105,11 @@
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-logging-slf4j-logback</artifactId>
         </dependency>
+        <!-- 又拍云存储SDK -->
+        <dependency>
+            <groupId>com.upyun</groupId>
+            <artifactId>java-sdk</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>

@@ -38,6 +38,7 @@
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <tencentcloud-sdk.version>3.1.817</tencentcloud-sdk.version>
         <mirai.version>2.15.0</mirai.version>
+        <upyun.version>4.2.3</upyun.version>
     </properties>
 
     <dependencyManagement>
@@ -146,6 +147,12 @@
                 <groupId>org.jetbrains.kotlinx</groupId>
                 <artifactId>kotlinx-coroutines-core-jvm</artifactId>
                 <version>1.6.4</version>
+            </dependency>
+            <!-- 又拍云存储SDK -->
+            <dependency>
+                <groupId>com.upyun</groupId>
+                <artifactId>java-sdk</artifactId>
+                <version>${upyun.version}</version>
             </dependency>
 
 

@@ -62,6 +62,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         List<UserPicCountDto> userPicCountDtoList = picService.countByUserIdList(userIdList);
         Map<Long, Integer> userPicCountMap = userPicCountDtoList.stream().collect(Collectors.toMap(UserPicCountDto::getUserId, UserPicCountDto::getPicCount, (k1, k2) -> k1));
 
+        // TODO 投稿数
+
+
         userAdminVoPage.getRecords().forEach(userAdminVo -> {
             Integer count = userPicCountMap.get(userAdminVo.getUserId());
             userAdminVo.setPicCount(count == null ? 0 : count);

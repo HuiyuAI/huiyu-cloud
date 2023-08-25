@@ -39,6 +39,7 @@
         <tencentcloud-sdk.version>3.1.817</tencentcloud-sdk.version>
         <mirai.version>2.15.0</mirai.version>
         <upyun.version>4.2.3</upyun.version>
+        <thumbnailator.version>0.4.20</thumbnailator.version>
     </properties>
 
     <dependencyManagement>
@@ -153,6 +154,12 @@
                 <groupId>com.upyun</groupId>
                 <artifactId>java-sdk</artifactId>
                 <version>${upyun.version}</version>
+            </dependency>
+            <!-- Thumbnailator -->
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
             </dependency>
 
 

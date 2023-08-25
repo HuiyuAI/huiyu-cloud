@@ -2,11 +2,14 @@ package com.huiyu.common.web.handler;
 
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.huiyu.common.core.result.R;
+import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.CompletionException;
@@ -66,6 +69,20 @@ public class ControllerExceptionHandler {
     public <T> R<T> processException(BindException e) {
         log.warn("参数校验异常: {}", e.getMessage());
         return R.error(e.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
+    /**
+     * 捕获文件上传异常
+     */
+    @ExceptionHandler(MultipartException.class)
+    public <T> R<T> processException(MultipartException e) {
+        Throwable rootCause = e.getRootCause();
+        if (rootCause instanceof FileSizeLimitExceededException || rootCause instanceof SizeLimitExceededException) {
+            log.warn("文件上传超出大小限制: {}", rootCause.getMessage());
+            return R.error("文件大小超出限制");
+        }
+        log.error("文件上传异常", e);
+        return R.error("文件上传失败");
     }
 
     /**

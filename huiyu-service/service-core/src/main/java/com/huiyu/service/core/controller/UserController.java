@@ -8,18 +8,15 @@ import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.convert.UserConvert;
-import com.huiyu.service.core.exception.BizException;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import com.huiyu.service.core.model.vo.UserVo;
 import com.huiyu.service.core.service.UserService;
 import com.huiyu.service.core.service.business.UserBusiness;
-import com.huiyu.service.core.utils.upload.FileUploadChannel;
-import com.huiyu.service.core.utils.upload.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,34 +69,10 @@ public class UserController {
      */
     @RequestLogger
     @RequestLimiter(seconds = 604800, maxCount = 5, msg = "本周修改次数已用完，请下周再试")
-    @GetMapping("/updateUserInfo")
-    public R<?> updateUserInfo(@RequestPart("file") MultipartFile file, @RequestPart("nickname") String nickname) {
+    @PostMapping("/updateProfiles")
+    public R<?> updateProfiles(@RequestPart("file") MultipartFile file, @RequestPart("nickname") String nickname) {
         Long userId = JwtUtils.getUserId();
-        User user = userService.queryByUserId(userId);
-        log.info("用户修改个人信息前, user: {}", user);
-
-        User updateUser = new User();
-        try {
-            // TODO 压缩 文件大小限制
-            String avatarUrl = UploadUtils.upload(new FileUploadChannel.ImageResource(file.getBytes(), "/avatar", "jpg"));
-            updateUser.setAvatar(avatarUrl);
-        } catch (Exception e) {
-            log.error("上传头像失败", e);
-            throw new BizException("上传头像失败");
-        }
-
-        nickname = StringUtils.trimToEmpty(nickname);
-        if (nickname.length() == 0 || nickname.length() > 8) {
-            throw new BizException("昵称长度错误");
-        }
-        updateUser.setNickname(nickname);
-
-        updateUser.setUserId(userId);
-        updateUser.setUpdateTime(user.getUpdateTime());
-
-        log.info("用户修改个人信息后, updateUser: {}", updateUser);
-        boolean isOK = userService.update(updateUser);
-
-        return R.status(isOK);
+        boolean res = userService.updateProfile(userId, file, nickname);
+        return R.status(res);
     }
 }

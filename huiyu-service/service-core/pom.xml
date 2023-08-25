@@ -110,6 +110,11 @@
             <groupId>com.upyun</groupId>
             <artifactId>java-sdk</artifactId>
         </dependency>
+        <!-- Thumbnailator -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>

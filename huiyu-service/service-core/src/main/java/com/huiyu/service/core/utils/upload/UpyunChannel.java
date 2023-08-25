@@ -2,6 +2,7 @@ package com.huiyu.service.core.utils.upload;
 
 import cn.hutool.core.util.IdUtil;
 import com.huiyu.service.core.config.UpyunProperties;
+import com.huiyu.service.core.exception.BizException;
 import com.upyun.RestManager;
 import okhttp3.Response;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,10 @@ public class UpyunChannel implements FileUploadChannel {
 
     @Override
     public String upload(ImageResource image) throws Exception {
-        String fileAbsolutePath = "/upload" + image.getPathPrefix() + "/" + IdUtil.fastSimpleUUID() + "." + image.getType();
+        String fileAbsolutePath = "/upload" + image.getPathPrefix() + "/" + IdUtil.fastUUID() + "." + image.getType();
         Response response = manager.writeFile(fileAbsolutePath, image.getData(), null);
         if (!response.isSuccessful()) {
-            throw new Exception("又拍云上传失败");
+            throw new BizException("又拍云上传失败");
         }
         return upyunProperties.getDomain() + fileAbsolutePath;
     }

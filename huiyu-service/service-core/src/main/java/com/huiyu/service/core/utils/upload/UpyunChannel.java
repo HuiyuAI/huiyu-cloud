@@ -2,7 +2,7 @@ package com.huiyu.service.core.utils.upload;
 
 import cn.hutool.core.util.IdUtil;
 import com.huiyu.service.core.config.UpyunProperties;
-import com.huiyu.service.core.exception.BizException;
+import com.huiyu.common.web.exception.BizException;
 import com.upyun.RestManager;
 import okhttp3.Response;
 import org.springframework.stereotype.Component;

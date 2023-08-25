@@ -1,5 +1,6 @@
 package com.huiyu.common.web.handler;
 
+import com.huiyu.common.web.exception.BizException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
@@ -83,6 +84,15 @@ public class ControllerExceptionHandler {
         }
         log.error("文件上传异常", e);
         return R.error("文件上传失败");
+    }
+
+    /**
+     * 捕获业务异常
+     */
+    @ExceptionHandler(BizException.class)
+    public <T> R<T> processException(BizException e) {
+        log.warn("业务异常: {}", e.getMessage());
+        return R.error(e.getMessage());
     }
 
     /**

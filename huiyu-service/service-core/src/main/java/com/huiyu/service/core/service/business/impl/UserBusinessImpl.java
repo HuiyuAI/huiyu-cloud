@@ -9,7 +9,7 @@ import com.huiyu.service.core.entity.PointRecord;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
-import com.huiyu.service.core.exception.BizException;
+import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import com.huiyu.service.core.service.PointRecordService;

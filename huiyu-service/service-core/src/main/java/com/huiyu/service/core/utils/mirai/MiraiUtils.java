@@ -3,7 +3,7 @@ package com.huiyu.service.core.utils.mirai;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
-import com.huiyu.service.core.exception.BizException;
+import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.model.vo.MiraiStatusVo;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.PicShareService;

@@ -1,4 +1,4 @@
-package com.huiyu.service.core.exception;
+package com.huiyu.common.web.exception;
 
 /**
  * @author Naccl

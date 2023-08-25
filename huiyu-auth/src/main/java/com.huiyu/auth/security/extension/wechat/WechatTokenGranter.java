@@ -43,16 +43,12 @@ public class WechatTokenGranter extends AbstractTokenGranter {
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
         String code = parameters.get("code");
-        String encryptedData = parameters.get("encryptedData");
-        String iv = parameters.get("iv");
 
         // 移除后续无用参数
         parameters.remove("code");
-        parameters.remove("encryptedData");
-        parameters.remove("iv");
 
         // 未认证状态
-        Authentication userAuth = new WechatAuthenticationToken(code, encryptedData, iv);
+        Authentication userAuth = new WechatAuthenticationToken(code);
         ((AbstractAuthenticationToken) userAuth).setDetails(parameters);
 
         try {

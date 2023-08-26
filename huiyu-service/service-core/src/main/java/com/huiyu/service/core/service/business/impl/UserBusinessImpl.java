@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.business.impl;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.util.JacksonUtils;
@@ -16,11 +17,15 @@ import com.huiyu.service.core.service.PointRecordService;
 import com.huiyu.service.core.service.UserService;
 import com.huiyu.service.core.service.business.UserBusiness;
 import com.huiyu.service.core.utils.IdUtils;
+import com.huiyu.service.core.utils.upload.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.common.error.WxErrorException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -34,6 +39,7 @@ import java.time.LocalDateTime;
 public class UserBusinessImpl implements UserBusiness {
     private final UserService userService;
     private final PointRecordService pointRecordService;
+    private final WxMaService wxMaService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -217,5 +223,48 @@ public class UserBusinessImpl implements UserBusiness {
         IPage<PointRecord> pointRecordPage = pointRecordService.pagePointRecord(page, dto);
         Page<PointRecordPageVo> pointRecordVoPage = PointRecordConvert.INSTANCE.toVOPage(pointRecordPage);
         return pointRecordVoPage;
+    }
+
+    @Override
+    public boolean updateAvatar(Long userId, MultipartFile file) {
+        String avatarUrl;
+        try {
+            avatarUrl = UploadUtils.uploadWithResizeCompress(file);
+        } catch (Exception e) {
+            log.error("上传头像失败", e);
+            throw new BizException("上传头像失败");
+        }
+
+        try {
+            boolean res = wxMaService.getSecCheckService().checkImage(avatarUrl);
+            log.info("头像上传成功, 调用微信图片审核接口, imgUrl: {}, res: {}", avatarUrl, res);
+        } catch (WxErrorException e) {
+            log.warn("头像上传成功, 调用微信图片审核接口, imgUrl: {}, 错误信息: {}", avatarUrl, e.getMessage());
+            if (e.getError().getErrorCode() == 87014) {
+                throw new BizException("头像检测违规，修改失败");
+            }
+        }
+
+        return userService.updateAvatar(userId, avatarUrl);
+    }
+
+    @Override
+    public boolean updateNickname(Long userId, String nickname) {
+        nickname = StringUtils.trimToEmpty(nickname);
+        if (StringUtils.isBlank(nickname) || nickname.length() > 8) {
+            throw new BizException("昵称无效");
+        }
+
+        try {
+            boolean res = wxMaService.getSecCheckService().checkMessage(nickname);
+            log.info("修改昵称, 调用微信文本审核接口, auditMsg: {}, res: {}", nickname, res);
+        } catch (WxErrorException e) {
+            log.warn("修改昵称, 调用微信文本审核接口, auditMsg: {}, 错误信息: {}", nickname, e.getMessage());
+            if (e.getError().getErrorCode() == 87014) {
+                throw new BizException("昵称包含违规内容，修改失败");
+            }
+        }
+
+        return userService.updateNickname(userId, nickname);
     }
 }

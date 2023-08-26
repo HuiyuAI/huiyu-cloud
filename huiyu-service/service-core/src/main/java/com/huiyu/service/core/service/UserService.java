@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.model.query.UserQuery;
 import com.huiyu.service.core.model.vo.UserAdminVo;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * (User)表服务接口
@@ -82,12 +81,20 @@ public interface UserService extends IService<User> {
     boolean updatePointByUserId(Long userId, Integer dailyPoint, Integer point);
 
     /**
-     * 用户修改个人信息
+     * 用户修改头像
+     *
+     * @param userId 用户id
+     * @param avatar 头像url
+     * @return 是否成功
+     */
+    boolean updateAvatar(Long userId, String avatar);
+
+    /**
+     * 用户修改昵称
      *
      * @param userId   用户id
-     * @param file     头像文件
      * @param nickname 昵称
      * @return 是否成功
      */
-    boolean updateProfile(Long userId, MultipartFile file, String nickname);
+    boolean updateNickname(Long userId, String nickname);
 }

@@ -8,6 +8,7 @@ import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author Naccl
@@ -43,4 +44,22 @@ public interface UserBusiness {
      * @return 查询结果
      */
     IPage<PointRecordPageVo> pagePointRecord(IPage<PointRecord> page, PointRecordPageDto dto);
+
+    /**
+     * 用户修改头像
+     *
+     * @param userId 用户id
+     * @param file   头像文件
+     * @return 是否成功
+     */
+    boolean updateAvatar(Long userId, MultipartFile file);
+
+    /**
+     * 用户修改昵称
+     *
+     * @param userId   用户id
+     * @param nickname 昵称
+     * @return 是否成功
+     */
+    boolean updateNickname(Long userId, String nickname);
 }

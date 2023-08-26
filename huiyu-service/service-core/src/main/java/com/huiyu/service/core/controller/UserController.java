@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,15 +63,31 @@ public class UserController {
     }
 
     /**
-     * 用户修改个人信息
+     * 用户修改头像
      * 7天内最多修改5次
      */
     @RequestLogger
-    @RequestLimiter(seconds = 604800, maxCount = 5, msg = "本周修改次数已用完，请下周再试")
-    @PostMapping("/updateProfiles")
-    public R<?> updateProfiles(@RequestPart("file") MultipartFile file, @RequestPart("nickname") String nickname) {
+//    @RequestLimiter(seconds = 604800, maxCount = 5, msg = "本周头像修改次数已用完，请下周再试")
+    @PostMapping("/updateAvatar")
+    public R<?> updateAvatar(MultipartFile file) {
+        if (file == null) {
+            return R.error("上传头像失败");
+        }
         Long userId = JwtUtils.getUserId();
-        boolean res = userService.updateProfile(userId, file, nickname);
+        boolean res = userBusiness.updateAvatar(userId, file);
+        return R.status(res);
+    }
+
+    /**
+     * 用户修改昵称
+     * 7天内最多修改5次
+     */
+    @RequestLogger
+//    @RequestLimiter(seconds = 604800, maxCount = 5, msg = "本周昵称修改次数已用完，请下周再试")
+    @PostMapping("/updateNickname")
+    public R<?> updateNickname(String nickname) {
+        Long userId = JwtUtils.getUserId();
+        boolean res = userBusiness.updateNickname(userId, nickname);
         return R.status(res);
     }
 }

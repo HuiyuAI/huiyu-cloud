@@ -7,7 +7,7 @@ import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.convert.UserConvert;
 import com.huiyu.service.core.entity.UserIdSender;
-import com.huiyu.service.core.exception.BizException;
+import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.mapper.UserIdSenderMapper;
 import com.huiyu.service.core.mapper.auth.UserMapper;
 import com.huiyu.service.core.model.dto.UserPicCountDto;
@@ -15,7 +15,6 @@ import com.huiyu.service.core.model.query.UserQuery;
 import com.huiyu.service.core.model.vo.UserAdminVo;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.UserService;
-import com.huiyu.service.core.utils.upload.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -167,24 +165,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public boolean updateProfile(Long userId, MultipartFile file, String nickname) {
-        String avatarUrl;
-        try {
-            avatarUrl = UploadUtils.uploadWithResizeCompress(file);
-        } catch (Exception e) {
-            log.error("上传头像失败", e);
-            throw new BizException("上传头像失败");
-        }
+    public boolean updateAvatar(Long userId, String avatar) {
+        return super.lambdaUpdate()
+                .eq(User::getUserId, userId)
+                .set(User::getAvatar, avatar)
+                .update();
+    }
 
-        nickname = StringUtils.trimToEmpty(nickname);
-        if (StringUtils.isBlank(nickname) || nickname.length() > 8) {
-            throw new BizException("昵称无效");
-        }
-
+    @Override
+    public boolean updateNickname(Long userId, String nickname) {
         return super.lambdaUpdate()
                 .eq(User::getUserId, userId)
                 .set(User::getNickname, nickname)
-                .set(User::getAvatar, avatarUrl)
                 .update();
     }
 }

@@ -1,6 +1,5 @@
 package com.huiyu.service.core.sd.callback.controller;
 
-import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
@@ -10,9 +9,9 @@ import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.sd.callback.cmd.UploadSuccessCallbackCmd;
 import com.huiyu.service.core.service.PicService;
+import com.huiyu.service.core.service.extension.SecureCheckService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +33,7 @@ public class SDServerCallbackController {
 
     private final PicService picService;
 
-    private final WxMaService wxMaService;
+    private final SecureCheckService secureCheckService;
 
     /**
      * 图片上传成功回调
@@ -53,15 +52,13 @@ public class SDServerCallbackController {
         log.info("图片上传成功 url: {}", imgUrl);
 
         PicStatusEnum picStatus = PicStatusEnum.GENERATED;
-        try {
-            // 减小图片尺寸
-            String checkUrl = imgUrl + "!/fw/720";
-            boolean res = wxMaService.getSecCheckService().checkImage(checkUrl);
-            log.info("图片上传成功, 调用微信图片审核接口, imgUrl: {}, res: {}", res);
-        } catch (WxErrorException e) {
-            // TODO 违规图片发至群内审核
-            // TODO 如果不是违规原因, 可能是微信接口调用失败, 发至群内审核
-            log.error("图片上传成功, 调用微信图片审核接口, imgUrl: {}, 错误信息: {}", e.getMessage());
+
+        // 缩略图
+        String checkUrl = imgUrl + "!/fw/720";
+        log.info("图片上传成功, 调用微信图片审核接口");
+        boolean checkRes = secureCheckService.checkImage(checkUrl);
+        if (!checkRes) {
+            log.info("图片审核不通过, imgUrl: {}", checkUrl);
             picStatus = PicStatusEnum.RISKY;
         }
 

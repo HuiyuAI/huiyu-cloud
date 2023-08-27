@@ -46,11 +46,11 @@ public class SDCmdValidator {
             return Pair.of(false, "模型不存在");
         }
 
-        if (cmd.getPrompt().length() > 500) {
+        if (cmd.getPrompt().length() > 1000) {
             return Pair.of(false, "描述词过长");
         }
 
-        if (StringUtils.isNotBlank(cmd.getNegativePrompt()) && cmd.getNegativePrompt().length() > 500) {
+        if (StringUtils.isNotBlank(cmd.getNegativePrompt()) && cmd.getNegativePrompt().length() > 1000) {
             return Pair.of(false, "负向描述词过长");
         }
 

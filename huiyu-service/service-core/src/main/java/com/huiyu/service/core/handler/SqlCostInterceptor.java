@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
 /**
  * @author wAnG
@@ -121,7 +122,7 @@ public class SqlCostInterceptor implements Interceptor {
         }
         String sql = boundSql.getSql();
         for (Object o : paramList) {
-            sql = sql.replaceFirst("\\?", formatParamValue(o));
+            sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(formatParamValue(o)));
         }
         return sql;
     }

@@ -2,9 +2,9 @@ package com.huiyu.service.core.aspect;
 
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.core.util.JacksonUtils;
-import com.huiyu.common.redis.constant.RedisKeyConstant;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
+import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.entity.RequestLimitLog;
 import com.huiyu.service.core.service.RequestLimitLogService;
 import com.huiyu.service.core.utils.IdUtils;
@@ -45,10 +45,15 @@ public class RequestLimitAspect {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         int seconds = requestLimiter.seconds();
         int maxCount = requestLimiter.maxCount();
+
+        // 用户标识，优先使用用户id，如果没有则使用ip
+        Long userId = JwtUtils.getUserId();
         String ip = IpAddressUtils.getIpAddress(request);
+        String userFlag = userId == null ? ip : String.valueOf(userId);
+
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
-        String redisKey = RedisKeyConstant.REQUEST_LIMITER + ":" + ip + ":" + method + ":" + requestURI;
+        String redisKey = RedisKeyEnum.REQUEST_LIMITER.getFormatKey(userFlag, method, requestURI);
         Object redisResult = redisTemplate.opsForValue().get(redisKey);
         Integer count = JacksonUtils.toBean(redisResult, Integer.class);
         if (count == null) {
@@ -63,7 +68,7 @@ public class RequestLimitAspect {
 
                 RequestLimitLog requestLimitLog = RequestLimitLog.builder()
                         .id(IdUtils.nextSnowflakeId())
-                        .userId(JwtUtils.getUserId())
+                        .userId(userId)
                         .ip(ip)
                         .method(method)
                         .uri(requestURI)

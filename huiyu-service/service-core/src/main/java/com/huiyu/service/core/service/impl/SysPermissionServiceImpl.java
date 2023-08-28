@@ -5,13 +5,13 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.entity.SysPermission;
 import com.huiyu.service.core.model.query.SysPermissionQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import com.huiyu.common.redis.constant.RedisKeyConstant;
 import com.huiyu.service.core.mapper.auth.SysPermissionMapper;
 import com.huiyu.service.core.service.SysPermissionService;
 import org.springframework.stereotype.Service;
@@ -107,7 +107,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
      */
     @Override
     public boolean refreshPermRolesRules() {
-        redisTemplate.delete(RedisKeyConstant.RESOURCE_ROLES_MAP);
+        redisTemplate.delete(RedisKeyEnum.RESOURCE_ROLES_MAP.getKey());
         List<SysPermission> sysPermissions = sysPermissionMapper.queryAll(new SysPermission());
         if (CollUtil.isNotEmpty(sysPermissions)) {
             // 初始化URL【权限->角色(集合)】规则
@@ -122,12 +122,12 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
                     urlPermRoles.put(urlPerm, roles);
                     log.info("urlPerm:{}, roles:{}", urlPerm, roles);
                 });
-                redisTemplate.opsForHash().putAll(RedisKeyConstant.RESOURCE_ROLES_MAP, urlPermRoles);
+                redisTemplate.opsForHash().putAll(RedisKeyEnum.RESOURCE_ROLES_MAP.getKey(), urlPermRoles);
                 return true;
             }
         }
         // 规则为空，则添加一个空规则
-        redisTemplate.opsForHash().put(RedisKeyConstant.RESOURCE_ROLES_MAP, "placeholder", "['null']");
+        redisTemplate.opsForHash().put(RedisKeyEnum.RESOURCE_ROLES_MAP.getKey(), "placeholder", "['null']");
         log.info("角色权限规则为空");
         return true;
     }

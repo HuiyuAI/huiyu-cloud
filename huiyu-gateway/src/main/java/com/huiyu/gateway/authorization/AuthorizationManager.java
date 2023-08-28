@@ -3,6 +3,7 @@ package com.huiyu.gateway.authorization;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import com.huiyu.common.core.util.JacksonUtils;
+import com.huiyu.gateway.constant.RedisKeyEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +19,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import reactor.core.publisher.Mono;
 import com.huiyu.common.core.constant.SecurityConstants;
-import com.huiyu.common.redis.constant.RedisKeyConstant;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +52,7 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
          * 从Redis中获取当前路径可访问角色列表 [URL-角色集合]
          * urlPermRolesRules = [{'key':'GET:/api/v1/users/*','value':['ADMIN','TEST']},...]
          */
-        Map<String, Object> urlPermRolesRules = redisTemplate.opsForHash().entries(RedisKeyConstant.RESOURCE_ROLES_MAP);
+        Map<String, Object> urlPermRolesRules = redisTemplate.opsForHash().entries(RedisKeyEnum.RESOURCE_ROLES_MAP.getKey());
 
         // 对应path拥有访问权限的角色
         Set<String> authorizedRoles = new HashSet<>(8);

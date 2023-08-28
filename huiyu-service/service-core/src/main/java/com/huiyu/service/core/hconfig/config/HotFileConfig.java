@@ -57,7 +57,7 @@ public class HotFileConfig implements HConfigOnChange<Map<String, String>> {
     }
 
     public Integer getSignInPoint() {
-        return this.getInt("sign_in_point", 1);
+        return this.getInt("sign_in_point", 100);
     }
 
     public Integer getInvitePoint() {

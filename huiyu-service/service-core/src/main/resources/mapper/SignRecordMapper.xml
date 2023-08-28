@@ -6,42 +6,17 @@
     <resultMap id="SignRecordMap" type="com.huiyu.service.core.entity.SignRecord">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
-        <result column="status" property="status"/>
         <result column="sign_time" property="signTime"/>
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
-    <select id="getTodayByUserId" resultMap="SignRecordMap">
-        select *
+    <select id="countByUserIdAndSignTime" resultType="java.lang.Integer">
+        select count(*)
         from sign_record
         where is_delete = 0
           and user_id = #{userId}
-          and sign_time = CURRENT_DATE
+          and sign_time >= #{start}
+          and sign_time &lt; #{end} limit 1
     </select>
 
-    <insert id="insert">
-        insert into sign_record (user_id, status, sign_time, is_delete)
-        values (#{userId}, #{status}, #{signTime}, #{isDelete})
-    </insert>
-
-    <update id="updateToday">
-        update sign_record
-        <set>
-            <if test="status != null">
-                status = #{status},
-            </if>
-            <if test="isDelete != null">
-                is_delete = #{isDelete},
-            </if>
-        </set>
-        where user_id = #{userId}
-        and sign_time = CURRENT_DATE
-    </update>
-
-    <update id="deleteTodayByUserId">
-        update sign_record
-        set is_delete = 1
-        where user_id = #{userId}
-          and sign_time = CURRENT_DATE
-    </update>
 </mapper>

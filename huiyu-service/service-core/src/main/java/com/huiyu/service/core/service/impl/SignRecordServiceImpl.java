@@ -1,35 +1,24 @@
 package com.huiyu.service.core.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.SignRecord;
 import com.huiyu.service.core.mapper.SignRecordMapper;
 import com.huiyu.service.core.service.SignRecordService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.time.LocalDateTime;
 
 @Service
-public class SignRecordServiceImpl implements SignRecordService {
-
-    @Resource
-    private SignRecordMapper signRecordMapper;
+public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRecord> implements SignRecordService {
 
     @Override
-    public SignRecord getTodayByUserId(Long userId) {
-        return signRecordMapper.getTodayByUserId(userId);
+    public boolean isSignIn(Long userId, LocalDateTime start, LocalDateTime end) {
+        return super.baseMapper.countByUserIdAndSignTime(userId, start, end) > 0;
     }
 
     @Override
-    public boolean insert(SignRecord signRecord) {
-        return signRecordMapper.insert(signRecord) > 0;
+    public boolean save(SignRecord signRecord) {
+        return super.save(signRecord);
     }
 
-    @Override
-    public boolean updateToday(SignRecord signRecord) {
-        return signRecordMapper.updateToday(signRecord) > 0;
-    }
-
-    @Override
-    public boolean deleteTodayByUserId(Long userId) {
-        return signRecordMapper.deleteTodayByUserId(userId) > 0;
-    }
 }

@@ -1,17 +1,20 @@
 package com.huiyu.service.core.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.huiyu.service.core.entity.SignRecord;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 
 @Mapper
-@Repository
-public interface SignRecordMapper {
-    SignRecord getTodayByUserId(Long userId);
-
-    int insert(SignRecord signRecord);
-
-    int updateToday(SignRecord signRecord);
-
-    int deleteTodayByUserId(Long userId);
+public interface SignRecordMapper extends BaseMapper<SignRecord> {
+    /**
+     * 根据用户id和签到时间判断是否已签到
+     *
+     * @param userId 用户id
+     * @param start  开始时间
+     * @param end    结束时间
+     * @return 1/0
+     */
+    int countByUserIdAndSignTime(Long userId, LocalDateTime start, LocalDateTime end);
 }

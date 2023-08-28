@@ -61,7 +61,7 @@ public class UserController {
      * 7天内最多修改5次
      */
     @RequestLogger
-    @RequestLimiter(seconds = 604800, maxCount = 5, msg = "本周头像修改次数已用完，请下周再试")
+    @RequestLimiter(seconds = 60 * 60 * 24 * 7, maxCount = 5, msg = "本周头像修改次数已用完，请下周再试")
     @PostMapping("/updateAvatar")
     public R<?> updateAvatar(MultipartFile file) {
         if (file == null) {
@@ -77,11 +77,23 @@ public class UserController {
      * 7天内最多修改5次
      */
     @RequestLogger
-    @RequestLimiter(seconds = 604800, maxCount = 5, msg = "本周昵称修改次数已用完，请下周再试")
+    @RequestLimiter(seconds = 60 * 60 * 24 * 7, maxCount = 5, msg = "本周昵称修改次数已用完，请下周再试")
     @PostMapping("/updateNickname")
     public R<?> updateNickname(String nickname) {
         Long userId = JwtUtils.getUserId();
         boolean res = userBusiness.updateNickname(userId, nickname);
+        return R.status(res);
+    }
+
+    /**
+     * 签到
+     */
+    @RequestLogger
+    @RequestLimiter(seconds = 60 * 60 * 24, maxCount = 3)
+    @PostMapping("/signIn")
+    public R<?> signIn() {
+        Long userId = JwtUtils.getUserId();
+        boolean res = userBusiness.signIn(userId);
         return R.status(res);
     }
 }

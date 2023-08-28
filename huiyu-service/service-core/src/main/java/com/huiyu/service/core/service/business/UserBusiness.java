@@ -71,4 +71,12 @@ public interface UserBusiness {
      * @return 是否成功
      */
     boolean updateNickname(Long userId, String nickname);
+
+    /**
+     * 用户签到
+     *
+     * @param userId 用户id
+     * @return 是否成功
+     */
+    boolean signIn(Long userId);
 }

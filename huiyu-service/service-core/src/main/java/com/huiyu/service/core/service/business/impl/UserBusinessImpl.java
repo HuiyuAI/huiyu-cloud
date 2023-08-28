@@ -4,17 +4,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
+import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.convert.PointRecordConvert;
 import com.huiyu.service.core.convert.UserConvert;
 import com.huiyu.service.core.entity.PointRecord;
+import com.huiyu.service.core.entity.SignRecord;
+import com.huiyu.service.core.enums.DailyTaskEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.common.web.exception.BizException;
+import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import com.huiyu.service.core.model.vo.UserVo;
 import com.huiyu.service.core.service.PointRecordService;
+import com.huiyu.service.core.service.SignRecordService;
 import com.huiyu.service.core.service.UserService;
 import com.huiyu.service.core.service.business.UserBusiness;
 import com.huiyu.service.core.service.extension.SecureCheckService;
@@ -23,12 +28,15 @@ import com.huiyu.service.core.utils.upload.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Naccl
@@ -40,7 +48,10 @@ import java.time.LocalDateTime;
 public class UserBusinessImpl implements UserBusiness {
     private final UserService userService;
     private final PointRecordService pointRecordService;
+    private final SignRecordService signRecordService;
     private final SecureCheckService secureCheckService;
+    private final HotFileConfig hotFileConfig;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -266,4 +277,42 @@ public class UserBusinessImpl implements UserBusiness {
 
         return userService.updateNickname(userId, nickname);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean signIn(Long userId) {
+        LocalDateTime now = LocalDateTime.now();
+        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), String.valueOf(userId));
+
+        LocalDateTime todayStart = now.with(LocalTime.MIN);
+        LocalDateTime todayEnd = now.with(LocalTime.MAX);
+
+        // 判断用户是否已签到
+        if (signRecordService.isSignIn(userId, todayStart, todayEnd)) {
+            return false;
+        }
+
+        // 签到记录
+        SignRecord signRecord = SignRecord.builder()
+                .userId(userId)
+                .signTime(now)
+                .isDelete(0)
+                .build();
+        signRecordService.save(signRecord);
+
+        // 签到积分奖励
+        User user = userService.queryByUserId(userId);
+        Integer userDailyPoint = user.getDailyPoint();
+        Integer signInPoint = hotFileConfig.getSignInPoint();
+        Integer diffPoint = signInPoint - userDailyPoint;
+        if (diffPoint > 0) {
+            this.updatePoint(userId, diffPoint, PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
+        }
+
+        // 记录每日任务完成情况
+        redisTemplate.opsForHash().put(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey(), 1);
+
+        return true;
+    }
+
 }

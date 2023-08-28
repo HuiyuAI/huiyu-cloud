@@ -4,14 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
-import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
-import com.huiyu.service.core.convert.UserConvert;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import com.huiyu.service.core.model.vo.UserVo;
-import com.huiyu.service.core.service.UserService;
 import com.huiyu.service.core.service.business.UserBusiness;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +29,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final UserService userService;
-
     private final UserBusiness userBusiness;
 
     /**
@@ -44,8 +39,7 @@ public class UserController {
     @GetMapping("/getMyUserInfo")
     public R<UserVo> getMyUserInfo() {
         Long userId = JwtUtils.getUserId();
-        User user = userService.queryByUserId(userId);
-        UserVo userVo = UserConvert.INSTANCE.toVo(user);
+        UserVo userVo = userBusiness.getUserInfo(userId);
         return R.ok(userVo);
     }
 

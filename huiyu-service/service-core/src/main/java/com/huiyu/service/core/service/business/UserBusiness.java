@@ -8,6 +8,7 @@ import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
+import com.huiyu.service.core.model.vo.UserVo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -44,6 +45,14 @@ public interface UserBusiness {
      * @return 查询结果
      */
     IPage<PointRecordPageVo> pagePointRecord(IPage<PointRecord> page, PointRecordPageDto dto);
+
+    /**
+     * 用户访问我的页面
+     *
+     * @param userId 用户id
+     * @return 用户信息
+     */
+    UserVo getUserInfo(Long userId);
 
     /**
      * 用户修改头像

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.convert.PointRecordConvert;
+import com.huiyu.service.core.convert.UserConvert;
 import com.huiyu.service.core.entity.PointRecord;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
@@ -12,6 +13,7 @@ import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
+import com.huiyu.service.core.model.vo.UserVo;
 import com.huiyu.service.core.service.PointRecordService;
 import com.huiyu.service.core.service.UserService;
 import com.huiyu.service.core.service.business.UserBusiness;
@@ -222,6 +224,12 @@ public class UserBusinessImpl implements UserBusiness {
         IPage<PointRecord> pointRecordPage = pointRecordService.pagePointRecord(page, dto);
         Page<PointRecordPageVo> pointRecordVoPage = PointRecordConvert.INSTANCE.toVOPage(pointRecordPage);
         return pointRecordVoPage;
+    }
+
+    @Override
+    public UserVo getUserInfo(Long userId) {
+        User user = userService.queryByUserId(userId);
+        return UserConvert.INSTANCE.toVo(user);
     }
 
     @Override

@@ -10,7 +10,9 @@ import lombok.ToString;
 public enum PointOperationTypeEnum implements BaseEnum<Integer> {
 
     REDUCE(0, "减少"),
-    ADD(1, "增加");
+    ADD(1, "增加"),
+    WAIT_CALC(100, "待计算"),
+    ;
 
     private Integer dictKey;
 

@@ -40,6 +40,7 @@
         <mirai.version>2.15.0</mirai.version>
         <upyun.version>4.2.3</upyun.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
+        <redisson.version>3.19.3</redisson.version>
     </properties>
 
     <dependencyManagement>
@@ -160,6 +161,12 @@
                 <groupId>net.coobird</groupId>
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator.version}</version>
+            </dependency>
+            <!-- redisson -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
 
 

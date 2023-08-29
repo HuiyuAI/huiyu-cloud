@@ -71,7 +71,7 @@ public interface UserService extends IService<User> {
     int getPointByUserId(Long userId);
 
     /**
-     * 根据userId增加积分
+     * 根据userId增加积分（修改积分的唯一入口）
      *
      * @param userId     用户id
      * @param dailyPoint 增加的每日积分(负数则减少)

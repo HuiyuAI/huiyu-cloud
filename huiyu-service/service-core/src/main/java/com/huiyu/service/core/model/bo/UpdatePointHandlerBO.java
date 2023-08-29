@@ -1,5 +1,6 @@
 package com.huiyu.service.core.model.bo;
 
+import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,10 @@ public class UpdatePointHandlerBO {
      * 计算后增减的永久积分
      */
     private Integer targetPointDiff;
+    /**
+     * 计算后的积分增减类型
+     */
+    private PointOperationTypeEnum operationType;
     /**
      * 计算后的积分类型
      */

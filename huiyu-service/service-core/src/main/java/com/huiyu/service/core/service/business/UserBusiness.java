@@ -25,7 +25,7 @@ public interface UserBusiness {
     boolean updateUser(User user);
 
     /**
-     * 用户积分修改
+     * 用户积分修改（修改积分的唯一入口）
      *
      * @param userId      用户id
      * @param pointDiff   要修改的积分值

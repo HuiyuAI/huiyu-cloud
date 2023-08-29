@@ -32,7 +32,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
         }
 
         @Override
-        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
             User user = userService.queryByUserId(userId);
             Integer dailyPoint = user.getDailyPoint();
             Integer point = user.getPoint();
@@ -66,7 +66,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
                 targetPointDiff = -pointDiff;
             }
 
-            return new UpdatePointHandlerBO(targetDailyPointDiff, targetPointDiff, pointType);
+            return new UpdatePointHandlerBO(targetDailyPointDiff, targetPointDiff, operationType, pointType);
         }
     },
     FAIL_RETURN("failReturn", "任务失败返还") {
@@ -78,7 +78,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
         }
 
         @Override
-        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
             // 要增减的每日积分、永久积分
             Integer targetDailyPointDiff = 0;
             Integer targetPointDiff = 0;
@@ -133,7 +133,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
                 }
             }
 
-            return new UpdatePointHandlerBO(targetDailyPointDiff, targetPointDiff, pointType);
+            return new UpdatePointHandlerBO(targetDailyPointDiff, targetPointDiff, operationType, pointType);
         }
     },
     REGISTER("register", "注册") {
@@ -148,8 +148,8 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
         }
 
         @Override
-        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
-            return new UpdatePointHandlerBO(0, pointDiff, pointType);
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
         }
     },
     SIGN_IN("signIn", "每日签到") {
@@ -164,7 +164,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
         }
 
         @Override
-        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
             // 在每日签到中，pointDiff是目标值，不是差值，要根据用户当前每日积分计算差值
             User user = userService.queryByUserId(userId);
             Integer userDailyPoint = user.getDailyPoint();
@@ -175,7 +175,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
                 log.info("用户每日积分已满，不需要签到重置, userId: {}, pointDiff: {}, userDailyPoint: {}", userId, pointDiff, userDailyPoint);
                 return null;
             }
-            return new UpdatePointHandlerBO(targetDailyPointDiff, 0, pointType);
+            return new UpdatePointHandlerBO(targetDailyPointDiff, 0, operationType, pointType);
         }
     },
     INVITE_USER("inviteUser", "邀请用户") {
@@ -190,8 +190,8 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
         }
 
         @Override
-        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
-            return new UpdatePointHandlerBO(0, pointDiff, pointType);
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
         }
     },
     ADMIN_UPDATE("adminUpdate", "管理员修改") {
@@ -201,8 +201,20 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
         }
 
         @Override
-        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
-            return new UpdatePointHandlerBO(0, pointDiff, pointType);
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            // 在管理员修改中，pointDiff是目标值，不是差值，要根据用户当前永久积分计算差值
+            User oldUser = userService.queryByUserId(userId);
+
+            int diffPoint = pointDiff - oldUser.getPoint();
+
+            if (diffPoint == 0) {
+                return null;
+            } else if (diffPoint > 0) {
+                operationType = PointOperationTypeEnum.ADD;
+            } else {
+                operationType = PointOperationTypeEnum.REDUCE;
+            }
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
         }
     },
     ;
@@ -213,7 +225,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
 
     public abstract void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType);
 
-    public abstract UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid);
+    public abstract UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid);
 
 
     @Setter

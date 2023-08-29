@@ -48,6 +48,10 @@ public class PointRecordServiceImpl extends ServiceImpl<PointRecordMapper, Point
 
     @Override
     public boolean insertRecord(PointRecord pointRecord) {
+        LocalDateTime now = LocalDateTime.now();
+        pointRecord.setCreateTime(now);
+        pointRecord.setUpdateTime(now);
+        pointRecord.setIsDelete(0);
         return super.save(pointRecord);
     }
 

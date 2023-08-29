@@ -57,10 +57,10 @@
     <update id="updatePointByUserId">
         update user
         <set>
-            <if test="dailyPoint != null">
+            <if test="dailyPoint != null and dailyPoint != 0">
                 daily_point = daily_point + #{dailyPoint},
             </if>
-            <if test="point != null">
+            <if test="point != null and point != 0">
                 point = point + #{point},
             </if>
         </set>

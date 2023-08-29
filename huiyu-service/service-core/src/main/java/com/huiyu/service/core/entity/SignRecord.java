@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -29,6 +30,11 @@ public class SignRecord implements Serializable {
      */
     @TableField("user_id")
     private Long userId;
+    /**
+     * 签到日期
+     */
+    @TableField("sign_date")
+    private LocalDate signDate;
     /**
      * 签到时间
      */

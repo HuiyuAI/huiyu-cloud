@@ -6,14 +6,14 @@ import com.huiyu.service.core.mapper.SignRecordMapper;
 import com.huiyu.service.core.service.SignRecordService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 public class SignRecordServiceImpl extends ServiceImpl<SignRecordMapper, SignRecord> implements SignRecordService {
 
     @Override
-    public boolean isSignIn(Long userId, LocalDateTime start, LocalDateTime end) {
-        return super.baseMapper.countByUserIdAndSignTime(userId, start, end) > 0;
+    public boolean isSignIn(Long userId, LocalDate signDate) {
+        return super.baseMapper.countByUserIdAndSignTime(userId, signDate) > 0;
     }
 
     @Override

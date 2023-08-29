@@ -28,15 +28,15 @@ import com.huiyu.service.core.utils.upload.UploadUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * @author Naccl
@@ -97,7 +97,7 @@ public class UserBusinessImpl implements UserBusiness {
         if (pointDiff == null || pointDiff <= 0) {
             throw new IllegalArgumentException("积分数值不合法");
         }
-        if (pointType == null && (source != PointOperationSourceEnum.GENERATE_PIC && source != PointOperationSourceEnum.FAIL_RETURN)) {
+        if (pointType == PointTypeEnum.MIX_POINT || (pointType == null && (source != PointOperationSourceEnum.GENERATE_PIC && source != PointOperationSourceEnum.FAIL_RETURN))) {
             // 操作来源不是[生成图片]或[失败返还]时，积分类型不能为空
             throw new IllegalArgumentException("积分类型不合法");
         }
@@ -192,6 +192,15 @@ public class UserBusinessImpl implements UserBusiness {
                     }
                     break;
             }
+        } else {
+            switch (pointType) {
+                case DAILY_POINT:
+                    targetDailyPointDiff = pointDiff;
+                    break;
+                case POINT:
+                    targetPointDiff = pointDiff;
+                    break;
+            }
         }
 
         log.info("更新用户积分, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
@@ -282,23 +291,26 @@ public class UserBusinessImpl implements UserBusiness {
     @Override
     public boolean signIn(Long userId) {
         LocalDateTime now = LocalDateTime.now();
-        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), String.valueOf(userId));
 
-        LocalDateTime todayStart = now.with(LocalTime.MIN);
-        LocalDateTime todayEnd = now.with(LocalTime.MAX);
-
+        LocalDate nowDate = now.toLocalDate();
         // 判断用户是否已签到
-        if (signRecordService.isSignIn(userId, todayStart, todayEnd)) {
+        if (signRecordService.isSignIn(userId, nowDate)) {
             return false;
         }
 
         // 签到记录
         SignRecord signRecord = SignRecord.builder()
                 .userId(userId)
+                .signDate(nowDate)
                 .signTime(now)
                 .isDelete(0)
                 .build();
-        signRecordService.save(signRecord);
+        try {
+            signRecordService.save(signRecord);
+        } catch (DuplicateKeyException e) {
+            log.warn("今日已签到 signRecord: {}", JacksonUtils.toJsonStr(signRecord));
+            return false;
+        }
 
         // 签到积分奖励
         User user = userService.queryByUserId(userId);
@@ -310,6 +322,7 @@ public class UserBusinessImpl implements UserBusiness {
         }
 
         // 记录每日任务完成情况
+        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(nowDate.toString(), String.valueOf(userId));
         redisTemplate.opsForHash().put(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey(), 1);
 
         return true;

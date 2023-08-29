@@ -6,6 +6,7 @@
     <resultMap id="SignRecordMap" type="com.huiyu.service.core.entity.SignRecord">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
+        <result column="sign_date" property="signDate"/>
         <result column="sign_time" property="signTime"/>
         <result column="is_delete" property="isDelete"/>
     </resultMap>
@@ -15,8 +16,7 @@
         from sign_record
         where is_delete = 0
           and user_id = #{userId}
-          and sign_time >= #{start}
-          and sign_time &lt; #{end} limit 1
+          and sign_date = #{signDate} limit 1
     </select>
 
 </mapper>

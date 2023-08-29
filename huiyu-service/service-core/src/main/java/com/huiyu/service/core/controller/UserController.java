@@ -94,6 +94,9 @@ public class UserController {
     public R<?> signIn() {
         Long userId = JwtUtils.getUserId();
         boolean res = userBusiness.signIn(userId);
-        return R.status(res);
+        if (!res) {
+            return R.error("签到失败");
+        }
+        return R.ok();
     }
 }

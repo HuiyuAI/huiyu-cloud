@@ -88,9 +88,16 @@ public class UserBusinessImpl implements UserBusiness {
         if (source == null) {
             throw new IllegalArgumentException("积分来源错误");
         }
+        // 参数校验
         source.checkParam(operation, pointType);
 
         UpdatePointHandlerBO updatePointHandlerBO = source.updatePointHandler(userId, pointDiff, pointType, requestUuid);
+        if (updatePointHandlerBO == null) {
+            // 如果返回null，则取消积分修改
+            log.info("用户积分修改取消, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}", userId, pointDiff, source, operation, requestUuid, pointType);
+            return false;
+        }
+
         Integer targetDailyPointDiff = updatePointHandlerBO.getTargetDailyPointDiff();
         Integer targetPointDiff = updatePointHandlerBO.getTargetPointDiff();
         pointType = updatePointHandlerBO.getPointType();
@@ -198,12 +205,9 @@ public class UserBusinessImpl implements UserBusiness {
         }
 
         // 签到积分奖励
-        User user = userService.queryByUserId(userId);
-        Integer userDailyPoint = user.getDailyPoint();
         Integer signInPoint = hotFileConfig.getSignInPoint();
-        Integer diffPoint = signInPoint - userDailyPoint;
-        if (diffPoint > 0) {
-            this.updatePoint(userId, diffPoint, PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
+        if (signInPoint > 0) {
+            this.updatePoint(userId, signInPoint, PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
         }
 
         // 记录每日任务完成情况

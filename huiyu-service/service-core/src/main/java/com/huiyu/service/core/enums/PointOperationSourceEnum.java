@@ -165,7 +165,17 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
 
         @Override
         public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointTypeEnum pointType, String requestUuid) {
-            return new UpdatePointHandlerBO(pointDiff, 0, pointType);
+            // 在每日签到中，pointDiff是目标值，不是差值，要根据用户当前每日积分计算差值
+            User user = userService.queryByUserId(userId);
+            Integer userDailyPoint = user.getDailyPoint();
+
+            Integer targetDailyPointDiff = pointDiff - userDailyPoint;
+            if (targetDailyPointDiff <= 0) {
+                // 热配的签到赠送积分数量可能小于用户当前每日积分，这种情况也不需要签到重置
+                log.info("用户每日积分已满，不需要签到重置, userId: {}, pointDiff: {}, userDailyPoint: {}", userId, pointDiff, userDailyPoint);
+                return null;
+            }
+            return new UpdatePointHandlerBO(targetDailyPointDiff, 0, pointType);
         }
     },
     INVITE_USER("inviteUser", "邀请用户") {

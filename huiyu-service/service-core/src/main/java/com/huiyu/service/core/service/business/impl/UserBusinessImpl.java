@@ -81,55 +81,66 @@ public class UserBusinessImpl implements UserBusiness {
             throw new IllegalArgumentException("积分来源错误");
         }
 
+        Integer targetDailyPointDiff;
+        Integer targetPointDiff;
+
         // 加锁
         String redisLockKey = RedisLockEnum.UPDATE_POINT.getFormatKey(String.valueOf(userId));
         RLock lock = redisson.getLock(redisLockKey);
-        lock.lock(RedisLockEnum.UPDATE_POINT.getLeaseTime(), TimeUnit.SECONDS);
         try {
-            // 参数校验
-            source.checkParam(operation, pointType);
+            boolean isLocked = lock.tryLock(3, 2, TimeUnit.SECONDS);
 
-            UpdatePointHandlerBO updatePointHandlerBO = source.updatePointHandler(userId, pointDiff, operation, pointType, requestUuid);
-            if (updatePointHandlerBO == null) {
-                // 如果返回null，则取消积分修改
-                log.info("用户积分修改取消, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}", userId, pointDiff, source, operation, requestUuid, pointType);
-                return false;
-            }
+            if (isLocked) {
+                // 参数校验
+                source.checkParam(operation, pointType);
 
-            Integer targetDailyPointDiff = updatePointHandlerBO.getTargetDailyPointDiff();
-            Integer targetPointDiff = updatePointHandlerBO.getTargetPointDiff();
-            operation = updatePointHandlerBO.getOperationType();
-            pointType = updatePointHandlerBO.getPointType();
+                UpdatePointHandlerBO updatePointHandlerBO = source.updatePointHandler(userId, pointDiff, operation, pointType, requestUuid);
+                if (updatePointHandlerBO == null) {
+                    // 如果返回null，则取消积分修改
+                    log.info("用户积分修改取消, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}", userId, pointDiff, source, operation, requestUuid, pointType);
+                    return false;
+                }
 
-            log.info("更新用户积分, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
-            // 修改用户积分
-            boolean isUpdatePointOK = userService.updatePointByUserId(userId, targetDailyPointDiff, targetPointDiff);
-            if (!isUpdatePointOK) {
-                log.error("更新用户积分失败, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
-                throw new BizException("异常错误");
-            }
+                targetDailyPointDiff = updatePointHandlerBO.getTargetDailyPointDiff();
+                targetPointDiff = updatePointHandlerBO.getTargetPointDiff();
+                operation = updatePointHandlerBO.getOperationType();
+                pointType = updatePointHandlerBO.getPointType();
 
-            // 记录积分表
-            PointRecord pointRecord = PointRecord.builder()
-                    .id(IdUtils.nextSnowflakeId())
-                    .userId(userId)
-                    .requestUuid(requestUuid == null ? "" : requestUuid)
-                    .dailyPoint(Math.abs(targetDailyPointDiff))
-                    .point(Math.abs(targetPointDiff))
-                    .operationType(operation)
-                    .operationSource(source)
-                    .pointType(pointType)
-                    .build();
-            boolean isInsertPointRecordOK = pointRecordService.insertRecord(pointRecord);
-            if (!isInsertPointRecordOK) {
-                log.error("记录积分流水表失败, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
+                log.info("更新用户积分, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
+                // 修改用户积分
+                boolean isUpdatePointOK = userService.updatePointByUserId(userId, targetDailyPointDiff, targetPointDiff);
+                if (!isUpdatePointOK) {
+                    log.error("更新用户积分失败, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
+                    throw new BizException("异常错误");
+                }
+            } else {
+                log.error("RedisLock: {}, 上锁超时", redisLockKey);
                 throw new BizException("异常错误");
             }
         } catch (Exception e) {
-            log.error("RedisLock: {}, 上锁期间发生异常",redisLockKey, e);
-            throw e;
+            log.error("RedisLock: {}, 上锁期间发生异常", redisLockKey, e);
+            throw new BizException("异常错误");
         } finally {
-            lock.unlock();
+            if (lock.isLocked() && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
+
+        // 记录积分流水表
+        PointRecord pointRecord = PointRecord.builder()
+                .id(IdUtils.nextSnowflakeId())
+                .userId(userId)
+                .requestUuid(requestUuid == null ? "" : requestUuid)
+                .dailyPoint(Math.abs(targetDailyPointDiff))
+                .point(Math.abs(targetPointDiff))
+                .operationType(operation)
+                .operationSource(source)
+                .pointType(pointType)
+                .build();
+        boolean isInsertPointRecordOK = pointRecordService.insertRecord(pointRecord);
+        if (!isInsertPointRecordOK) {
+            log.error("记录积分流水表失败, userId: {}, pointDiff: {}, source: {}, operation: {}, requestUuid: {}, pointType: {}, targetDailyPointDiff: {}, targetPointDiff: {}", userId, pointDiff, source, operation, requestUuid, pointType, targetDailyPointDiff, targetPointDiff);
+            throw new BizException("异常错误");
         }
 
         return true;

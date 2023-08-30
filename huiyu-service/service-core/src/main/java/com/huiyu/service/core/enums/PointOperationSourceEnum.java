@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.EnumSet;
 
 @Slf4j
 @Getter
@@ -241,10 +240,8 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
 
         @PostConstruct
         public void init() {
-            EnumSet.allOf(PointOperationSourceEnum.class).forEach(item -> {
-                PointOperationSourceEnum.setUserService(userService);
-                PointOperationSourceEnum.setPointRecordService(pointRecordService);
-            });
+            PointOperationSourceEnum.setUserService(userService);
+            PointOperationSourceEnum.setPointRecordService(pointRecordService);
         }
     }
 }

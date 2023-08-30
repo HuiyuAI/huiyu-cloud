@@ -16,11 +16,10 @@ import java.text.MessageFormat;
 @ToString
 @AllArgsConstructor
 public enum RedisLockEnum {
-    UPDATE_POINT("service:lock:update_point:{0}", 20, "用户积分修改"),
+    UPDATE_POINT("service:lock:update_point:{0}", "用户积分修改"),
     ;
 
     private String key;
-    private long leaseTime;
     private String desc;
 
     public String getFormatKey(Object... args) {

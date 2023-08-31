@@ -177,6 +177,22 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
             return new UpdatePointHandlerBO(targetDailyPointDiff, 0, operationType, pointType);
         }
     },
+    DAILY_TASK("dailyTask", "每日任务") {
+        @Override
+        public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {
+            if (operation != PointOperationTypeEnum.ADD) {
+                throw new IllegalArgumentException("参数错误");
+            }
+            if (pointType != PointTypeEnum.POINT) {
+                throw new IllegalArgumentException("参数错误");
+            }
+        }
+
+        @Override
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
+        }
+    },
     INVITE_USER("inviteUser", "邀请用户") {
         @Override
         public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {

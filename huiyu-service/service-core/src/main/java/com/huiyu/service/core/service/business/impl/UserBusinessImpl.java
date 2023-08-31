@@ -221,14 +221,16 @@ public class UserBusinessImpl implements UserBusiness {
         }
 
         // 签到积分奖励
-        Integer signInPoint = hotFileConfig.getSignInPoint();
+        Integer signInPoint = hotFileConfig.getInt("dailyTask_" + DailyTaskEnum.SIGN_IN.getDictKey(), DailyTaskEnum.SIGN_IN.getPoint());
         if (signInPoint > 0) {
+            log.info("奖励积分, desc: {}, userId: {}, point: {}", DailyTaskEnum.SIGN_IN.getDesc(), userId, signInPoint);
             this.updatePoint(userId, signInPoint, PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
         }
 
         // 记录每日任务完成情况
         String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(nowDate.toString(), String.valueOf(userId));
         redisTemplate.opsForHash().put(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey(), 1);
+        log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}", DailyTaskEnum.SIGN_IN.getDesc(), dailyTaskRedisKey);
 
         return true;
     }

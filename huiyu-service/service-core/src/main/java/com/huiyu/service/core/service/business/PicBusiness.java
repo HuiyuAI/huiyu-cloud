@@ -15,6 +15,15 @@ import com.huiyu.service.core.model.vo.RedrawVo;
 import java.util.List;
 
 public interface PicBusiness {
+
+    /**
+     * 图片生成完毕回调
+     *
+     * @param resImageUuid    图片uuid
+     * @param resImageUrlUuid 图片地址uuid
+     */
+    void picGeneratedCallback(String resImageUuid, String resImageUrlUuid);
+
     /**
      * 分页查询画夹
      *

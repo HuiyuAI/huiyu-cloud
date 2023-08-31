@@ -5,19 +5,14 @@ import com.huiyu.common.core.result.ResultCode;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.constant.HuiyuConstant;
-import com.huiyu.service.core.enums.PicStatusEnum;
-import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.sd.callback.cmd.UploadSuccessCallbackCmd;
-import com.huiyu.service.core.service.PicService;
-import com.huiyu.service.core.service.extension.SecureCheckService;
+import com.huiyu.service.core.service.business.PicBusiness;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 /**
  * Stable Diffusion服务端回调
@@ -31,9 +26,7 @@ import java.time.LocalDateTime;
 @RequestMapping("/callback/sd/")
 public class SDServerCallbackController {
 
-    private final PicService picService;
-
-    private final SecureCheckService secureCheckService;
+    private final PicBusiness picBusiness;
 
     /**
      * 图片上传成功回调
@@ -48,30 +41,7 @@ public class SDServerCallbackController {
             return R.create(ResultCode.FORBIDDEN);
         }
 
-        String imgUrl = HuiyuConstant.cdnUrlGen + cmd.getResImageUrlUuid() + HuiyuConstant.imageSuffix;
-        log.info("图片上传成功 url: {}", imgUrl);
-
-        PicStatusEnum picStatus = PicStatusEnum.GENERATED;
-
-        // 缩略图
-        String checkUrl = imgUrl + "!/fw/720";
-        log.info("图片上传成功, 调用微信图片审核接口");
-        boolean checkRes = secureCheckService.checkImage(checkUrl);
-        if (!checkRes) {
-            log.info("图片审核不通过, imgUrl: {}", checkUrl);
-            picStatus = PicStatusEnum.RISKY;
-        }
-
-        // 更新图片状态
-        Pic pic = Pic.builder()
-                .uuid(cmd.getResImageUuid())
-                .path(imgUrl)
-                .status(picStatus)
-                .updateTime(LocalDateTime.now())
-                .build();
-        picService.updateByUuid(pic);
-
-        picService.sendMsgByPicGenerated(cmd.getResImageUuid());
+        picBusiness.picGeneratedCallback(cmd.getResImageUuid(), cmd.getResImageUrlUuid());
         return R.ok();
     }
 }

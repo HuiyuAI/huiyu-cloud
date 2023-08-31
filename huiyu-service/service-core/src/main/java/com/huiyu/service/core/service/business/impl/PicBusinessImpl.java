@@ -3,9 +3,12 @@ package com.huiyu.service.core.service.business.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.huiyu.service.core.constant.HuiyuConstant;
+import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.convert.PicConvert;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.entity.PicShare;
+import com.huiyu.service.core.enums.DailyTaskEnum;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.model.dto.PicPageDto;
@@ -22,29 +25,65 @@ import com.huiyu.service.core.service.ModelService;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.business.PicBusiness;
 import com.huiyu.service.core.entity.Pic;
+import com.huiyu.service.core.service.extension.SecureCheckService;
 import com.huiyu.service.core.utils.IdUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class PicBusinessImpl implements PicBusiness {
+    private final PicService picService;
+    private final PicShareService picShareService;
+    private final ModelService modelService;
+    private final SecureCheckService secureCheckService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Resource
-    private PicService picService;
+    @Override
+    public void picGeneratedCallback(String resImageUuid, String resImageUrlUuid) {
+        String imgUrl = HuiyuConstant.cdnUrlGen + resImageUrlUuid + HuiyuConstant.imageSuffix;
+        log.info("图片上传成功 url: {}", imgUrl);
 
-    @Resource
-    private PicShareService picShareService;
+        PicStatusEnum picStatus = PicStatusEnum.GENERATED;
 
-    @Resource
-    private ModelService modelService;
+        // 缩略图
+        String checkUrl = imgUrl + "!/fw/720";
+        log.info("图片上传成功, 调用微信图片审核接口");
+        boolean checkRes = secureCheckService.checkImage(checkUrl);
+        if (!checkRes) {
+            log.info("图片审核不通过, imgUrl: {}", checkUrl);
+            picStatus = PicStatusEnum.RISKY;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        // 更新图片状态
+        Pic updatePicDto = Pic.builder()
+                .uuid(resImageUuid)
+                .path(imgUrl)
+                .status(picStatus)
+                .updateTime(now)
+                .build();
+        picService.updateByUuid(updatePicDto);
+
+        // 每日任务计数
+        Pic pic = picService.getByUuidOnly(resImageUuid);
+        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(now.toLocalDate().toString(), String.valueOf(pic.getUserId()));
+        redisTemplate.opsForHash().increment(dailyTaskRedisKey, DailyTaskEnum.GENERATE_PIC.getDictKey(), 1);
+
+        // 通知审核群
+        picService.sendMsgByPicGenerated(resImageUuid);
+    }
 
     @Override
     public IPage<PicPageVo> queryVoPage(IPage<Pic> page, PicPageDto dto) {

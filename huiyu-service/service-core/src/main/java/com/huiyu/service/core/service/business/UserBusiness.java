@@ -3,6 +3,7 @@ package com.huiyu.service.core.service.business;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.entity.PointRecord;
+import com.huiyu.service.core.enums.DailyTaskEnum;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
@@ -79,4 +80,12 @@ public interface UserBusiness {
      * @return 是否成功
      */
     boolean signIn(Long userId);
+
+    /**
+     * 完成每日任务奖励积分
+     *
+     * @param userId        用户id
+     * @param dailyTaskEnum 每日任务枚举
+     */
+    void dailyTaskFinished(Long userId, DailyTaskEnum dailyTaskEnum);
 }

@@ -235,4 +235,25 @@ public class UserBusinessImpl implements UserBusiness {
         return true;
     }
 
+    @Override
+    public void dailyTaskFinished(Long userId, DailyTaskEnum dailyTaskEnum) {
+        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(LocalDate.now().toString(), String.valueOf(userId));
+        // 判断今日是否已完成
+        Integer finishedCount = (Integer) redisTemplate.opsForHash().get(dailyTaskRedisKey, dailyTaskEnum.getDictKey());
+
+        log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}, finishedCount: {}", dailyTaskEnum.getDesc(), dailyTaskRedisKey, finishedCount);
+
+        if (finishedCount != null && finishedCount >= dailyTaskEnum.getCount()) {
+            // 今日已完成
+            return;
+        }
+        Long increment = redisTemplate.opsForHash().increment(dailyTaskRedisKey, dailyTaskEnum.getDictKey(), 1);
+        if (increment.intValue() == dailyTaskEnum.getCount()) {
+            // 奖励积分
+            Integer point = hotFileConfig.getInt("dailyTask_" + dailyTaskEnum.getDictKey(), dailyTaskEnum.getPoint());
+
+            log.info("奖励积分, desc: {}, userId: {}, point: {}", dailyTaskEnum.getDesc(), userId, point);
+            this.updatePoint(userId, point, PointOperationSourceEnum.DAILY_TASK, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
+        }
+    }
 }

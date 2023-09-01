@@ -65,6 +65,10 @@ public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> i
 
     @Override
     public boolean save(PicShare picShare) {
+        picShare.setHits(0);
+        picShare.setLikeCount(0);
+        picShare.setDrawCount(0);
+        picShare.setIsDelete(0);
         return super.save(picShare);
     }
 

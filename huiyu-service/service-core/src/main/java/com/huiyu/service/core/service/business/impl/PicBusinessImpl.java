@@ -4,17 +4,12 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.service.core.constant.HuiyuConstant;
-import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.convert.PicConvert;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.DailyTaskEnum;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.enums.PicStatusEnum;
-import com.huiyu.service.core.enums.PointOperationSourceEnum;
-import com.huiyu.service.core.enums.PointOperationTypeEnum;
-import com.huiyu.service.core.enums.PointTypeEnum;
-import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
@@ -35,13 +30,11 @@ import com.huiyu.service.core.utils.IdUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -54,8 +47,6 @@ public class PicBusinessImpl implements PicBusiness {
     private final PicShareService picShareService;
     private final ModelService modelService;
     private final SecureCheckService secureCheckService;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final HotFileConfig hotFileConfig;
     private final UserBusiness userBusiness;
 
     @Override
@@ -86,7 +77,7 @@ public class PicBusinessImpl implements PicBusiness {
 
         // 每日任务奖励
         Pic pic = picService.getByUuidOnly(resImageUuid);
-        this.dailyTaskGeneratePic(pic.getUserId());
+        userBusiness.dailyTaskFinished(pic.getUserId(), DailyTaskEnum.GENERATE_PIC);
 
         // 通知审核群
         picService.sendMsgByPicGenerated(resImageUuid);
@@ -165,18 +156,17 @@ public class PicBusinessImpl implements PicBusiness {
                 .uuid(pic.getUuid())
                 .userId(userId)
                 .title(StringUtils.trimToEmpty(picShareDto.getTitle()))
-                .hits(0)
-                .likeCount(0)
-                .drawCount(0)
                 .status(PicShareStatusEnum.AUDITING)
                 .createTime(now)
                 .updateTime(now)
-                .isDelete(0)
                 .build();
         boolean flag = picShareService.save(picShare);
         if (!flag) {
             return false;
         }
+
+        // 每日任务奖励
+        userBusiness.dailyTaskFinished(userId, DailyTaskEnum.SHARE_PIC);
 
         // 通知审核群
         picShareService.sendMsgByPicShare(pic, picShare, now);
@@ -238,24 +228,4 @@ public class PicBusinessImpl implements PicBusiness {
         return redrawVo;
     }
 
-    private void dailyTaskGeneratePic(Long userId) {
-        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(LocalDate.now().toString(), String.valueOf(userId));
-        // 判断今日是否已完成
-        Integer finishedCount = (Integer) redisTemplate.opsForHash().get(dailyTaskRedisKey, DailyTaskEnum.GENERATE_PIC.getDictKey());
-
-        log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}, finishedCount: {}", DailyTaskEnum.GENERATE_PIC.getDesc(), dailyTaskRedisKey, finishedCount);
-
-        if (finishedCount != null && finishedCount >= DailyTaskEnum.GENERATE_PIC.getCount()) {
-            // 今日已完成
-            return;
-        }
-        Long increment = redisTemplate.opsForHash().increment(dailyTaskRedisKey, DailyTaskEnum.GENERATE_PIC.getDictKey(), 1);
-        if (increment.intValue() == DailyTaskEnum.GENERATE_PIC.getCount()) {
-            // 奖励积分
-            Integer point = hotFileConfig.getInt("dailyTask_" + DailyTaskEnum.GENERATE_PIC.getDictKey(), DailyTaskEnum.GENERATE_PIC.getPoint());
-
-            log.info("奖励积分, desc: {}, userId: {}, point: {}", DailyTaskEnum.GENERATE_PIC.getDesc(), userId, point);
-            userBusiness.updatePoint(userId, point, PointOperationSourceEnum.DAILY_TASK, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
-        }
-    }
 }

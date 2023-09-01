@@ -228,4 +228,19 @@ public class PicBusinessImpl implements PicBusiness {
         return redrawVo;
     }
 
+    @Override
+    public boolean audit(List<Long> picIdList, PicShareStatusEnum status) {
+        boolean res = picShareService.audit(picIdList, status);
+        if (!res) {
+            return false;
+        }
+
+        // 每日任务奖励
+        for (Long picId : picIdList) {
+            Pic pic = picService.getById(picId);
+            userBusiness.dailyTaskFinished(pic.getUserId(), DailyTaskEnum.SHARE_PASS);
+        }
+        return true;
+    }
+
 }

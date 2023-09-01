@@ -7,6 +7,7 @@ import com.huiyu.service.core.model.dto.PicShareAuditDto;
 import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.service.PicShareService;
+import com.huiyu.service.core.service.business.PicBusiness;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ import java.util.List;
 @RequestMapping("/admin/picShare")
 public class PicShareAdminController {
     private final PicShareService picShareService;
+    private final PicBusiness picBusiness;
 
     /**
      * 后台管理分页查询
@@ -43,7 +45,7 @@ public class PicShareAdminController {
      */
     @PostMapping("/audit")
     public R audit(@RequestBody PicShareAuditDto dto) {
-        boolean res = picShareService.audit(dto.getPicIdList(), dto.getStatus());
+        boolean res = picBusiness.audit(dto.getPicIdList(), dto.getStatus());
         return R.status(res);
     }
 

@@ -6,7 +6,7 @@ import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.model.vo.MiraiStatusVo;
 import com.huiyu.service.core.service.PicService;
-import com.huiyu.service.core.service.PicShareService;
+import com.huiyu.service.core.service.business.PicBusiness;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.mamoe.mirai.Bot;
@@ -51,7 +51,7 @@ public class MiraiUtils {
 
     private static PicService picService;
 
-    private static PicShareService picShareService;
+    private static PicBusiness picBusiness;
 
     private static volatile Bot bot;
 
@@ -67,9 +67,9 @@ public class MiraiUtils {
     @Getter
     private static volatile Long groupId;
 
-    public MiraiUtils(PicService picService, PicShareService picShareService) {
+    public MiraiUtils(PicService picService, PicBusiness picBusiness) {
         MiraiUtils.picService = picService;
-        MiraiUtils.picShareService = picShareService;
+        MiraiUtils.picBusiness = picBusiness;
     }
 
     public static synchronized void login(long qq, long groupId) {
@@ -274,7 +274,7 @@ public class MiraiUtils {
                 }
 
                 if ("pass".equals(plainText.contentToString().trim())) {
-                    boolean res = picShareService.audit(Collections.singletonList(picId), PicShareStatusEnum.PUBLIC);
+                    boolean res = picBusiness.audit(Collections.singletonList(picId), PicShareStatusEnum.PUBLIC);
 
                     event.getSubject().sendMessage(new MessageChainBuilder()
                             .append(new QuoteReply(event.getMessage()))
@@ -283,7 +283,7 @@ public class MiraiUtils {
                     );
                 }
                 if ("ban".equals(plainText.contentToString().trim())) {
-                    boolean res = picShareService.audit(Collections.singletonList(picId), PicShareStatusEnum.REJECT);
+                    boolean res = picBusiness.audit(Collections.singletonList(picId), PicShareStatusEnum.REJECT);
 
                     event.getSubject().sendMessage(new MessageChainBuilder()
                             .append(new QuoteReply(event.getMessage()))

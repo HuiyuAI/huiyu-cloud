@@ -283,12 +283,22 @@ public class UserBusinessImpl implements UserBusiness {
 
         log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}, finishedCount: {}", dailyTaskEnum.getDesc(), dailyTaskRedisKey, finishedCount);
 
-        if (finishedCount != null && finishedCount >= dailyTaskEnum.getCount()) {
-            // 今日已完成
-            return;
+        if (finishedCount != null && dailyTaskEnum.getRoundPerDay() != -1) {
+            // 每日可完成轮数有限，则判断今日已完成几轮
+            if (dailyTaskEnum.getCountPerRound() == -1) {
+                if (finishedCount >= dailyTaskEnum.getRoundPerDay()) {
+                    // 今日轮数已全部完成
+                    return;
+                }
+            } else {
+                if (finishedCount >= dailyTaskEnum.getCountPerRound() * dailyTaskEnum.getRoundPerDay()) {
+                    // 今日轮数已全部完成
+                    return;
+                }
+            }
         }
         Long increment = redisTemplate.opsForHash().increment(dailyTaskRedisKey, dailyTaskEnum.getDictKey(), 1);
-        if (increment.intValue() == dailyTaskEnum.getCount()) {
+        if (dailyTaskEnum.getCountPerRound() == -1 || increment.intValue() == dailyTaskEnum.getCountPerRound() * dailyTaskEnum.getRoundPerDay()) {
             // 奖励积分
             Integer point = hotFileConfig.getInt("dailyTask_" + dailyTaskEnum.getDictKey(), dailyTaskEnum.getPoint());
 

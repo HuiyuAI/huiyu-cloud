@@ -3,6 +3,7 @@ package com.huiyu.service.core.service.business;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
+import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.model.dto.PicPageDto;
 import com.huiyu.service.core.model.dto.PicShareDto;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
@@ -85,4 +86,13 @@ public interface PicBusiness {
      * @return 隐藏参数
      */
     RedrawVo redraw(Long userId, String uuid);
+
+    /**
+     * 审核
+     *
+     * @param picIdList 图片主键idList
+     * @param status    审核结果
+     * @return true/false
+     */
+    boolean audit(List<Long> picIdList, PicShareStatusEnum status);
 }

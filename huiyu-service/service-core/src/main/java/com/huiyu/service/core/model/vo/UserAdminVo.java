@@ -79,4 +79,8 @@ public class UserAdminVo {
      * 图片数量
      */
     private Integer picCount;
+    /**
+     * 投稿数量
+     */
+    private Integer picShareCount;
 }

@@ -16,5 +16,11 @@ public interface PicMapper extends BaseMapper<Pic> {
 
     Pic getByTaskId(Long taskId);
 
+    /**
+     * 根据用户idList查询图片数量
+     *
+     * @param userIdList 用户idList
+     * @return 图片数量
+     */
     List<UserPicCountDto> countByUserIdList(@Param("userIdList") List<Long> userIdList);
 }

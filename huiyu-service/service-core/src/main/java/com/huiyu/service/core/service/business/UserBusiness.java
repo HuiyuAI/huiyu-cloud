@@ -8,7 +8,9 @@ import com.huiyu.service.core.enums.PointOperationSourceEnum;
 import com.huiyu.service.core.enums.PointOperationTypeEnum;
 import com.huiyu.service.core.enums.PointTypeEnum;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
+import com.huiyu.service.core.model.query.UserQuery;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
+import com.huiyu.service.core.model.vo.UserAdminVo;
 import com.huiyu.service.core.model.vo.UserVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2023-08-11
  */
 public interface UserBusiness {
+    /**
+     * 后台管理分页查询
+     *
+     * @param page  分页对象
+     * @param query 筛选条件
+     * @return 查询结果
+     */
+    IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query);
+
     /**
      * 修改用户数据
      *

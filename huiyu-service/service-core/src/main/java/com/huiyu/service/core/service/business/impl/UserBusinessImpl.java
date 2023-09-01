@@ -18,8 +18,14 @@ import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import com.huiyu.service.core.model.bo.UpdatePointHandlerBO;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
+import com.huiyu.service.core.model.dto.UserPicCountDto;
+import com.huiyu.service.core.model.dto.UserPicShareCountDto;
+import com.huiyu.service.core.model.query.UserQuery;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
+import com.huiyu.service.core.model.vo.UserAdminVo;
 import com.huiyu.service.core.model.vo.UserVo;
+import com.huiyu.service.core.service.PicService;
+import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.service.PointRecordService;
 import com.huiyu.service.core.service.SignRecordService;
 import com.huiyu.service.core.service.UserService;
@@ -37,11 +43,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Naccl
@@ -54,10 +64,40 @@ public class UserBusinessImpl implements UserBusiness {
     private final UserService userService;
     private final PointRecordService pointRecordService;
     private final SignRecordService signRecordService;
+    private final PicService picService;
+    private final PicShareService picShareService;
     private final SecureCheckService secureCheckService;
     private final HotFileConfig hotFileConfig;
     private final RedisTemplate<String, Object> redisTemplate;
     private final Redisson redisson;
+
+    @Override
+    public IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query) {
+        IPage<User> userPage = userService.adminPageQuery(page, query);
+
+        IPage<UserAdminVo> userAdminVoPage = UserConvert.INSTANCE.toAdminVOPage(userPage);
+        if (CollectionUtils.isEmpty(userPage.getRecords())) {
+            return userAdminVoPage;
+        }
+
+        List<Long> userIdList = userAdminVoPage.getRecords().stream().map(UserAdminVo::getUserId).collect(Collectors.toList());
+
+        // 图片数量
+        List<UserPicCountDto> userPicCountDtoList = picService.countByUserIdList(userIdList);
+        Map<Long, Integer> userPicCountMap = userPicCountDtoList.stream().collect(Collectors.toMap(UserPicCountDto::getUserId, UserPicCountDto::getPicCount, (k1, k2) -> k1));
+
+        // 投稿数量
+        List<UserPicShareCountDto> userPicShareCountDtoList = picShareService.countByUserIdList(userIdList);
+        Map<Long, Integer> userPicShareCountMap = userPicShareCountDtoList.stream().collect(Collectors.toMap(UserPicShareCountDto::getUserId, UserPicShareCountDto::getPicShareCount, (k1, k2) -> k1));
+
+        userAdminVoPage.getRecords().forEach(userAdminVo -> {
+            Integer picCount = userPicCountMap.get(userAdminVo.getUserId());
+            Integer picShareCount = userPicShareCountMap.get(userAdminVo.getUserId());
+            userAdminVo.setPicCount(picCount == null ? 0 : picCount);
+            userAdminVo.setPicShareCount(picShareCount == null ? 0 : picShareCount);
+        });
+        return userAdminVoPage;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override

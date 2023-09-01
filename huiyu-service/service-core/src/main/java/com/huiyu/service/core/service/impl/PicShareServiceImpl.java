@@ -7,6 +7,7 @@ import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.mapper.PicShareMapper;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.dto.UserPicShareCountDto;
 import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
@@ -61,6 +62,11 @@ public class PicShareServiceImpl extends ServiceImpl<PicShareMapper, PicShare> i
                 .eq(PicShare::getUserId, userId)
                 .in(PicShare::getUuid, uuidList)
                 .list();
+    }
+
+    @Override
+    public List<UserPicShareCountDto> countByUserIdList(List<Long> userIdList) {
+        return super.baseMapper.countByUserIdList(userIdList);
     }
 
     @Override

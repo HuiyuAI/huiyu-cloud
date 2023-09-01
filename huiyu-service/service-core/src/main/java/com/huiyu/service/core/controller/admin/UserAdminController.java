@@ -34,7 +34,7 @@ public class UserAdminController {
 
     @GetMapping("/{pageNum}/{pageSize}")
     public R<IPage<UserAdminVo>> adminPageQuery(UserQuery query, @PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
-        IPage<UserAdminVo> pageInfo = userService.adminPageQuery(new Page<>(pageNum, pageSize), query);
+        IPage<UserAdminVo> pageInfo = userBusiness.adminPageQuery(new Page<>(pageNum, pageSize), query);
         return R.ok(pageInfo);
     }
 

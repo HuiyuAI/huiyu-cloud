@@ -185,6 +185,23 @@
           and a.uuid = #{uuid}
     </select>
 
+
+    <resultMap id="userPicShareCountDto" type="com.huiyu.service.core.model.dto.UserPicShareCountDto">
+        <result column="user_id" property="userId"/>
+        <result column="pic_share_count" property="picShareCount"/>
+    </resultMap>
+
+    <select id="countByUserIdList" resultMap="userPicShareCountDto">
+        select user_id, count(user_id) as pic_share_count
+        from pic_share
+        where user_id in
+        <foreach collection="userIdList" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        and is_delete = 0
+        group by user_id
+    </select>
+
     <update id="addHitsByUuid">
         update pic_share
         set hits = hits + 1

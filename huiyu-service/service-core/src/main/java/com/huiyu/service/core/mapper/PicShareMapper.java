@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.dto.UserPicShareCountDto;
 import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
@@ -12,6 +13,8 @@ import com.huiyu.service.core.model.vo.PicShareVo;
 import com.huiyu.service.core.model.vo.RedrawVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 图片分享表(PicShare)Mapper接口
@@ -56,6 +59,14 @@ public interface PicShareMapper extends BaseMapper<PicShare> {
      * @return 隐藏参数
      */
     RedrawVo redraw(@Param("uuid") String uuid, @Param("picShareStatus") PicShareStatusEnum picShareStatus);
+
+    /**
+     * 根据用户idList查询投稿数量
+     *
+     * @param userIdList 用户idList
+     * @return 投稿数量
+     */
+    List<UserPicShareCountDto> countByUserIdList(@Param("userIdList") List<Long> userIdList);
 
     /**
      * 根据图片uuid增加图片点击量

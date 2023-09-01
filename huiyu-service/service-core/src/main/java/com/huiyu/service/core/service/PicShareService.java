@@ -6,6 +6,7 @@ import com.huiyu.service.core.entity.Pic;
 import com.huiyu.service.core.entity.PicShare;
 import com.huiyu.service.core.enums.PicShareStatusEnum;
 import com.huiyu.service.core.model.dto.PicSharePageDto;
+import com.huiyu.service.core.model.dto.UserPicShareCountDto;
 import com.huiyu.service.core.model.query.PicShareQuery;
 import com.huiyu.service.core.model.vo.PicShareAdminVo;
 import com.huiyu.service.core.model.vo.PicSharePageVo;
@@ -73,6 +74,14 @@ public interface PicShareService extends IService<PicShare> {
      * @return 详情
      */
     List<PicShare> getByUserIdAndUuidList(Long userId, List<String> uuidList);
+
+    /**
+     * 根据用户idList查询投稿数量
+     *
+     * @param userIdList 用户idList
+     * @return 投稿数量
+     */
+    List<UserPicShareCountDto> countByUserIdList(List<Long> userIdList);
 
     /**
      * 投稿分享图片

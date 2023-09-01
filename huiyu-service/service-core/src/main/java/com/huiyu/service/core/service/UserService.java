@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.service.core.model.query.UserQuery;
-import com.huiyu.service.core.model.vo.UserAdminVo;
 
 /**
  * (User)表服务接口
@@ -14,13 +13,13 @@ import com.huiyu.service.core.model.vo.UserAdminVo;
  */
 public interface UserService extends IService<User> {
     /**
-     * 分页查询
+     * 后台管理分页查询
      *
      * @param page  分页对象
      * @param query 筛选条件
      * @return 查询结果
      */
-    IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query);
+    IPage<User> adminPageQuery(IPage<User> page, UserQuery query);
 
     /**
      * 通过userId查询单条数据

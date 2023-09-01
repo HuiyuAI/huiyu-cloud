@@ -5,15 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
-import com.huiyu.service.core.convert.UserConvert;
 import com.huiyu.service.core.entity.UserIdSender;
 import com.huiyu.common.web.exception.BizException;
 import com.huiyu.service.core.mapper.UserIdSenderMapper;
 import com.huiyu.service.core.mapper.auth.UserMapper;
-import com.huiyu.service.core.model.dto.UserPicCountDto;
 import com.huiyu.service.core.model.query.UserQuery;
-import com.huiyu.service.core.model.vo.UserAdminVo;
-import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * (User)表服务实现类
@@ -41,35 +33,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final UserMapper userMapper;
     private final UserIdSenderMapper userIdSenderMapper;
     private final PasswordEncoder passwordEncoder;
-    private final PicService picService;
 
     @Override
-    public IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query) {
-        IPage<User> userPage = super.lambdaQuery()
+    public IPage<User> adminPageQuery(IPage<User> page, UserQuery query) {
+        return super.lambdaQuery()
                 .eq(query.getUserId() != null, User::getUserId, query.getUserId())
                 .eq(StringUtils.isNotEmpty(query.getRole()), User::getRole, query.getRole())
                 .ge(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, User::getCreateTime, query.getCreateTimeStart())
                 .le(query.getCreateTimeStart() != null && query.getCreateTimeEnd() != null, User::getCreateTime, query.getCreateTimeEnd())
                 .orderByDesc(User::getId)
                 .page(page);
-
-        IPage<UserAdminVo> userAdminVoPage = UserConvert.INSTANCE.toAdminVOPage(userPage);
-        if (CollectionUtils.isEmpty(userPage.getRecords())) {
-            return userAdminVoPage;
-        }
-
-        List<Long> userIdList = userAdminVoPage.getRecords().stream().map(UserAdminVo::getUserId).collect(Collectors.toList());
-        List<UserPicCountDto> userPicCountDtoList = picService.countByUserIdList(userIdList);
-        Map<Long, Integer> userPicCountMap = userPicCountDtoList.stream().collect(Collectors.toMap(UserPicCountDto::getUserId, UserPicCountDto::getPicCount, (k1, k2) -> k1));
-
-        // TODO 投稿数
-
-
-        userAdminVoPage.getRecords().forEach(userAdminVo -> {
-            Integer count = userPicCountMap.get(userAdminVo.getUserId());
-            userAdminVo.setPicCount(count == null ? 0 : count);
-        });
-        return userAdminVoPage;
     }
 
     /**

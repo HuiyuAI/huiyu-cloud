@@ -1,6 +1,5 @@
 package com.huiyu.service.core.config.executor;
 
-import com.huiyu.service.core.config.TaskContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Function;
@@ -17,7 +16,6 @@ public class CompletableFutureExceptionHandle {
             Exception exception = new Exception(e);
             log.error("异步流程出错", exception);
         }
-        TaskContext.TASK_SUBMIT_CONTEXT.remove();
         return null;
     };
 

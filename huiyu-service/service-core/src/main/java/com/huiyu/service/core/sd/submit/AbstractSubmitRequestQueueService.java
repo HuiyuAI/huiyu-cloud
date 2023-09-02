@@ -2,7 +2,7 @@ package com.huiyu.service.core.sd.submit;
 
 import cn.hutool.core.lang.Pair;
 import com.huiyu.service.core.config.RequestContext;
-import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
+import com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle;
 import com.huiyu.service.core.model.vo.SDResponseVo;
 import com.huiyu.service.core.entity.Task;
 import com.huiyu.service.core.enums.PointOperationSourceEnum;
@@ -22,8 +22,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
-import static com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle.ExceptionLogHandle;
+import java.util.concurrent.Executor;
 
 /**
  * @author wAnG
@@ -34,7 +33,7 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
 
     @Resource
     @Qualifier("splitTaskExecutor")
-    private ThreadPoolExecutorDecorator splitTaskExecutor;
+    private Executor splitTaskExecutor;
 
     @Resource
     private ImageTaskService imageTaskService;
@@ -64,8 +63,8 @@ public abstract class AbstractSubmitRequestQueueService<T extends Cmd> {
             return null;
         }
         Dto dto = taskDtoPair.getValue();
-        return CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto, sdResponseVo), splitTaskExecutor.getThreadPoolExecutor())
-                .exceptionally(ExceptionLogHandle);
+        return CompletableFuture.runAsync(() -> imageTaskService.trySplitTask(task, dto, sdResponseVo), splitTaskExecutor)
+                .exceptionally(CompletableFutureExceptionHandle.ExceptionLogHandle);
     }
 
     public boolean isSupport(T t) {

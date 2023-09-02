@@ -1,7 +1,6 @@
 package com.huiyu.service.core.utils.translate;
 
 import com.huiyu.service.core.config.TencentCloudConfig;
-import com.huiyu.service.core.config.executor.ThreadPoolExecutorDecorator;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -20,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -38,9 +38,9 @@ public class TencentCloudTranslator {
 
     private static AtomicLong count = new AtomicLong(0L);
 
-    private static ThreadPoolExecutorDecorator translateExecutor;
+    private static Executor translateExecutor;
 
-    public TencentCloudTranslator(TencentCloudConfig tencentCloudConfig, @Qualifier("translateExecutor") ThreadPoolExecutorDecorator translateExecutor) {
+    public TencentCloudTranslator(TencentCloudConfig tencentCloudConfig, @Qualifier("translateExecutor") Executor translateExecutor) {
         TencentCloudTranslator.clientList = new ArrayList<>();
         List<String> secretIdList = tencentCloudConfig.getSecretId();
         List<String> secretKeyList = tencentCloudConfig.getSecretKey();
@@ -70,7 +70,7 @@ public class TencentCloudTranslator {
         for (int i = 0; i < sourceTextList.size(); i++) {
             int finalIndex = i;
             CompletableFuture<String> completableFuture = CompletableFuture
-                    .supplyAsync(() -> en2ZhTranslate(sourceTextList.get(finalIndex)), translateExecutor.getThreadPoolExecutor())
+                    .supplyAsync(() -> en2ZhTranslate(sourceTextList.get(finalIndex)), translateExecutor)
                     .whenComplete((result, throwable) -> {
                         if (result != null) {
                             resultList.set(finalIndex, result);

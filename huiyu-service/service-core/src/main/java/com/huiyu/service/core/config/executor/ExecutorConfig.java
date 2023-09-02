@@ -28,10 +28,10 @@ public class ExecutorConfig {
         executor.setCorePoolSize(1);
         executor.setMaxPoolSize(1);
         executor.setQueueCapacity(5);
-        executor.setThreadNamePrefix("SUBMIT");
+        executor.setThreadNamePrefix("submit-");
         executor.setMonitorName("submitRequestExecutor_test1");
         executor.setRejectedExecutionHandler(new TaskExecutionRejectedHandler());
-        executor.setTaskDecorator(taskDecorator());
+        executor.setTaskDecorator(mdcDecorator());
         executor.initialize();
         return ThreadPoolExecutorDecorator.builder()
                 .threadPoolExecutor(executor)
@@ -40,38 +40,34 @@ public class ExecutorConfig {
     }
 
     @Bean(name = "splitTaskExecutor")
-    public ThreadPoolExecutorDecorator splitTaskExecutor() {
+    public Executor splitTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(50);
         executor.setMaxPoolSize(50);
         executor.setQueueCapacity(2000);
+        executor.setThreadNamePrefix("split-");
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
-        executor.setTaskDecorator(taskDecorator());
+        executor.setTaskDecorator(mdcDecorator());
         executor.initialize();
         Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
-        return ThreadPoolExecutorDecorator.builder()
-                .threadPoolExecutor(ttlExecutor)
-                .sourceName("split")
-                .build();
+        return ttlExecutor;
     }
 
     @Bean(name = "translateExecutor")
-    public ThreadPoolExecutorDecorator translateExecutor() {
+    public Executor translateExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(2000);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        executor.setTaskDecorator(taskDecorator());
+        executor.setThreadNamePrefix("translate-");
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        executor.setTaskDecorator(mdcDecorator());
         executor.initialize();
         Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
-        return ThreadPoolExecutorDecorator.builder()
-                .threadPoolExecutor(ttlExecutor)
-                .sourceName("translate")
-                .build();
+        return ttlExecutor;
     }
 
-    private TaskDecorator taskDecorator() {
+    public static TaskDecorator mdcDecorator() {
         return runnable -> {
             String traceId = MDC.get(TRACE_ID);
             return () -> {

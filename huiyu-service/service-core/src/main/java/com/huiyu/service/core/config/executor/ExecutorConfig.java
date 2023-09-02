@@ -67,6 +67,20 @@ public class ExecutorConfig {
         return ttlExecutor;
     }
 
+    @Bean(name = "registerExecutor")
+    public Executor registerExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(20);
+        executor.setQueueCapacity(200);
+        executor.setThreadNamePrefix("register-");
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+        executor.setTaskDecorator(mdcDecorator());
+        executor.initialize();
+        Executor ttlExecutor = TtlExecutors.getTtlExecutor(executor);
+        return ttlExecutor;
+    }
+
     public static TaskDecorator mdcDecorator() {
         return runnable -> {
             String traceId = MDC.get(TRACE_ID);

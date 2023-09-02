@@ -135,7 +135,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
             return new UpdatePointHandlerBO(targetDailyPointDiff, targetPointDiff, operationType, pointType);
         }
     },
-    REGISTER("register", "注册") {
+    REGISTER("register", "注册赠送") {
         @Override
         public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {
             if (operation != PointOperationTypeEnum.ADD) {
@@ -250,7 +250,7 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
 
     @RequiredArgsConstructor
     @Component
-    public static class MailHandleEnumComponent {
+    public static class StaticComponent {
         private final UserService userService;
         private final PointRecordService pointRecordService;
 

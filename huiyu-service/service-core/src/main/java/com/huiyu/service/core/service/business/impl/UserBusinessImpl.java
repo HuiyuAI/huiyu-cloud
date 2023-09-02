@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.api.entity.User;
+import com.huiyu.service.core.config.executor.CompletableFutureExceptionHandle;
 import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.constant.RedisLockEnum;
 import com.huiyu.service.core.convert.PointRecordConvert;
@@ -38,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -70,6 +74,8 @@ public class UserBusinessImpl implements UserBusiness {
     private final HotFileConfig hotFileConfig;
     private final RedisTemplate<String, Object> redisTemplate;
     private final Redisson redisson;
+    @Qualifier("registerExecutor")
+    private final Executor registerExecutor;
 
     @Override
     public IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query) {
@@ -99,11 +105,28 @@ public class UserBusinessImpl implements UserBusiness {
         return userAdminVoPage;
     }
 
+    @Override
+    public User addUser(User user) {
+        User resUser = userService.insert(user);
+
+        CompletableFuture.runAsync(() -> {
+                    // 注册赠送积分
+                    Integer registerPoint = hotFileConfig.getInt("registerPoint", 100);
+                    this.updatePoint(resUser.getUserId(), registerPoint, PointOperationSourceEnum.REGISTER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
+
+                    // TODO 邀请人奖励积分
+
+                }, registerExecutor)
+                .exceptionally(CompletableFutureExceptionHandle.ExceptionLogHandle);
+
+        return resUser;
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean updateUser(User user) {
         // 修改用户积分
-        this.updatePoint(user.getUserId(), user.getPoint(), PointOperationSourceEnum.ADMIN_UPDATE, PointOperationTypeEnum.WAIT_CALC, "", PointTypeEnum.POINT);
+        this.updatePoint(user.getUserId(), user.getPoint(), PointOperationSourceEnum.ADMIN_UPDATE, PointOperationTypeEnum.WAIT_CALC, null, PointTypeEnum.POINT);
 
         // 修改用户信息
         user.setPoint(null);
@@ -275,6 +298,7 @@ public class UserBusinessImpl implements UserBusiness {
         return true;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void dailyTaskFinished(Long userId, DailyTaskEnum dailyTaskEnum) {
         String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(LocalDate.now().toString(), String.valueOf(userId));

@@ -29,6 +29,14 @@ public interface UserBusiness {
     IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query);
 
     /**
+     * 新增用户
+     *
+     * @param user 用户对象
+     * @return 用户对象
+     */
+    User addUser(User user);
+
+    /**
      * 修改用户数据
      *
      * @param user 实例对象

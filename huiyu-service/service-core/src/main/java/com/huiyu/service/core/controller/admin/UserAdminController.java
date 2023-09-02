@@ -79,7 +79,7 @@ public class UserAdminController {
      */
     @PostMapping("/addUser")
     public R<User> add(@RequestBody User user) {
-        return R.ok(userService.insert(user));
+        return R.ok(userBusiness.addUser(user));
     }
 
     /**

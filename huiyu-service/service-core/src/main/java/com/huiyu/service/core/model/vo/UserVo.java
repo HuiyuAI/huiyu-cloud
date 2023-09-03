@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 用户表(User)视图类
  *
@@ -36,4 +38,21 @@ public class UserVo {
      * 积分
      */
     private Integer point;
+    /**
+     * 每日任务
+     */
+    private List<DailyTask> dailyTaskList;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DailyTask {
+        private String key;
+        private String title;
+        private String desc;
+        private Integer point;
+        private Boolean status;
+        private String action;
+    }
 }

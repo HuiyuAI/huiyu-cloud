@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Arrays;
+
 /**
  * 每日任务枚举
  *
@@ -14,11 +16,11 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public enum DailyTaskEnum implements BaseEnum<String> {
-    SIGN_IN("signIn", "每日签到", 100, 1, 1),
-    GENERATE_PIC("generatePic", "完成创作", 10, 5, 1),
-    SHARE_PIC("sharePic", "投稿作品", 10, 3, 1),
-    SHARE_PASS("sharePass", "投稿通过", 5, -1, 5),
-    INVITE_USER("inviteUser", "邀请好友", 100, -1, -1),
+    SIGN_IN("signIn", "每日签到", 100, 1, 1, "签到"),
+    GENERATE_PIC("generatePic", "完成创作", 10, 5, 3, "去创作"),
+    SHARE_PIC("sharePic", "投稿作品", 10, 3, 1, "去投稿"),
+    SHARE_PASS("sharePass", "投稿通过", 5, -1, 5, "去投稿"),
+    INVITE_USER("inviteUser", "邀请好友", 100, -1, -1, "去邀请"),
     ;
 
     private String dictKey;
@@ -36,4 +38,12 @@ public enum DailyTaskEnum implements BaseEnum<String> {
      * 每天可完成轮数，-1为每天可无限次完成
      */
     private Integer roundPerDay;
+    /**
+     * 操作按钮文本
+     */
+    private String action;
+
+    public static DailyTaskEnum getByDictKey(String dictKey) {
+        return Arrays.stream(DailyTaskEnum.values()).filter(e -> e.getDictKey().equals(dictKey)).findFirst().orElse(null);
+    }
 }

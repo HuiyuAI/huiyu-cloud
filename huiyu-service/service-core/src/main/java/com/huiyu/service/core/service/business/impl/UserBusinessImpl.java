@@ -50,6 +50,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -225,7 +226,76 @@ public class UserBusinessImpl implements UserBusiness {
     @Override
     public UserVo getUserInfo(Long userId) {
         User user = userService.queryByUserId(userId);
-        return UserConvert.INSTANCE.toVo(user);
+        UserVo userVo = UserConvert.INSTANCE.toVo(user);
+        // 每日任务
+        userVo.setDailyTaskList(processDailyTaskList(userId));
+        return userVo;
+    }
+
+    /**
+     * 处理每日任务vo
+     */
+    private List<UserVo.DailyTask> processDailyTaskList(Long userId) {
+        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(LocalDate.now().toString(), String.valueOf(userId));
+
+        List<UserVo.DailyTask> dailyTaskList = new ArrayList<>();
+        redisTemplate.opsForHash().entries(dailyTaskRedisKey).forEach((k, v) -> {
+            String key = (String) k;
+            Integer value = (Integer) v;
+            DailyTaskEnum dailyTaskEnum = DailyTaskEnum.getByDictKey(key);
+
+            String desc = "";
+            Boolean status = false;
+            String action = "";
+
+            if (dailyTaskEnum.getRoundPerDay() != -1) {
+                // 每日可完成次数有限制
+                if (dailyTaskEnum.getCountPerRound() != -1) {
+                    if (dailyTaskEnum.getRoundPerDay() == 1) {
+                        desc = String.format("进度(%d/%d)", value, dailyTaskEnum.getCountPerRound());
+                    } else {
+                        desc = String.format("进度(%d/%d)，可完成(%d/%d)", value % dailyTaskEnum.getCountPerRound(), dailyTaskEnum.getCountPerRound(), value / dailyTaskEnum.getCountPerRound(), dailyTaskEnum.getRoundPerDay());
+                    }
+                    if (value >= dailyTaskEnum.getCountPerRound() * dailyTaskEnum.getRoundPerDay()) {
+                        status = true;
+                        action = "已完成";
+                    } else {
+                        status = false;
+                        action = dailyTaskEnum.getAction();
+                    }
+                } else {
+                    // getCountPerRound为-1 触发即认为完成且不显示次数
+                    if (dailyTaskEnum.getRoundPerDay() != 1) {
+                        desc = String.format("可完成(%d/%d)", value, dailyTaskEnum.getRoundPerDay());
+                    } else {
+                        desc = "";
+                    }
+                    if (value >= dailyTaskEnum.getRoundPerDay()) {
+                        status = true;
+                        action = "已完成";
+                    } else {
+                        status = false;
+                        action = dailyTaskEnum.getAction();
+                    }
+                }
+            } else {
+                // 每日可无限完成
+                desc = "";
+                status = false;
+                action = dailyTaskEnum.getAction();
+            }
+
+            UserVo.DailyTask dailyTask = UserVo.DailyTask.builder()
+                    .key(key)
+                    .title(dailyTaskEnum.getDesc())
+                    .desc(desc)
+                    .point(dailyTaskEnum.getPoint())
+                    .status(status)
+                    .action(action)
+                    .build();
+            dailyTaskList.add(dailyTask);
+        });
+        return dailyTaskList;
     }
 
     @Override

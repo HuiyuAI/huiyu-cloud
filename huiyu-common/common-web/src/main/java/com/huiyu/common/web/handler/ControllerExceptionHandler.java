@@ -38,7 +38,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(FeignException.BadRequest.class)
     public <T> R<T> processException(FeignException.BadRequest e) {
         log.error("微服务feign调用异常: {}", e.getMessage());
-        return R.error(e.getMessage());
+        return R.error();
     }
 
     /**

@@ -39,6 +39,7 @@ public class UserController {
     @GetMapping("/getMyUserInfo")
     public R<UserVo> getMyUserInfo() {
         Long userId = JwtUtils.getUserId();
+        userBusiness.signIn(userId);
         UserVo userVo = userBusiness.getUserInfo(userId);
         return R.ok(userVo);
     }
@@ -83,20 +84,5 @@ public class UserController {
         Long userId = JwtUtils.getUserId();
         boolean res = userBusiness.updateNickname(userId, nickname);
         return R.status(res);
-    }
-
-    /**
-     * 签到
-     */
-    @RequestLogger
-    @RequestLimiter(seconds = 60 * 60 * 24, maxCount = 3)
-    @PostMapping("/signIn")
-    public R<?> signIn() {
-        Long userId = JwtUtils.getUserId();
-        boolean res = userBusiness.signIn(userId);
-        if (!res) {
-            return R.error("签到失败");
-        }
-        return R.ok();
     }
 }

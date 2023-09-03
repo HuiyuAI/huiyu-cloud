@@ -144,6 +144,11 @@ public class UserBusinessImpl implements UserBusiness {
             throw new IllegalArgumentException("积分来源错误");
         }
 
+        if (source == PointOperationSourceEnum.GENERATE_PIC) {
+            // 生成图片前先执行每日签到
+            this.signIn(userId);
+        }
+
         Integer targetDailyPointDiff;
         Integer targetPointDiff;
 
@@ -262,12 +267,23 @@ public class UserBusinessImpl implements UserBusiness {
     @Override
     public boolean signIn(Long userId) {
         LocalDateTime now = LocalDateTime.now();
-
         LocalDate nowDate = now.toLocalDate();
+
         // 判断用户是否已签到
+        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(nowDate.toString(), String.valueOf(userId));
+        Integer o = (Integer) redisTemplate.opsForHash().get(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey());
+        if (o != null && o == 1) {
+            log.info("今日已签到 userId: {}", userId);
+            return false;
+        }
+
         if (signRecordService.isSignIn(userId, nowDate)) {
             return false;
         }
+
+        // 记录每日任务完成情况
+        redisTemplate.opsForHash().put(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey(), 1);
+        log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}", DailyTaskEnum.SIGN_IN.getDesc(), dailyTaskRedisKey);
 
         // 签到记录
         SignRecord signRecord = SignRecord.builder()
@@ -289,11 +305,6 @@ public class UserBusinessImpl implements UserBusiness {
             log.info("奖励积分, desc: {}, userId: {}, point: {}", DailyTaskEnum.SIGN_IN.getDesc(), userId, signInPoint);
             this.updatePoint(userId, signInPoint, PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
         }
-
-        // 记录每日任务完成情况
-        String dailyTaskRedisKey = RedisKeyEnum.DAILY_TASK_MAP.getFormatKey(nowDate.toString(), String.valueOf(userId));
-        redisTemplate.opsForHash().put(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey(), 1);
-        log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}", DailyTaskEnum.SIGN_IN.getDesc(), dailyTaskRedisKey);
 
         return true;
     }

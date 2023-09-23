@@ -415,12 +415,12 @@ public class UserBusinessImpl implements UserBusiness {
             }
         }
         Long increment = redisTemplate.opsForHash().increment(dailyTaskRedisKey, dailyTaskEnum.getDictKey(), 1);
-        if (dailyTaskEnum.getCountPerRound() == -1 || increment.intValue() == dailyTaskEnum.getCountPerRound() * dailyTaskEnum.getRoundPerDay()) {
+        if (dailyTaskEnum.getCountPerRound() == -1 || (increment != 0 && increment % dailyTaskEnum.getCountPerRound() == 0)) {
             // 奖励积分
             Integer point = dailyTaskEnum.getPointByHotFile();
 
             log.info("奖励积分, desc: {}, userId: {}, point: {}", dailyTaskEnum.getDesc(), userId, point);
-            this.updatePoint(userId, point, PointOperationSourceEnum.DAILY_TASK, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
+            this.updatePoint(userId, point, PointOperationSourceEnum.getByDictKey("dailyTask_" + dailyTaskEnum.getDictKey()), PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
         }
     }
 }

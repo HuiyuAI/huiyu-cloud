@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 @Slf4j
 @Getter
@@ -177,7 +178,39 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
             return new UpdatePointHandlerBO(targetDailyPointDiff, 0, operationType, pointType);
         }
     },
-    DAILY_TASK("dailyTask", "每日任务") {
+    DAILY_TASK_GENERATE_PIC("dailyTask_generatePic", "每日任务-完成创作") {
+        @Override
+        public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {
+            if (operation != PointOperationTypeEnum.ADD) {
+                throw new IllegalArgumentException("参数错误");
+            }
+            if (pointType != PointTypeEnum.POINT) {
+                throw new IllegalArgumentException("参数错误");
+            }
+        }
+
+        @Override
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
+        }
+    },
+    DAILY_TASK_SHARE_PIC("dailyTask_sharePic", "每日任务-投稿作品") {
+        @Override
+        public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {
+            if (operation != PointOperationTypeEnum.ADD) {
+                throw new IllegalArgumentException("参数错误");
+            }
+            if (pointType != PointTypeEnum.POINT) {
+                throw new IllegalArgumentException("参数错误");
+            }
+        }
+
+        @Override
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
+        }
+    },
+    DAILY_TASK_SHARE_PASS("dailyTask_sharePass", "每日任务-投稿通过") {
         @Override
         public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {
             if (operation != PointOperationTypeEnum.ADD) {
@@ -237,6 +270,10 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
     private String dictKey;
 
     private String desc;
+
+    public static PointOperationSourceEnum getByDictKey(String dictKey) {
+        return Arrays.stream(PointOperationSourceEnum.values()).filter(e -> e.getDictKey().equals(dictKey)).findFirst().orElse(null);
+    }
 
     public abstract void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType);
 

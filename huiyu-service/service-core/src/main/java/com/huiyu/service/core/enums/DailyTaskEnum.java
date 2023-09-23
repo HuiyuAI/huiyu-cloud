@@ -1,9 +1,14 @@
 package com.huiyu.service.core.enums;
 
+import com.huiyu.service.core.hconfig.config.HotFileConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 /**
@@ -45,5 +50,23 @@ public enum DailyTaskEnum implements BaseEnum<String> {
 
     public static DailyTaskEnum getByDictKey(String dictKey) {
         return Arrays.stream(DailyTaskEnum.values()).filter(e -> e.getDictKey().equals(dictKey)).findFirst().orElse(null);
+    }
+
+    public Integer getPointByHotFile() {
+        return hotFileConfig.getInt("dailyTask_" + this.getDictKey(), this.getPoint());
+    }
+
+    @Setter
+    private static HotFileConfig hotFileConfig;
+
+    @RequiredArgsConstructor
+    @Component
+    public static class StaticComponent {
+        private final HotFileConfig hotFileConfig;
+
+        @PostConstruct
+        public void init() {
+            DailyTaskEnum.setHotFileConfig(hotFileConfig);
+        }
     }
 }

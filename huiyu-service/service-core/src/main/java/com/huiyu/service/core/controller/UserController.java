@@ -6,6 +6,7 @@ import com.huiyu.common.core.result.R;
 import com.huiyu.common.web.util.JwtUtils;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
+import com.huiyu.service.core.enums.DailyTaskEnum;
 import com.huiyu.service.core.model.dto.PointRecordPageDto;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import com.huiyu.service.core.model.vo.UserVo;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Naccl
@@ -42,6 +46,19 @@ public class UserController {
         userBusiness.signIn(userId);
         UserVo userVo = userBusiness.getUserInfo(userId);
         return R.ok(userVo);
+    }
+
+    /**
+     * 查询每日任务积分奖励
+     */
+    @RequestLogger
+    @RequestLimiter(seconds = 60, maxCount = 30)
+    @GetMapping("/getDailyTaskPoint")
+    public R<Map<String, String>> getDailyTaskPoint() {
+        Map<String, String> enumVoMap = Arrays.asList(DailyTaskEnum.values())
+                .stream()
+                .collect(Collectors.toMap(DailyTaskEnum::getDictKey, e -> String.valueOf(e.getPointByHotFile())));
+        return R.ok(enumVoMap);
     }
 
     /**

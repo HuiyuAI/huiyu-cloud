@@ -286,7 +286,7 @@ public class UserBusinessImpl implements UserBusiness {
             }
 
             UserVo.DailyTask dailyTask = UserVo.DailyTask.builder()
-                    .key(key)
+                    .key(dailyTaskEnum.getDictKey())
                     .title(dailyTaskEnum.getDesc())
                     .desc(desc)
                     .point(dailyTaskEnum.getPoint())
@@ -353,6 +353,9 @@ public class UserBusinessImpl implements UserBusiness {
 
         // 记录每日任务完成情况
         redisTemplate.opsForHash().put(dailyTaskRedisKey, DailyTaskEnum.SIGN_IN.getDictKey(), 1);
+        // 初始化其它每日任务
+        this.initDailyTaskRedis(dailyTaskRedisKey);
+
         log.info("记录每日任务完成情况, desc: {}, dailyTaskRedisKey: {}", DailyTaskEnum.SIGN_IN.getDesc(), dailyTaskRedisKey);
 
         // 签到记录
@@ -370,13 +373,22 @@ public class UserBusinessImpl implements UserBusiness {
         }
 
         // 签到积分奖励
-        Integer signInPoint = hotFileConfig.getInt("dailyTask_" + DailyTaskEnum.SIGN_IN.getDictKey(), DailyTaskEnum.SIGN_IN.getPoint());
+        Integer signInPoint = DailyTaskEnum.SIGN_IN.getPointByHotFile();
         if (signInPoint > 0) {
             log.info("奖励积分, desc: {}, userId: {}, point: {}", DailyTaskEnum.SIGN_IN.getDesc(), userId, signInPoint);
             this.updatePoint(userId, signInPoint, PointOperationSourceEnum.SIGN_IN, PointOperationTypeEnum.ADD, null, PointTypeEnum.DAILY_POINT);
         }
 
         return true;
+    }
+
+    private void initDailyTaskRedis(String dailyTaskRedisKey) {
+        for (DailyTaskEnum value : DailyTaskEnum.values()) {
+            if (value.getDictKey().equals(DailyTaskEnum.SIGN_IN.getDictKey())) {
+                continue;
+            }
+            redisTemplate.opsForHash().putIfAbsent(dailyTaskRedisKey, value.getDictKey(), 0);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -405,7 +417,7 @@ public class UserBusinessImpl implements UserBusiness {
         Long increment = redisTemplate.opsForHash().increment(dailyTaskRedisKey, dailyTaskEnum.getDictKey(), 1);
         if (dailyTaskEnum.getCountPerRound() == -1 || increment.intValue() == dailyTaskEnum.getCountPerRound() * dailyTaskEnum.getRoundPerDay()) {
             // 奖励积分
-            Integer point = hotFileConfig.getInt("dailyTask_" + dailyTaskEnum.getDictKey(), dailyTaskEnum.getPoint());
+            Integer point = dailyTaskEnum.getPointByHotFile();
 
             log.info("奖励积分, desc: {}, userId: {}, point: {}", dailyTaskEnum.getDesc(), userId, point);
             this.updatePoint(userId, point, PointOperationSourceEnum.DAILY_TASK, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);

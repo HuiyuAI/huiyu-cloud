@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Naccl
@@ -71,15 +71,14 @@ public class EnumAdminController {
         return R.ok(enum2EnumVoList(PicShareStatusEnum.class));
     }
 
-    private List<EnumVo> enum2EnumVoList(Class<? extends BaseEnum> enumClass) {
+    private List<EnumVo> enum2EnumVoList(Class<? extends BaseEnum<?>> enumClass) {
         BaseEnum<?>[] enums = enumClass.getEnumConstants();
-        List<EnumVo> enumVoList = new ArrayList<>(enums.length);
-        Arrays.asList(enums).stream().map(
+        List<EnumVo> enumVoList = Arrays.asList(enums).stream().map(
                 e -> EnumVo.builder()
                         .key(e.name())
                         .desc(e.getDesc())
                         .build()
-        ).forEach(enumVoList::add);
+        ).collect(Collectors.toList());
         return enumVoList;
     }
 }

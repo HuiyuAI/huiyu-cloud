@@ -3,6 +3,7 @@ package com.huiyu.service.core.handler;
 import com.baomidou.mybatisplus.core.MybatisParameterHandler;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.config.SpringContext;
 import org.apache.ibatis.executor.statement.RoutingStatementHandler;
@@ -73,7 +74,7 @@ public class SqlCostInterceptor implements Interceptor {
         }
     }
 
-    private void printSqlLog(long startTime, StatementHandler statementHandler,List<Object> resultList,Long sqlCost) {
+    private void printSqlLog(long startTime, StatementHandler statementHandler, List<Object> resultList, Long sqlCost) {
         BoundSql boundSql = statementHandler.getBoundSql();
         Object parameterObject = boundSql.getParameterObject();
         String sql = boundSql.getSql();
@@ -82,13 +83,13 @@ public class SqlCostInterceptor implements Interceptor {
         }
         int total = resultList == null ? 0 : resultList.size();
         sql = sql.replace("\n", " ").replaceAll("\\s{1,}", " ");
-        log.info("\n" +
-                        "==================== MySQLStart ====================\n" +
-                        "totalTime : {}ms ==> total : [{}]\n" +
-                        "SQL : [{}]\n" +
-                        "Result : [{}]\n" +
-                        "====================  MySQLEnd  ====================",
-                sqlCost, total, sql, resultList);
+        log.info("");
+        log.info("==================== MySQL Start ====================");
+        log.info("totalTime: {}ms ==> total: {}", sqlCost, total);
+        log.info("SQL: {}", sql);
+        log.info("Result: {}", JacksonUtils.toJsonStr(resultList));
+        log.info("==================== MySQL End   ====================");
+        log.info("");
     }
 
     public String getFllSql(BoundSql boundSql, Object parameterObject) {

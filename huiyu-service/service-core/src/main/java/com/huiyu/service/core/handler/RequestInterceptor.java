@@ -30,11 +30,11 @@ public class RequestInterceptor implements HandlerInterceptor {
         String remoteName = request.getServerName();
         long startTime = System.currentTimeMillis();
         request.getSession().setAttribute("startTime", startTime);
-        log.info("\n" +
-                        "==================== RequestStart ====================\n" +
-                        "IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}]\n" +
-                        "====================  RequestEnd  ====================",
-                IP, method, requestURI, remoteName);
+        log.info("");
+        log.info("==================== Request Start ====================");
+        log.info("IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}]", IP, method, requestURI, remoteName);
+        log.info("==================== Request End   ====================");
+        log.info("");
         return true;
     }
 
@@ -49,12 +49,12 @@ public class RequestInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         String IP = IpAddressUtils.getIpAddress(request);
         String remoteName = request.getServerName();
-        log.info("\n" +
-                        "==================== ResponseStart ====================\n" +
-                        "totalTime : {}ms ==> IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}] |\n" +
-                        "status : [{}] | body : [{}]\n" +
-                        "====================  ResponseEnd  ====================",
-                totalTime, IP, method, requestURI, remoteName, status, JacksonUtils.toJsonStr(body));
+        log.info("");
+        log.info("==================== Response Start ====================");
+        log.info("totalTime : {}ms ==> IP : [{}] | Method : [{}] | URI : [{}] | remoteName : [{}] |", totalTime, IP, method, requestURI, remoteName);
+        log.info("status : [{}] | body : [{}]", status, JacksonUtils.toJsonStr(body));
+        log.info("==================== Response End   ====================");
+        log.info("");
     }
 
 }

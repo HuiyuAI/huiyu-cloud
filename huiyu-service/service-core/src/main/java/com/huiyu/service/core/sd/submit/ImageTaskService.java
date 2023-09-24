@@ -142,11 +142,13 @@ public class ImageTaskService {
         pic.setStatus(PicStatusEnum.GENERATING);
         picService.insert(pic);
 
-        sdResponseVo.setUuid(pic.getUuid());
-        sdResponseVo.setStatus(pic.getStatus());
-        sdResponseVo.setPath(pic.getPath());
-        sdResponseVo.setWidth(pic.getWidth());
-        sdResponseVo.setHeight(pic.getHeight());
+        if (sdResponseVo.getUuid() == null) {
+            sdResponseVo.setUuid(pic.getUuid());
+            sdResponseVo.setStatus(pic.getStatus());
+            sdResponseVo.setPath(pic.getPath());
+            sdResponseVo.setWidth(pic.getWidth());
+            sdResponseVo.setHeight(pic.getHeight());
+        }
     }
 
     public List<ThreadPoolExecutorDecorator> getSubmitRequestExecutorList() {

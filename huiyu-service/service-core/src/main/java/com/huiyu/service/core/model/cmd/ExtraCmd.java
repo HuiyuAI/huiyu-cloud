@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 高清化extra指令对象
  *
@@ -21,11 +23,6 @@ public class ExtraCmd extends Cmd {
     /**
      * 原图uuid
      */
+    @NotBlank(message = "异常错误")
     private String imageUuid;
-    /**
-     * 放大等级
-     * 1: 4K
-     * 2: 8K
-     */
-    private Integer level;
 }

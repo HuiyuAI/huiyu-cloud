@@ -6,9 +6,11 @@ import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.enums.PicStatusEnum;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.entity.Pic;
+import com.huiyu.service.core.model.cmd.ExtraCmd;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
+import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.service.ModelService;
 import com.huiyu.service.core.service.PicService;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +96,26 @@ public class SDCmdValidator {
 
         RequestContext.PARENT_PIC_CONTEXT.set(originPic);
         RequestContext.MODEL_CONTEXT.set(model);
+
+        return Pair.of(true, null);
+    }
+
+    public static Pair<Boolean, String> validate(ExtraCmd cmd) {
+        Long userId = JwtUtils.getUserId();
+        Pic originPic = picService.getByUuidAndUserIdAndStatus(cmd.getImageUuid(), userId, PicStatusEnum.GENERATED);
+        if (originPic == null) {
+            return Pair.of(false, "图片不存在");
+        }
+
+        if (originPic.getQuality() == ImageQualityEnum.HD) {
+            return Pair.of(false, "高清质量图片暂不支持超分");
+        }
+
+        if (originPic.getQuality().is4k()) {
+            return Pair.of(false, "该图片已经是4K分辨率");
+        }
+
+        RequestContext.PARENT_PIC_CONTEXT.set(originPic);
 
         return Pair.of(true, null);
     }

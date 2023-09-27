@@ -60,7 +60,7 @@ public enum ImageQualityEnum implements BaseEnum<Integer> {
         return ImageQualityEnum.UNKNOWN;
     }
 
-    public static boolean is4k(ImageQualityEnum imageQualityEnum) {
-        return imageQualityEnum == ImageQualityEnum.UHD4K;
+    public boolean is4k() {
+        return this == ImageQualityEnum.UHD4K;
     }
 }

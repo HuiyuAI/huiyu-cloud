@@ -44,7 +44,7 @@ public interface PicConvert {
      * @param source entity
      * @return pageVO分页
      */
-    @Mapping(target = "is4k", expression = "java(com.huiyu.service.core.sd.constant.ImageQualityEnum.is4k(source.getQuality()))")
+    @Mapping(target = "is4k", expression = "java(source.getQuality().is4k())")
     PicPageVo toPageVO(Pic source);
 
     /**

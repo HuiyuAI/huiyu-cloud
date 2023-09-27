@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Img2ImgCmd extends Cmd{
+public class Img2ImgCmd extends Cmd {
     /**
      * 模型id
      */

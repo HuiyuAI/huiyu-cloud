@@ -5,11 +5,13 @@ import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.RequestContext;
 import com.huiyu.service.core.entity.Model;
 import com.huiyu.service.core.entity.Pic;
+import com.huiyu.service.core.model.cmd.ExtraCmd;
 import com.huiyu.service.core.model.cmd.Img2ImgCmd;
 import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
 import com.huiyu.service.core.sd.constant.ImageQualityEnum;
 import com.huiyu.service.core.sd.constant.ImageSizeEnum;
+import com.huiyu.service.core.sd.dto.ExtraDto;
 import com.huiyu.service.core.sd.dto.Img2ImgDto;
 import com.huiyu.service.core.sd.dto.RestoreFaceDto;
 import com.huiyu.service.core.sd.dto.Txt2ImgDto;
@@ -129,6 +131,15 @@ public class SDCmd2DtoConverter {
                 .enableExtra(imageQualityEnum.getEnableExtra())
                 .upscalingResize(imageQualityEnum.getUpscalingResize())
                 .alwaysonScripts(alwaysonScripts)
+                .build();
+    }
+
+    public static ExtraDto convert(ExtraCmd cmd) {
+        Pic parentPic = RequestContext.PARENT_PIC_CONTEXT.get();
+
+        return ExtraDto.builder()
+                .imageUuid(parentPic.getUrlUuid())
+                .upscalingResize(ImageQualityEnum.UHD4K.getUpscalingResize())
                 .build();
     }
 

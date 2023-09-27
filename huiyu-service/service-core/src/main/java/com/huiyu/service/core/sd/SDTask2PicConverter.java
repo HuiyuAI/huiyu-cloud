@@ -130,15 +130,43 @@ public class SDTask2PicConverter {
                 .build();
     }
 
-    // TODO
     private static Pic convertExtra(Task task) {
         ExtraDto dto = JacksonUtils.toBean(task.getBody(), ExtraDto.class);
         LocalDateTime now = LocalDateTime.now();
 
+        Pic parentPic = RequestContext.PARENT_PIC_CONTEXT.get();
+
+        int width = parentPic.getWidth() * ImageQualityEnum.UHD4K.getUpscalingResize();
+        int height = parentPic.getHeight() * ImageQualityEnum.UHD4K.getUpscalingResize();
 
         return Pic.builder()
+                .id(IdUtils.nextSnowflakeId())
                 .uuid(dto.getResImageUuid())
+                .urlUuid(dto.getResImageUrlUuid())
+                .userId(task.getUserId())
+                .taskId(task.getId())
+                .modelId(parentPic.getModelId())
+                .parentPicId(parentPic.getId())
                 .type(task.getType())
+                .prompt(parentPic.getPrompt())
+                .negativePrompt(parentPic.getNegativePrompt())
+                .translatedPrompt(parentPic.getTranslatedPrompt())
+                .translatedNegativePrompt(parentPic.getTranslatedNegativePrompt())
+                .quality(ImageQualityEnum.UHD4K)
+                .ratio(parentPic.getRatio())
+                .width(width)
+                .height(height)
+                .modelCode(parentPic.getModelCode())
+                .vae(parentPic.getVae())
+                .samplerName(parentPic.getSamplerName())
+                .steps(parentPic.getSteps())
+                .cfg(parentPic.getCfg())
+                .enableHr(parentPic.getEnableHr())
+                .hrUpscaler(parentPic.getHrUpscaler())
+                .denoisingStrength(parentPic.getDenoisingStrength())
+                .hrScale(parentPic.getHrScale())
+                .enableExtra(ImageQualityEnum.UHD4K.getEnableExtra())
+                .upscalingResize(ImageQualityEnum.UHD4K.getUpscalingResize())
                 .createTime(now)
                 .updateTime(now)
                 .isDelete(0)

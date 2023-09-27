@@ -8,6 +8,7 @@ import com.huiyu.service.core.aspect.annotation.MethodMonitor;
 import com.huiyu.service.core.aspect.annotation.RequestLimiter;
 import com.huiyu.service.core.aspect.annotation.RequestLogger;
 import com.huiyu.service.core.config.RequestContext;
+import com.huiyu.service.core.model.cmd.ExtraCmd;
 import com.huiyu.service.core.model.vo.SDResponseVo;
 import com.huiyu.service.core.model.cmd.RestoreFaceCmd;
 import com.huiyu.service.core.model.cmd.Txt2ImgCmd;
@@ -122,6 +123,50 @@ public class SDController {
     @RequestLimiter(seconds = 10, maxCount = 6)
     @PostMapping("/restoreFace")
     public R<SDResponseVo> restoreFace(@Valid @RequestBody RestoreFaceCmd cmd) {
+        // 1. 参数校验
+        Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
+        if (!validate.getKey()) {
+            return R.error(validate.getValue());
+        }
+
+        // 2. 校验用户积分
+        Long userId = JwtUtils.getUserId();
+        int calcPoint = SDPointCalculator.calcPointConsume(cmd);
+        int point = userService.getPointByUserId(userId);
+        if (point < calcPoint) {
+            return R.error("积分不足");
+        }
+        cmd.setPoint(calcPoint);
+        cmd.setUserId(userId);
+
+
+        // 3. 检验用户图片库存是否满(库存是否需要根据用户级别增加)
+
+
+        String requestUuid = IdUtil.fastUUID();
+        RequestContext.REQUEST_UUID_CONTEXT.set(requestUuid);
+        RequestContext.CMD_CONTEXT.set(cmd);
+
+        SDResponseVo sdResponseVo = new SDResponseVo();
+
+        // 4. 提交任务队列
+        imageGenerates.stream()
+                .filter(imageGenerate -> imageGenerate.isSupport(cmd))
+                .forEach(imageGenerate -> imageGenerate.generate(cmd, sdResponseVo));
+
+        // 5. 处理用户界面
+
+        return R.ok(sdResponseVo);
+    }
+
+    /**
+     * 超分辨率
+     */
+    @MethodMonitor
+    @RequestLogger
+    @RequestLimiter(seconds = 10, maxCount = 6)
+    @PostMapping("/superResolution")
+    public R<SDResponseVo> superResolution(@Valid @RequestBody ExtraCmd cmd) {
         // 1. 参数校验
         Pair<Boolean, String> validate = SDCmdValidator.validate(cmd);
         if (!validate.getKey()) {

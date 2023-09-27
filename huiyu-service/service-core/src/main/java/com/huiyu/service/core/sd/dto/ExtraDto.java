@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class ExtraDto extends Dto {
     /**
-     * 参考图uuid
+     * 参考图url地址uuid
      */
     @JsonProperty("image_uuid")
     private String imageUuid;

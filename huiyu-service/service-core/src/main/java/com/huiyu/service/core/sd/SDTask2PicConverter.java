@@ -156,6 +156,8 @@ public class SDTask2PicConverter {
                 .ratio(parentPic.getRatio())
                 .width(width)
                 .height(height)
+                .seed(parentPic.getSeed())
+                .subseed(parentPic.getSubseed())
                 .modelCode(parentPic.getModelCode())
                 .vae(parentPic.getVae())
                 .samplerName(parentPic.getSamplerName())

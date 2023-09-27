@@ -1,6 +1,8 @@
 package com.huiyu.service.core.sd.submit;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Stopwatch;
+import com.huiyu.common.core.util.JacksonUtils;
 import com.huiyu.service.core.config.Monitor;
 import com.huiyu.service.core.enums.TaskStatusEnum;
 import com.huiyu.service.core.entity.Pic;
@@ -59,7 +61,7 @@ public class ImageTaskInvoker {
         Monitor.recordTime("generate_time", stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
 
         SDResponse resp = response.getBody();
-        log.info("Python端生成图片响应结果 response: {}", resp);
+        log.info("Python端生成图片响应结果 response: {}", JacksonUtils.toJsonStr(resp));
 
         return resp;
     }
@@ -82,11 +84,29 @@ public class ImageTaskInvoker {
     }
 
     private void updatePic(SDResponse resp) {
-        String resImageUuid = resp.getData().get("res_image_uuid").asText();
-        Long seed = resp.getData().get("info").get("seed").asLong();
-        Long subseed = resp.getData().get("info").get("subseed").asLong();
-        String infotexts = resp.getData().get("info").get("infotexts").get(0).asText();
-        String alwaysonScripts = resp.getData().get("parameters").get("alwayson_scripts").toString();
+        JsonNode data = resp.getData();
+        JsonNode info = data.get("info");
+        JsonNode parameters = data.get("parameters");
+
+        String resImageUuid = data.get("res_image_uuid").asText();
+        Long seed = null;
+        Long subseed = null;
+        String infotexts;
+        String alwaysonScripts;
+
+        if (info.isTextual()) {
+            infotexts = info.asText();
+        } else {
+            seed = info.get("seed").asLong();
+            subseed = info.get("subseed").asLong();
+            infotexts = info.get("infotexts").get(0).asText();
+        }
+
+        if (parameters.isTextual()) {
+            alwaysonScripts = parameters.asText();
+        } else {
+            alwaysonScripts = data.get("parameters").get("alwayson_scripts").toString();
+        }
 
         Pic pic = Pic.builder()
                 .uuid(resImageUuid)

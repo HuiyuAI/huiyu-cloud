@@ -3,72 +3,13 @@
 <mapper namespace="com.huiyu.service.core.mapper.InviteMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="inviteMap" type="com.huiyu.service.core.entity.Invite">
-        <id column="id" property="id"/>
-        <result column="inviters_id" property="invitersId"/>
-        <result column="invitees_openid" property="inviteesOpenid"/>
-        <result column="status" property="status"/>
+    <resultMap id="inviteResultMap" type="com.huiyu.service.core.entity.Invite">
+        <result column="id" property="id"/>
+        <result column="inviter_id" property="inviterId"/>
+        <result column="invitee_id" property="inviteeId"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="is_delete" property="isDelete"/>
     </resultMap>
 
-    <insert id="insert">
-        insert into invite
-            (inviters_id, invitees_openid, status, create_time, update_time, is_delete)
-        values (#{invitersId}, #{inviteesOpenid}, #{status}, #{createTime}, #{updateTime}, #{isDelete})
-    </insert>
-
-    <update id="update">
-        update invite
-        <set>
-            <if test="invitersId != null">
-                inviters_id = #{invitersId},
-            </if>
-            <if test="inviteesOpenid != null">
-                invitees_openid = #{inviteesOpenid},
-            </if>
-            <if test="status != null">
-                status = #{status},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime},
-            </if>
-        </set>
-        where is_delete = 0
-            and id = #{id}
-    </update>
-
-<!--    <update id="updateBatchById" parameterType="java.util.List">-->
-<!--        <foreach collection="list" item="invite" separator=";">-->
-<!--            update invite-->
-<!--            <set>-->
-<!--                <if test="invite.status != null">-->
-<!--                    status = #{invite.status.dictKey},-->
-<!--                </if>-->
-<!--                <if test="invite.updateTime != null">-->
-<!--                    update_time = #{invite.updateTime},-->
-<!--                </if>-->
-<!--            </set>-->
-<!--            where id = #{invite.id}-->
-<!--        </foreach>-->
-<!--    </update>-->
-
-    <select id="queryAll" resultMap="inviteMap">
-        select *
-        from invite
-        where is_delete = 0
-        <if test="id != null">
-            and id = #{id}
-        </if>
-        <if test="invitersId != null">
-            and inviters_id = #{invitersId}
-        </if>
-        <if test="inviteesOpenid != null">
-            and invitees_openid = #{inviteesOpenid}
-        </if>
-        <if test="status != null">
-            and status = #{status}
-        </if>
-    </select>
 </mapper>

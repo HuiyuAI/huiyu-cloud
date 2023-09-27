@@ -9,6 +9,7 @@ import com.huiyu.service.core.constant.RedisKeyEnum;
 import com.huiyu.service.core.constant.RedisLockEnum;
 import com.huiyu.service.core.convert.PointRecordConvert;
 import com.huiyu.service.core.convert.UserConvert;
+import com.huiyu.service.core.entity.Invite;
 import com.huiyu.service.core.entity.PointRecord;
 import com.huiyu.service.core.entity.SignRecord;
 import com.huiyu.service.core.enums.DailyTaskEnum;
@@ -25,6 +26,7 @@ import com.huiyu.service.core.model.query.UserQuery;
 import com.huiyu.service.core.model.vo.PointRecordPageVo;
 import com.huiyu.service.core.model.vo.UserAdminVo;
 import com.huiyu.service.core.model.vo.UserVo;
+import com.huiyu.service.core.service.InviteService;
 import com.huiyu.service.core.service.PicService;
 import com.huiyu.service.core.service.PicShareService;
 import com.huiyu.service.core.service.PointRecordService;
@@ -71,6 +73,7 @@ public class UserBusinessImpl implements UserBusiness {
     private final SignRecordService signRecordService;
     private final PicService picService;
     private final PicShareService picShareService;
+    private final InviteService inviteService;
     private final SecureCheckService secureCheckService;
     private final HotFileConfig hotFileConfig;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -114,9 +117,6 @@ public class UserBusinessImpl implements UserBusiness {
                     // 注册赠送积分
                     Integer registerPoint = hotFileConfig.getInt("registerPoint", 100);
                     this.updatePoint(resUser.getUserId(), registerPoint, PointOperationSourceEnum.REGISTER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
-
-                    // TODO 邀请人奖励积分
-
                 }, registerExecutor)
                 .exceptionally(CompletableFutureExceptionHandle.ExceptionLogHandle);
 
@@ -422,5 +422,33 @@ public class UserBusinessImpl implements UserBusiness {
             log.info("奖励积分, desc: {}, userId: {}, point: {}", dailyTaskEnum.getDesc(), userId, point);
             this.updatePoint(userId, point, PointOperationSourceEnum.getByDictKey("dailyTask_" + dailyTaskEnum.getDictKey()), PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean bindInviter(Long sharerUserId, Long userId) {
+        Invite one = inviteService.getByInviteeId(userId);
+        if (one != null) {
+            log.info("已绑定邀请关系, 邀请人: {}, 被邀请人: {}", one.getInviterId(), userId);
+            return false;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        Invite invite = Invite.builder()
+                .inviterId(sharerUserId)
+                .inviteeId(userId)
+                .createTime(now)
+                .updateTime(now)
+                .build();
+
+        boolean insertRes = inviteService.insert(invite);
+
+        // 邀请人奖励积分
+        if (insertRes) {
+            this.updatePoint(sharerUserId, DailyTaskEnum.INVITE_USER.getPointByHotFile(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
+        }
+
+        // TODO 被邀请人奖励积分
+        return true;
     }
 }

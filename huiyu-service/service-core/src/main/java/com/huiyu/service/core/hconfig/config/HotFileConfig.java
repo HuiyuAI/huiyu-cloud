@@ -55,8 +55,4 @@ public class HotFileConfig implements HConfigOnChange<Map<String, String>> {
     public Integer getExecStrategy() {
         return this.getInt("exec_strategy", 1);
     }
-
-    public Integer getInvitePoint() {
-        return this.getInt("invite_point", 10);
-    }
 }

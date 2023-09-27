@@ -102,4 +102,16 @@ public class UserController {
         boolean res = userBusiness.updateNickname(userId, nickname);
         return R.status(res);
     }
+
+    /**
+     * 新用户绑定邀请人
+     */
+    @RequestLogger
+    @RequestLimiter(seconds = 60, maxCount = 5)
+    @PostMapping("/bindInviter")
+    public R<?> bindInviter(Long sharerUserId) {
+        Long userId = JwtUtils.getUserId();
+        boolean res = userBusiness.bindInviter(sharerUserId, userId);
+        return R.status(res);
+    }
 }

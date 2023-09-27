@@ -1,32 +1,24 @@
 package com.huiyu.service.core.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huiyu.service.core.entity.Invite;
 import com.huiyu.service.core.mapper.InviteMapper;
 import com.huiyu.service.core.service.InviteService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.List;
-
 @Service
-public class InviteServiceImpl implements InviteService {
-
-    @Resource
-    private InviteMapper inviteMapper;
+public class InviteServiceImpl extends ServiceImpl<InviteMapper, Invite> implements InviteService {
 
     @Override
     public boolean insert(Invite invite) {
-        return inviteMapper.insert(invite) > 0;
+        return super.save(invite);
     }
 
     @Override
-    public boolean update(Invite invite) {
-        return inviteMapper.update(invite) > 0;
-    }
-
-    @Override
-    public List<Invite> queryAll(Invite invite) {
-        return inviteMapper.queryAll(invite);
+    public Invite getByInviteeId(Long userId) {
+        return super.lambdaQuery()
+                .eq(Invite::getInviteeId, userId)
+                .one();
     }
 
 }

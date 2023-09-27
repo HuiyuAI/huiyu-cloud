@@ -107,4 +107,13 @@ public interface UserBusiness {
      * @param dailyTaskEnum 每日任务枚举
      */
     void dailyTaskFinished(Long userId, DailyTaskEnum dailyTaskEnum);
+
+    /**
+     * 新用户绑定邀请人
+     *
+     * @param sharerUserId 邀请人id
+     * @param userId       新用户id
+     * @return 是否成功
+     */
+    boolean bindInviter(Long sharerUserId, Long userId);
 }

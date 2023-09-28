@@ -2,6 +2,7 @@ package com.huiyu.auth.security.config;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserFeignClient userFeignClient;
     private final UserDetailsServiceImpl userDetailsService;
     private final WxMaService wxMaService;
+    @Value("${huiyu.default-avatar}")
+    private String defaultAvatar;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -62,11 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public WechatAuthenticationProvider wechatAuthenticationProvider() {
-        WechatAuthenticationProvider provider = new WechatAuthenticationProvider();
-        provider.setUserFeignClient(userFeignClient);
-        provider.setUserDetailsService(userDetailsService);
-        provider.setWxMaService(wxMaService);
-        return provider;
+        return new WechatAuthenticationProvider(userFeignClient, userDetailsService, wxMaService, defaultAvatar);
     }
 
     /**

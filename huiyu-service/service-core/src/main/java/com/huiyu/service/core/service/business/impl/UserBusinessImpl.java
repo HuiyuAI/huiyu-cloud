@@ -53,8 +53,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -110,13 +112,16 @@ public class UserBusinessImpl implements UserBusiness {
     }
 
     @Override
-    public User addUser(User user) {
+    public User addUser(User user, Long inviterId) {
         User resUser = userService.insert(user);
 
         CompletableFuture.runAsync(() -> {
                     // 注册赠送积分
                     Integer registerPoint = hotFileConfig.getInt("registerPoint", 100);
                     this.updatePoint(resUser.getUserId(), registerPoint, PointOperationSourceEnum.REGISTER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
+
+                    // 绑定邀请人
+                    this.bindInviter(inviterId, resUser.getUserId());
                 }, registerExecutor)
                 .exceptionally(CompletableFutureExceptionHandle.ExceptionLogHandle);
 
@@ -383,12 +388,9 @@ public class UserBusinessImpl implements UserBusiness {
     }
 
     private void initDailyTaskRedis(String dailyTaskRedisKey) {
-        for (DailyTaskEnum value : DailyTaskEnum.values()) {
-            if (value.getDictKey().equals(DailyTaskEnum.SIGN_IN.getDictKey())) {
-                continue;
-            }
-            redisTemplate.opsForHash().putIfAbsent(dailyTaskRedisKey, value.getDictKey(), 0);
-        }
+        Arrays.stream(DailyTaskEnum.values())
+                .filter(e -> !e.getDictKey().equals(DailyTaskEnum.SIGN_IN.getDictKey()))
+                .forEach(e -> redisTemplate.opsForHash().putIfAbsent(dailyTaskRedisKey, e.getDictKey(), 0));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -426,16 +428,27 @@ public class UserBusinessImpl implements UserBusiness {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public boolean bindInviter(Long sharerUserId, Long userId) {
+    public boolean bindInviter(Long inviterId, Long userId) {
+        if (Objects.equals(inviterId, userId)) {
+            log.info("不能自己邀请自己, inviterId: {}, userId: {}", inviterId, userId);
+            return false;
+        }
+
         Invite one = inviteService.getByInviteeId(userId);
         if (one != null) {
             log.info("已绑定邀请关系, 邀请人: {}, 被邀请人: {}", one.getInviterId(), userId);
             return false;
         }
 
+        User inviterUser = userService.queryByUserId(inviterId);
+        if (inviterUser == null || !inviterUser.getEnabled()) {
+            log.info("邀请人不存在, inviterId: {}, inviterUser: {}", inviterId, JacksonUtils.toJsonStr(inviterUser));
+            return false;
+        }
+
         LocalDateTime now = LocalDateTime.now();
         Invite invite = Invite.builder()
-                .inviterId(sharerUserId)
+                .inviterId(inviterId)
                 .inviteeId(userId)
                 .createTime(now)
                 .updateTime(now)
@@ -443,12 +456,13 @@ public class UserBusinessImpl implements UserBusiness {
 
         boolean insertRes = inviteService.insert(invite);
 
-        // 邀请人奖励积分
         if (insertRes) {
-            this.updatePoint(sharerUserId, DailyTaskEnum.INVITE_USER.getPointByHotFile(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
-        }
+            // 邀请人奖励积分
+            this.updatePoint(inviterId, DailyTaskEnum.INVITE_USER.getPointByHotFile(), PointOperationSourceEnum.INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
 
-        // TODO 被邀请人奖励积分
-        return true;
+            // 被邀请人奖励积分
+            this.updatePoint(userId, DailyTaskEnum.INVITE_USER.getPointByHotFile(), PointOperationSourceEnum.BIND_INVITE_USER, PointOperationTypeEnum.ADD, null, PointTypeEnum.POINT);
+        }
+        return insertRes;
     }
 }

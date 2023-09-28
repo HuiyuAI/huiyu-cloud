@@ -31,10 +31,11 @@ public interface UserBusiness {
     /**
      * 新增用户
      *
-     * @param user 用户对象
+     * @param user      用户对象
+     * @param inviterId 邀请人id
      * @return 用户对象
      */
-    User addUser(User user);
+    User addUser(User user, Long inviterId);
 
     /**
      * 修改用户数据
@@ -111,9 +112,9 @@ public interface UserBusiness {
     /**
      * 新用户绑定邀请人
      *
-     * @param sharerUserId 邀请人id
-     * @param userId       新用户id
+     * @param inviterId 邀请人id
+     * @param userId    新用户id
      * @return 是否成功
      */
-    boolean bindInviter(Long sharerUserId, Long userId);
+    boolean bindInviter(Long inviterId, Long userId);
 }

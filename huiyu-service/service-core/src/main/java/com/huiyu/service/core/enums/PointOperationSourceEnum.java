@@ -242,6 +242,22 @@ public enum PointOperationSourceEnum implements BaseEnum<String> {
             return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
         }
     },
+    BIND_INVITE_USER("bindInviteUser", "绑定邀请人") {
+        @Override
+        public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {
+            if (operation != PointOperationTypeEnum.ADD) {
+                throw new IllegalArgumentException("参数错误");
+            }
+            if (pointType != PointTypeEnum.POINT) {
+                throw new IllegalArgumentException("参数错误");
+            }
+        }
+
+        @Override
+        public UpdatePointHandlerBO updatePointHandler(Long userId, Integer pointDiff, PointOperationTypeEnum operationType, PointTypeEnum pointType, String requestUuid) {
+            return new UpdatePointHandlerBO(0, pointDiff, operationType, pointType);
+        }
+    },
     ADMIN_UPDATE("adminUpdate", "管理员修改") {
         @Override
         public void checkParam(PointOperationTypeEnum operation, PointTypeEnum pointType) {

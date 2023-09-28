@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -74,12 +75,13 @@ public class UserAdminController {
     /**
      * 新增数据
      *
-     * @param user 实体
+     * @param user      实体
+     * @param inviterId 邀请人id
      * @return 新增结果
      */
     @PostMapping("/addUser")
-    public R<User> add(@RequestBody User user) {
-        return R.ok(userBusiness.addUser(user));
+    public R<User> add(@RequestBody User user, @RequestParam("inviterId") Long inviterId) {
+        return R.ok(userBusiness.addUser(user, inviterId));
     }
 
     /**

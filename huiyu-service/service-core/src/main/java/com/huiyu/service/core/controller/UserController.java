@@ -109,9 +109,9 @@ public class UserController {
     @RequestLogger
     @RequestLimiter(seconds = 60, maxCount = 5)
     @PostMapping("/bindInviter")
-    public R<?> bindInviter(Long sharerUserId) {
+    public R<?> bindInviter(Long inviterId) {
         Long userId = JwtUtils.getUserId();
-        boolean res = userBusiness.bindInviter(sharerUserId, userId);
+        boolean res = userBusiness.bindInviter(inviterId, userId);
         return R.status(res);
     }
 }

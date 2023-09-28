@@ -1,5 +1,6 @@
 package com.huiyu.auth.security.extension.wechat;
 
+import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
@@ -14,15 +15,21 @@ import java.util.Collection;
  */
 public class WechatAuthenticationToken extends AbstractAuthenticationToken {
     private final Object principal;
+    /**
+     * 邀请人userId
+     */
+    @Getter
+    private Long inviterId;
 
     /**
      * 账号校验之前的token构建
      *
      * @param principal
      */
-    public WechatAuthenticationToken(Object principal) {
+    public WechatAuthenticationToken(Object principal, Long inviterId) {
         super(null);
         this.principal = principal;
+        this.inviterId = inviterId;
         setAuthenticated(false);
     }
 

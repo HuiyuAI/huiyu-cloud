@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.huiyu.service.api.entity.User;
 import com.huiyu.common.core.result.R;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 用户信息 FeignClient
@@ -46,10 +47,11 @@ public interface UserFeignClient {
     /**
      * 新增数据
      *
-     * @param user 实体
+     * @param user      实体
+     * @param inviterId 邀请人id
      * @return 新增结果
      */
     @PostMapping("/admin/user/addUser")
-    R<User> add(@RequestBody User user);
+    R<User> add(@RequestBody User user, @RequestParam("inviterId") Long inviterId);
 
 }

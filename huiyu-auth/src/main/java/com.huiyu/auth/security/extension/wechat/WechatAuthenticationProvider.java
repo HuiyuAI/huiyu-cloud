@@ -4,7 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.hutool.core.util.RandomUtil;
 import com.huiyu.common.core.util.JacksonUtils;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,11 +26,12 @@ import java.util.HashSet;
  * @date 2022-03-08
  */
 @Slf4j
-@Setter
+@AllArgsConstructor
 public class WechatAuthenticationProvider implements AuthenticationProvider {
     private UserFeignClient userFeignClient;
     private UserDetailsServiceImpl userDetailsService;
     private WxMaService wxMaService;
+    private String defaultAvatar;
 
     /**
      * 微信认证
@@ -43,6 +44,7 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         WechatAuthenticationToken authenticationToken = (WechatAuthenticationToken) authentication;
         String code = (String) authenticationToken.getPrincipal();
+        Long inviterId = authenticationToken.getInviterId();
 
         WxMaJscode2SessionResult sessionInfo = null;
         try {
@@ -61,13 +63,13 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
             User newUser = new User();
             newUser.setOpenid(openid);
             newUser.setNickname("绘画师" + RandomUtil.randomNumbers(5));
-            newUser.setAvatar("https://huiyucdn.naccl.top/upload/avatar/96d740cc-06f3-403c-96d4-6ce29d6a5e9a.jpg");
+            newUser.setAvatar(defaultAvatar);
             newUser.setGender(0);
             newUser.setEnabled(true);
             newUser.setRole(SecurityConstants.ROLE_PREFIX + SecurityConstants.ROLE_USER);
             log.info("微信小程序注册新用户: {}", JacksonUtils.toJsonStr(newUser));
             // 注册新用户
-            R<User> addResult = userFeignClient.add(newUser);
+            R<User> addResult = userFeignClient.add(newUser, inviterId);
             log.info("微信小程序注册新用户结果: {}", JacksonUtils.toJsonStr(addResult));
         }
         UserDetails userDetails = userDetailsService.loadUserByOpenId(openid);

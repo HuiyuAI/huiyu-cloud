@@ -1,5 +1,6 @@
 package com.huiyu.service.core.service.business.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.huiyu.common.core.util.JacksonUtils;
@@ -42,6 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -82,6 +84,8 @@ public class UserBusinessImpl implements UserBusiness {
     private final Redisson redisson;
     @Qualifier("registerExecutor")
     private final Executor registerExecutor;
+    @Value("${huiyu.default-avatar}")
+    private String defaultAvatar;
 
     @Override
     public IPage<UserAdminVo> adminPageQuery(IPage<User> page, UserQuery query) {
@@ -113,6 +117,10 @@ public class UserBusinessImpl implements UserBusiness {
 
     @Override
     public User addUser(User user, Long inviterId) {
+        user.setNickname("绘画师" + RandomUtil.randomNumbers(5));
+        user.setAvatar(defaultAvatar);
+        user.setGender(0);
+        user.setEnabled(true);
         User resUser = userService.insert(user);
 
         CompletableFuture.runAsync(() -> {

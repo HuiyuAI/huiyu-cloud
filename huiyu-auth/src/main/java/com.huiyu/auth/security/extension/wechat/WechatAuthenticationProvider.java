@@ -2,7 +2,6 @@ package com.huiyu.auth.security.extension.wechat;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import cn.hutool.core.util.RandomUtil;
 import com.huiyu.common.core.util.JacksonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,6 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
     private UserFeignClient userFeignClient;
     private UserDetailsServiceImpl userDetailsService;
     private WxMaService wxMaService;
-    private String defaultAvatar;
 
     /**
      * 微信认证
@@ -62,10 +60,6 @@ public class WechatAuthenticationProvider implements AuthenticationProvider {
         if (result.isSuccess() && user == null) {
             User newUser = new User();
             newUser.setOpenid(openid);
-            newUser.setNickname("绘画师" + RandomUtil.randomNumbers(5));
-            newUser.setAvatar(defaultAvatar);
-            newUser.setGender(0);
-            newUser.setEnabled(true);
             newUser.setRole(SecurityConstants.ROLE_PREFIX + SecurityConstants.ROLE_USER);
             log.info("微信小程序注册新用户: {}", JacksonUtils.toJsonStr(newUser));
             // 注册新用户

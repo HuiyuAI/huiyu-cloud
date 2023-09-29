@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 微信授权者
@@ -43,7 +44,7 @@ public class WechatTokenGranter extends AbstractTokenGranter {
     protected OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
         String code = parameters.get("code");
-        Long inviterId = Long.valueOf(parameters.get("inviterId"));
+        Long inviterId = Optional.ofNullable(parameters.get("inviterId")).map(Long::valueOf).orElse(null);
 
         // 移除后续无用参数
         parameters.remove("code");

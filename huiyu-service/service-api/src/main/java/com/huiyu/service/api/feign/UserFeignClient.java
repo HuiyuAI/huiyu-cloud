@@ -52,6 +52,6 @@ public interface UserFeignClient {
      * @return 新增结果
      */
     @PostMapping("/admin/user/addUser")
-    R<User> add(@RequestBody User user, @RequestParam("inviterId") Long inviterId);
+    R<User> add(@RequestBody User user, @RequestParam(value = "inviterId", required = false) Long inviterId);
 
 }

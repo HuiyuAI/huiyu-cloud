@@ -80,7 +80,7 @@ public class UserAdminController {
      * @return 新增结果
      */
     @PostMapping("/addUser")
-    public R<User> add(@RequestBody User user, @RequestParam("inviterId") Long inviterId) {
+    public R<User> add(@RequestBody User user, @RequestParam(value = "inviterId", required = false) Long inviterId) {
         return R.ok(userBusiness.addUser(user, inviterId));
     }
 

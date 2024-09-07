@@ -83,7 +83,7 @@ public class MiraiUtils {
         customLoginSolver = new CustomLoginSolver();
 
         bot = BotFactory.INSTANCE.newBot(qq, BotAuthorization.byQRCode(), configuration -> {
-            configuration.setProtocol(BotConfiguration.MiraiProtocol.ANDROID_WATCH);
+            configuration.setProtocol(BotConfiguration.MiraiProtocol.MACOS);
             configuration.fileBasedDeviceInfo();
             configuration.setLoginSolver(customLoginSolver);
         });

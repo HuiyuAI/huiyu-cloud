@@ -1,14 +1,51 @@
+server:
+  port: 8010
+
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
   cloud:
     nacos:
       discovery:
-        server-addr: 101.43.14.157:3333
+        server-addr: localhost:8848
       config:
-        server-addr: 101.43.14.157:3333
-        username: nacos
-        password: huiyuai
-        # 默认命名空间public 如果加上会重复打印日志
-        #        namespace: public
+        server-addr: localhost:8848
+        username: admin
+        password: admin
         group: DEFAULT_GROUP
         prefix: huiyu-service
         file-extension: yml
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    default-enum-type-handler: com.huiyu.service.core.handler.EnumTypeHandle
+
+logging:
+  level:
+    root: info
+    com.huiyu: debug
+
+management:
+  endpoint:
+    health:
+      show-components: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: { spring.application.name }
+    export:
+      prometheus:
+        enabled: true
+
+scrape_configs:
+  name: { spring.application.name }

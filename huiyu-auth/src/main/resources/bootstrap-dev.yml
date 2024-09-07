@@ -5,19 +5,18 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 101.43.14.157:3333
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        group: DEFAULT_GROUP
+        prefix: huiyu-auth
+        file-extension: yml
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-
-wechat:
-  miniapp:
-    config:
-      appid: wx7eb04dd743a70c8f
-      secret: 3328425d1b5f7e44c71ead5de08e772a
 
 logging:
   level:
